@@ -8,7 +8,6 @@ interface NavigationProps {
 const NAV_ITEMS: Array<{ view: Exclude<GameView, 'seasonSelect'>; label: string; shortLabel: string }> = [
   { view: 'dashboard', label: 'Dashboard', shortLabel: 'Dash' },
   { view: 'transfer', label: 'Transfer Center', shortLabel: 'Transfer' },
-  { view: 'raceControl', label: 'Race Control', shortLabel: 'Control' },
   { view: 'standings', label: 'Standings', shortLabel: 'Table' },
 ]
 

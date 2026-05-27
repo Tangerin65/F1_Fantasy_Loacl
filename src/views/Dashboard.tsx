@@ -1,128 +1,140 @@
 import { DriverCard } from '../components/DriverCard'
+import { ValueChip } from '../components/ValueChip'
 import { useGame } from '../context/useGame'
 
 const formatMoney = (value: number) => `$${value.toFixed(1)}M`
 
 export function Dashboard() {
-  const { currentRoundData, humanManager, selectedSeasonEntry, state, standings } = useGame()
+  const { currentRoundData, humanManager, selectedSeasonEntry, state } = useGame()
 
-  if (!humanManager || !selectedSeasonEntry) {
+  if (!humanManager || !selectedSeasonEntry || !state.seasonData) {
     return null
   }
 
   const driverMap = new Map(state.drivers.map((driver) => [driver.abbreviation, driver]))
-  const constructorMap = new Map(state.constructors.map((constructor) => [constructor.name, constructor]))
+  const constructorMap = new Map(
+    state.constructors.map((constructor) => [constructor.name, constructor]),
+  )
   const chipsLeft = Object.values(humanManager.chips).filter(Boolean).length
+  const nextRoundLabel = currentRoundData
+    ? `Round ${currentRoundData.round}`
+    : 'Season Complete'
+
+  const lastRoundData =
+    state.lastProcessedRound >= 0
+      ? state.seasonData.rounds[state.lastProcessedRound]
+      : null
+  const lastRoundResult =
+    state.lastProcessedRound >= 0
+      ? state.roundResults[state.lastProcessedRound]?.find(
+          (entry) => entry.managerId === humanManager.id,
+        )
+      : null
+  const marketMovers = [...state.drivers]
+    .sort(
+      (left, right) =>
+        (right.recentScores.at(-1) ?? Number.NEGATIVE_INFINITY) -
+        (left.recentScores.at(-1) ?? Number.NEGATIVE_INFINITY),
+    )
+    .slice(0, 3)
 
   return (
     <section className="view-stack">
-      <section className="hero-panel">
+      <section className="hero-panel panel--track">
         <div className="hero-panel__copy">
           <p className="hero-panel__meta">
-            {selectedSeasonEntry.season} season · {selectedSeasonEntry.source === 'json' ? 'real export' : 'dev fixture'}
+            {selectedSeasonEntry.season} season -{' '}
+            {selectedSeasonEntry.source === 'json' ? 'real export' : 'dev fixture'}
           </p>
-          <h2>Garage overview</h2>
+          <h2>
+            {currentRoundData
+              ? `ROUND ${currentRoundData.round}: ${currentRoundData.raceName}`
+              : `${selectedSeasonEntry.season} archive replay complete`}
+          </h2>
           <p className="hero-panel__description">
-            Track squad value, bank, chip inventory, and the next historical weekend before you lock the round.
+            Lock your lineup and process the weekend from the top control bar. Live
+            summary and roster form update immediately after each round.
           </p>
         </div>
         <div className="metric-grid">
-          <article className="metric-card">
-            <span>Total points</span>
-            <strong>{humanManager.totalPoints.toFixed(0)}</strong>
-          </article>
-          <article className="metric-card">
-            <span>Bank</span>
-            <strong>{formatMoney(humanManager.budget)}</strong>
-          </article>
-          <article className="metric-card">
-            <span>Chips left</span>
-            <strong>{chipsLeft}</strong>
-          </article>
-          <article className="metric-card">
-            <span>Next round</span>
-            <strong>{currentRoundData ? `R${currentRoundData.round}` : 'Complete'}</strong>
-          </article>
+          <ValueChip label="Total Points" value={humanManager.totalPoints.toFixed(0)} />
+          <ValueChip label="Bank" value={formatMoney(humanManager.budget)} />
+          <ValueChip label="Chips Left" value={`${chipsLeft}`} tone="accent" />
+          <ValueChip label="Next Round" value={nextRoundLabel} />
         </div>
       </section>
 
       <section className="panel">
         <div className="panel__header">
           <div>
-            <p className="panel__kicker">Upcoming weekend</p>
-            <h3>{currentRoundData ? currentRoundData.raceName : 'Season complete'}</h3>
+            <p className="panel__kicker">Weekend summary</p>
+            <h3>{lastRoundData ? `Round ${lastRoundData.round} report` : 'No processed rounds yet'}</h3>
           </div>
-          {currentRoundData ? (
+          {lastRoundData ? (
             <div className="round-chip">
-              <span>{currentRoundData.country}</span>
-              <strong>{currentRoundData.date}</strong>
+              <span>{lastRoundData.country}</span>
+              <strong>{lastRoundData.raceName}</strong>
             </div>
           ) : null}
         </div>
-        {currentRoundData ? (
-          <div className="event-grid">
-            <article className="event-card">
-              <span>Weekend format</span>
-              <strong>{currentRoundData.isSprint ? 'Sprint' : 'Standard'}</strong>
-            </article>
-            <article className="event-card">
-              <span>Fastest pit lane</span>
-              <strong>{currentRoundData.race.pitStops[0]?.constructor ?? 'N/A'}</strong>
-            </article>
-            <article className="event-card">
-              <span>Fastest lap watch</span>
-              <strong>{currentRoundData.race.fastestLapDriver}</strong>
-            </article>
-          </div>
+
+        {lastRoundData && lastRoundResult ? (
+          <>
+            <div className="report-grid">
+              <article className="report-card">
+                <span>Podium P1</span>
+                <strong>{lastRoundData.race.results[0]?.driver ?? 'N/A'}</strong>
+              </article>
+              <article className="report-card">
+                <span>Fastest pit team</span>
+                <strong>{lastRoundData.race.pitStops[0]?.constructor ?? 'N/A'}</strong>
+              </article>
+              <article className="report-card">
+                <span>DRS return</span>
+                <strong>{lastRoundResult.driverScores.find((s) => s.drsMultiplier > 1)?.totalFinal.toFixed(0) ?? 0} pts</strong>
+              </article>
+              <article className="report-card">
+                <span>Net weekend</span>
+                <strong>{lastRoundResult.netPoints.toFixed(0)} pts</strong>
+              </article>
+            </div>
+            <div className="market-movers">
+              <h4>Market movers</h4>
+              <ul>
+                {marketMovers.map((driver) => (
+                  <li key={driver.abbreviation}>
+                    <strong>{driver.fullName}</strong>
+                    <span>
+                      Last round {driver.recentScores.at(-1)?.toFixed(0) ?? 0} pts
+                    </span>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          </>
         ) : (
-          <p className="muted-copy">All rounds have been processed. Move to the standings view for the final table.</p>
+          <p className="muted-copy">
+            Process the first round using the top HUD button to generate podium,
+            DRS returns, and market mover analytics.
+          </p>
         )}
       </section>
 
-      <section className="two-column">
-        <div className="panel">
-          <div className="panel__header">
-            <div>
-              <p className="panel__kicker">Driver lineup</p>
-              <h3>Five active seats</h3>
-            </div>
-          </div>
-          <div className="asset-grid">
-            {humanManager.drivers.map((driverId) => {
-              const driver = driverMap.get(driverId)
-              if (!driver) {
-                return null
-              }
-
-              return (
-                <DriverCard
-                  key={driver.abbreviation}
-                  title={driver.fullName}
-                  subtitle={driver.team}
-                  price={driver.price}
-                  points={driver.fantasyPoints}
-                  tag={humanManager.drsBoostDriver === driver.abbreviation ? 'DRS' : undefined}
-                  highlight={`Recent form ${driver.recentScores.length ? driver.recentScores.join(' / ') : 'No rounds yet'}`}
-                />
-              )
-            })}
+      <section className="panel">
+        <div className="panel__header">
+          <div>
+            <p className="panel__kicker">Garage lineup</p>
+            <h3>Formation view</h3>
           </div>
         </div>
 
-        <div className="panel">
-          <div className="panel__header">
-            <div>
-              <p className="panel__kicker">Constructor lineup</p>
-              <h3>Factory wall</h3>
-            </div>
-          </div>
-          <div className="asset-grid asset-grid--compact">
+        <div className="garage-grid">
+          <div className="garage-grid__row garage-grid__row--constructors">
             {humanManager.constructors.map((constructorName) => {
               const constructor = constructorMap.get(constructorName)
               if (!constructor) {
                 return null
               }
-
               return (
                 <DriverCard
                   key={constructor.name}
@@ -130,31 +142,35 @@ export function Dashboard() {
                   subtitle="Constructor"
                   price={constructor.price}
                   points={constructor.fantasyPoints}
-                  highlight={`Recent form ${constructor.recentScores.length ? constructor.recentScores.join(' / ') : 'No rounds yet'}`}
+                  recentScores={constructor.recentScores}
+                  accent="gold"
                 />
               )
             })}
           </div>
 
-          <div className="standings-mini">
-            <div className="panel__header">
-              <div>
-                <p className="panel__kicker">League snapshot</p>
-                <h3>Current order</h3>
-              </div>
-            </div>
-            <ol className="ranking-list">
-              {standings.map((manager, index) => (
-                <li key={manager.id}>
-                  <span>{index + 1}</span>
-                  <div>
-                    <strong>{manager.name}</strong>
-                    <small>{manager.weeklyPoints.at(-1)?.toFixed(0) ?? 0} last round</small>
-                  </div>
-                  <strong>{manager.totalPoints.toFixed(0)}</strong>
-                </li>
-              ))}
-            </ol>
+          <div className="garage-grid__row garage-grid__row--drivers">
+            {humanManager.drivers.map((driverId) => {
+              const driver = driverMap.get(driverId)
+              if (!driver) {
+                return null
+              }
+              const isDrs = humanManager.drsBoostDriver === driver.abbreviation
+              return (
+                <DriverCard
+                  key={driver.abbreviation}
+                  title={driver.fullName}
+                  subtitle={driver.team}
+                  price={driver.price}
+                  points={driver.fantasyPoints}
+                  recentScores={driver.recentScores}
+                  accent={isDrs ? 'cyan' : 'red'}
+                  tag={isDrs ? '2X DRS' : undefined}
+                  isDrs={isDrs}
+                  highlight={`Form ${driver.recentScores.length ? driver.recentScores.join(' / ') : 'No rounds yet'}`}
+                />
+              )
+            })}
           </div>
         </div>
       </section>

@@ -1,9 +1,9 @@
 import heroImage from './assets/hero.png'
 import './App.css'
 import { Navigation } from './components/Navigation'
+import { ValueChip } from './components/ValueChip'
 import { useGame } from './context/useGame'
 import { Dashboard } from './views/Dashboard'
-import { RaceControl } from './views/RaceControl'
 import { Standings } from './views/Standings'
 import { Transfer } from './views/Transfer'
 
@@ -17,7 +17,9 @@ function SeasonSelect() {
           <p className="season-select__meta">F1 fantasy local engine</p>
           <h1>Historical season management, rendered as a local race wall.</h1>
           <p>
-            Choose an exported FastF1 season to run a full fantasy campaign. A built-in development fixture is kept in the catalog so the UI stays runnable before real JSON exports exist.
+            Choose an exported FastF1 season to run a full fantasy campaign. A
+            built-in development fixture is kept in the catalog so the UI stays
+            runnable before real JSON exports exist.
           </p>
         </div>
         <img src={heroImage} alt="" className="season-select__image" />
@@ -44,7 +46,9 @@ function SeasonSelect() {
 function AppShell() {
   const {
     currentRoundData,
+    getTransferSummary,
     humanManager,
+    processCurrentRound,
     resetSeason,
     selectedSeasonEntry,
     setCurrentView,
@@ -55,13 +59,17 @@ function AppShell() {
     return null
   }
 
+  const transferSummary = getTransferSummary(humanManager.id)
+
   return (
     <main className="app-shell">
       <aside className="app-sidebar">
         <div className="brand-block">
           <p>F1 Fantasy</p>
           <strong>{selectedSeasonEntry.season}</strong>
-          <small>{selectedSeasonEntry.source === 'json' ? 'FastF1 export' : 'Fixture mode'}</small>
+          <small>
+            {selectedSeasonEntry.source === 'json' ? 'FastF1 export' : 'Fixture mode'}
+          </small>
         </div>
 
         <Navigation
@@ -90,24 +98,58 @@ function AppShell() {
       </aside>
 
       <section className="app-main">
+        <header className="hud-bar">
+          <div className="hud-bar__left">
+            <ValueChip label="Bank" value={`$${humanManager.budget.toFixed(1)}M`} />
+            <ValueChip
+              label="Total Points"
+              value={`${humanManager.totalPoints.toFixed(0)} pts`}
+            />
+            <ValueChip
+              label="Transfers"
+              value={`${transferSummary.transfersUsed}/${humanManager.freeTransfers}`}
+              tone={transferSummary.penalty < 0 ? 'warning' : 'neutral'}
+            />
+          </div>
+          <div className="hud-bar__center">
+            <span className="hud-pulse" />
+            <strong>{selectedSeasonEntry.season} SEASON</strong>
+            <small>
+              {selectedSeasonEntry.source === 'json' ? 'Real Export' : 'Dev Fixture'}
+            </small>
+          </div>
+          <div className="hud-bar__right">
+            <button
+              type="button"
+              className="action-button"
+              onClick={processCurrentRound}
+              disabled={!currentRoundData || !transferSummary.canProcess}
+            >
+              {currentRoundData ? 'Lock & Process Weekend' : 'No Remaining Rounds'}
+            </button>
+          </div>
+        </header>
+
         <header className="app-header">
           <div>
             <p className="app-header__meta">Historical race wall</p>
             <h1>
               {currentRoundData
-                ? `${currentRoundData.raceName} · Round ${currentRoundData.round}`
+                ? `ROUND ${currentRoundData.round}: ${currentRoundData.raceName}`
                 : `${selectedSeasonEntry.season} championship complete`}
             </h1>
           </div>
           <div className="app-header__status">
             <span>{currentRoundData?.country ?? 'Final table'}</span>
-            <strong>{currentRoundData?.date ?? `${state.seasonData?.rounds.length ?? 0} rounds processed`}</strong>
+            <strong>
+              {currentRoundData?.date ??
+                `${state.seasonData?.rounds.length ?? 0} rounds processed`}
+            </strong>
           </div>
         </header>
 
         {state.currentView === 'dashboard' ? <Dashboard /> : null}
         {state.currentView === 'transfer' ? <Transfer /> : null}
-        {state.currentView === 'raceControl' ? <RaceControl /> : null}
         {state.currentView === 'standings' ? <Standings /> : null}
       </section>
     </main>
@@ -117,7 +159,12 @@ function AppShell() {
 function App() {
   const { state } = useGame()
 
-  return state.currentView === 'seasonSelect' || !state.selectedSeason ? <SeasonSelect /> : <AppShell />
+  return state.currentView === 'seasonSelect' || !state.selectedSeason ? (
+    <SeasonSelect />
+  ) : (
+    <AppShell />
+  )
 }
 
 export default App
+

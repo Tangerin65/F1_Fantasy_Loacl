@@ -173,7 +173,7 @@ export interface ManagerRoundResult {
 
 // --- UI State ---
 
-export type GameView = 'seasonSelect' | 'dashboard' | 'transfer' | 'raceControl' | 'standings';
+export type GameView = 'seasonSelect' | 'dashboard' | 'transfer' | 'standings';
 
 export interface GameState {
   selectedSeason: number | null;

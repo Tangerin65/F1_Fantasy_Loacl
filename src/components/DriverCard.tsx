@@ -1,10 +1,15 @@
+import { Sparkline } from './Sparkline'
+
 interface DriverCardProps {
   title: string
   subtitle: string
   price: number
   points: number
+  recentScores: number[]
   highlight?: string
   tag?: string
+  accent?: 'red' | 'cyan' | 'gold'
+  isDrs?: boolean
 }
 
 const formatMoney = (value: number) => `$${value.toFixed(1)}M`
@@ -14,11 +19,14 @@ export function DriverCard({
   subtitle,
   price,
   points,
+  recentScores,
   highlight,
   tag,
+  accent = 'red',
+  isDrs = false,
 }: DriverCardProps) {
   return (
-    <article className="asset-card">
+    <article className={`asset-card${isDrs ? ' is-drs' : ''}`}>
       <div className="asset-card__head">
         <div>
           <p className="asset-card__eyebrow">{subtitle}</p>
@@ -36,6 +44,7 @@ export function DriverCard({
           <strong>{points.toFixed(0)} pts</strong>
         </div>
       </div>
+      <Sparkline values={recentScores} accent={accent} />
       {highlight ? <p className="asset-card__highlight">{highlight}</p> : null}
     </article>
   )

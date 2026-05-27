@@ -1,23 +1,26 @@
 :root {
-  --bg: #06090d;
-  --surface: rgba(14, 18, 27, 0.88);
-  --surface-elevated: rgba(19, 24, 34, 0.94);
+  --bg: #15151e;
+  --surface: rgba(30, 30, 40, 0.6);
+  --surface-elevated: rgba(35, 35, 50, 0.72);
   --border: rgba(255, 255, 255, 0.08);
   --border-strong: rgba(255, 255, 255, 0.18);
-  --text: #d8dde8;
+  --text: #dae1ef;
   --text-strong: #f8fafc;
   --muted: #8f9aae;
   --accent: #e10600;
   --accent-strong: #ff5f57;
-  --shadow-sm: 0 20px 38px rgba(0, 0, 0, 0.22);
-  --shadow-lg: 0 30px 70px rgba(0, 0, 0, 0.28);
-  --display: 'Orbitron', 'Segoe UI', sans-serif;
+  --neon-green: #00f0a0;
+  --neon-cyan: #00ffff;
+  --champion-gold: #ffd700;
+  --shadow-sm: 0 16px 34px rgba(0, 0, 0, 0.28);
+  --shadow-lg: 0 26px 68px rgba(0, 0, 0, 0.36);
+  --display: 'formula1-display-black', 'Orbitron', 'Segoe UI', sans-serif;
   --body: 'Inter', 'Segoe UI', sans-serif;
   color: var(--text);
   background:
-    radial-gradient(circle at top left, rgba(225, 6, 0, 0.22), transparent 22%),
-    radial-gradient(circle at right 20%, rgba(33, 44, 64, 0.46), transparent 30%),
-    linear-gradient(180deg, #0a0f18, #06090d 28%, #04070b);
+    radial-gradient(circle at top left, rgba(225, 6, 0, 0.2), transparent 25%),
+    radial-gradient(circle at right 15%, rgba(0, 240, 160, 0.12), transparent 32%),
+    linear-gradient(180deg, #1a1a25, #15151e 30%, #12121a);
   font: 400 16px/1.55 var(--body);
   font-synthesis: none;
   text-rendering: optimizeLegibility;
@@ -39,6 +42,7 @@ body {
   margin: 0;
   min-width: 320px;
   min-height: 100vh;
+  background-color: var(--bg);
 }
 
 button,
