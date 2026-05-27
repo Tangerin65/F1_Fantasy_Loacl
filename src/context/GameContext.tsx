@@ -5,6 +5,7 @@ import {
   useState,
   type ReactNode,
 } from 'react'
+import { getRoundActiveDrivers } from '../lib/presentation'
 import {
   ALL_CHIPS_AVAILABLE,
   FREE_TRANSFERS_PER_ROUND,
@@ -60,11 +61,14 @@ interface GameContextValue {
   humanManager: ManagerTeam | null
   standings: ManagerTeam[]
   selectSeason: (season: number) => void
+  exitToSeasonSelect: () => void
+  restartSeason: () => void
   resetSeason: () => void
   setCurrentView: (view: GameView) => void
   replaceDriver: (slotIndex: number, driver: string) => void
   replaceConstructor: (slotIndex: number, constructorName: string) => void
   setDrsBoostDriver: (driver: string) => void
+  setExtraDrsTargets: (tripleDriver: string, doubleDriver: string) => void
   setActiveChip: (chip: ChipType | null) => void
   processCurrentRound: () => void
   getTransferSummary: (managerId: string) => TransferSummary
@@ -142,6 +146,35 @@ const computePendingTransfers = (current: string[], baseline: string[] | undefin
 const getDriversMap = (drivers: DriverAsset[]) => new Map(drivers.map((driver) => [driver.abbreviation, driver]))
 const getConstructorsMap = (constructors: ConstructorAsset[]) =>
   new Map(constructors.map((constructor) => [constructor.name, constructor]))
+
+const resolveExtraDrsTargets = (
+  drivers: string[],
+  currentDoubleDriver?: string,
+  currentTripleDriver?: string,
+) => {
+  const fallbackDriver = drivers[0] ?? ''
+  let doubleDriver =
+    currentDoubleDriver && drivers.includes(currentDoubleDriver)
+      ? currentDoubleDriver
+      : fallbackDriver
+  let tripleDriver =
+    currentTripleDriver && drivers.includes(currentTripleDriver)
+      ? currentTripleDriver
+      : doubleDriver
+
+  if (tripleDriver === doubleDriver) {
+    tripleDriver = drivers.find((driver) => driver !== doubleDriver) ?? doubleDriver
+  }
+
+  if (doubleDriver === tripleDriver) {
+    doubleDriver = drivers.find((driver) => driver !== tripleDriver) ?? tripleDriver
+  }
+
+  return {
+    drsBoostDriver: doubleDriver,
+    extraDrsDriver: tripleDriver,
+  }
+}
 
 const getManagerCost = (
   manager: ManagerTeam,
@@ -562,6 +595,7 @@ const initializeManagers = (seasonData: SeasonData, drivers: DriverAsset[], cons
       drivers: balancedRoster.drivers,
       constructors: balancedRoster.constructors,
       drsBoostDriver: balancedRoster.drivers[0],
+      extraDrsDriver: balancedRoster.drivers[1] ?? balancedRoster.drivers[0],
       activeChip: null,
       chips: { ...ALL_CHIPS_AVAILABLE },
       totalPoints: 0,
@@ -579,6 +613,7 @@ const initializeManagers = (seasonData: SeasonData, drivers: DriverAsset[], cons
       drivers: fanaticRoster.drivers,
       constructors: fanaticRoster.constructors,
       drsBoostDriver: fanaticRoster.drivers[0],
+      extraDrsDriver: fanaticRoster.drivers[1] ?? fanaticRoster.drivers[0],
       activeChip: null,
       chips: { ...ALL_CHIPS_AVAILABLE },
       totalPoints: 0,
@@ -596,6 +631,7 @@ const initializeManagers = (seasonData: SeasonData, drivers: DriverAsset[], cons
       drivers: valueRoster.drivers,
       constructors: valueRoster.constructors,
       drsBoostDriver: valueRoster.drivers[0],
+      extraDrsDriver: valueRoster.drivers[1] ?? valueRoster.drivers[0],
       activeChip: null,
       chips: { ...ALL_CHIPS_AVAILABLE },
       totalPoints: 0,
@@ -613,6 +649,7 @@ const initializeManagers = (seasonData: SeasonData, drivers: DriverAsset[], cons
       drivers: underdogRoster.drivers,
       constructors: underdogRoster.constructors,
       drsBoostDriver: underdogRoster.drivers[0],
+      extraDrsDriver: underdogRoster.drivers[1] ?? underdogRoster.drivers[0],
       activeChip: null,
       chips: { ...ALL_CHIPS_AVAILABLE },
       totalPoints: 0,
@@ -665,6 +702,7 @@ const applyAiStrategy = (
   const candidateDrivers = roster.drivers
   const topDriver = [...candidateDrivers]
     .sort((left, right) => (driverMap.get(right)?.price ?? 0) - (driverMap.get(left)?.price ?? 0))[0]
+  const secondaryDriver = candidateDrivers.find((driver) => driver !== topDriver) ?? topDriver
 
   let activeChip: ChipType | null = null
   const transferCount =
@@ -703,7 +741,8 @@ const applyAiStrategy = (
       ...manager,
       drivers: candidateDrivers,
       constructors: roster.constructors,
-      drsBoostDriver: topDriver,
+      drsBoostDriver: activeChip === 'extraDrs' ? secondaryDriver : topDriver,
+      extraDrsDriver: activeChip === 'extraDrs' ? topDriver : secondaryDriver,
       activeChip,
     },
     driverMap,
@@ -763,18 +802,40 @@ const scoreManager = (
   })
 
   const highestDriver = [...driverScores].sort((left, right) => right.totalRaw - left.totalRaw)[0]
+  const secondHighestDriver = [...driverScores]
+    .sort((left, right) => right.totalRaw - left.totalRaw)[1]
   let drsDriver = manager.drivers.includes(manager.drsBoostDriver)
     ? manager.drsBoostDriver
     : highestDriver?.driver
+  let tripleDrsDriver = manager.drivers.includes(manager.extraDrsDriver)
+    ? manager.extraDrsDriver
+    : secondHighestDriver?.driver ?? highestDriver?.driver
 
   if (manager.activeChip === 'autopilot' && highestDriver) {
     drsDriver = highestDriver.driver
   }
 
-  const drsMultiplier = manager.activeChip === 'extraDrs' ? 3 : 2
+  if (manager.activeChip === 'extraDrs') {
+    const resolvedTargets = resolveExtraDrsTargets(
+      manager.drivers,
+      drsDriver,
+      tripleDrsDriver,
+    )
+    drsDriver = resolvedTargets.drsBoostDriver
+    tripleDrsDriver = resolvedTargets.extraDrsDriver
+  }
 
   const finalizedDriverScores = driverScores.map((score) => {
-    const multiplier = score.driver === drsDriver ? drsMultiplier : 1
+    let multiplier = 1
+    if (manager.activeChip === 'extraDrs') {
+      if (score.driver === tripleDrsDriver) {
+        multiplier = 3
+      } else if (score.driver === drsDriver) {
+        multiplier = 2
+      }
+    } else if (score.driver === drsDriver) {
+      multiplier = 2
+    }
     const totalFinal = score.totalRaw * multiplier
     return {
       ...score,
@@ -837,6 +898,24 @@ export function GameProvider({ children }: { children: ReactNode }) {
     setState(initializeStateForSeason(selectedEntry))
   }, [])
 
+  const exitToSeasonSelect = useCallback(() => {
+    setState(createEmptyState())
+  }, [])
+
+  const restartSeason = useCallback(() => {
+    if (!state.selectedSeason) {
+      setState(createEmptyState())
+      return
+    }
+
+    const selectedEntry = seasonCatalog.find((entry) => entry.season === state.selectedSeason)
+    if (!selectedEntry) {
+      return
+    }
+
+    setState(initializeStateForSeason(selectedEntry))
+  }, [state.selectedSeason])
+
   const resetSeason = useCallback(() => {
     if (!state.selectedSeason) {
       setState(createEmptyState())
@@ -862,6 +941,13 @@ export function GameProvider({ children }: { children: ReactNode }) {
         return previous
       }
 
+      const activeDrivers = getRoundActiveDrivers(
+        previous.seasonData?.rounds[previous.currentRound] ?? null,
+      )
+      if (activeDrivers.size > 0 && !activeDrivers.has(driver)) {
+        return previous
+      }
+
       const driversMap = getDriversMap(previous.drivers)
       const constructorsMap = getConstructorsMap(previous.constructors)
 
@@ -872,15 +958,18 @@ export function GameProvider({ children }: { children: ReactNode }) {
 
         const nextDrivers = [...entry.drivers]
         nextDrivers[slotIndex] = driver
-        const drsBoostDriver = nextDrivers.includes(entry.drsBoostDriver)
-          ? entry.drsBoostDriver
-          : nextDrivers[0]
+        const { drsBoostDriver, extraDrsDriver } = resolveExtraDrsTargets(
+          nextDrivers,
+          entry.drsBoostDriver,
+          entry.extraDrsDriver,
+        )
 
         return syncBudget(
           {
             ...entry,
             drivers: nextDrivers,
             drsBoostDriver,
+            extraDrsDriver,
           },
           driversMap,
           constructorsMap,
@@ -934,7 +1023,24 @@ export function GameProvider({ children }: { children: ReactNode }) {
       ...previous,
       managers: previous.managers.map((manager) =>
         manager.isHuman && manager.drivers.includes(driver)
-          ? { ...manager, drsBoostDriver: driver }
+          ? {
+              ...manager,
+              ...resolveExtraDrsTargets(manager.drivers, driver, manager.extraDrsDriver),
+            }
+          : manager,
+      ),
+    }))
+  }, [])
+
+  const setExtraDrsTargets = useCallback((tripleDriver: string, doubleDriver: string) => {
+    setState((previous) => ({
+      ...previous,
+      managers: previous.managers.map((manager) =>
+        manager.isHuman
+          ? {
+              ...manager,
+              ...resolveExtraDrsTargets(manager.drivers, doubleDriver, tripleDriver),
+            }
           : manager,
       ),
     }))
@@ -955,13 +1061,19 @@ export function GameProvider({ children }: { children: ReactNode }) {
           const toggledChip = manager.activeChip === chip ? null : chip
 
           if (manager.activeChip === 'limitless' && toggledChip !== 'limitless' && manager.backupDrivers && manager.backupConstructors) {
+            const restoredTargets = resolveExtraDrsTargets(
+              manager.backupDrivers,
+              manager.drsBoostDriver,
+              manager.extraDrsDriver,
+            )
             return syncBudget(
               {
                 ...manager,
                 activeChip: toggledChip,
                 drivers: manager.backupDrivers,
                 constructors: manager.backupConstructors,
-                drsBoostDriver: manager.backupDrivers[0],
+                drsBoostDriver: restoredTargets.drsBoostDriver,
+                extraDrsDriver: restoredTargets.extraDrsDriver,
                 backupDrivers: undefined,
                 backupConstructors: undefined,
                 backupBudget: undefined,
@@ -981,6 +1093,18 @@ export function GameProvider({ children }: { children: ReactNode }) {
             }
           }
 
+          if (toggledChip === 'extraDrs') {
+            return {
+              ...manager,
+              activeChip: toggledChip,
+              ...resolveExtraDrsTargets(
+                manager.drivers,
+                manager.drsBoostDriver,
+                manager.extraDrsDriver,
+              ),
+            }
+          }
+
           return {
             ...manager,
             activeChip: toggledChip,
@@ -992,8 +1116,15 @@ export function GameProvider({ children }: { children: ReactNode }) {
 
   const processCurrentRound = useCallback(() => {
     setState((previous) => {
-      if (!previous.seasonData || previous.isSeasonComplete) {
+      if (!previous.seasonData) {
         return previous
+      }
+
+      if (previous.isSeasonComplete) {
+        return {
+          ...previous,
+          currentView: 'seasonSummary',
+        }
       }
 
       const seasonData = previous.seasonData
@@ -1105,15 +1236,19 @@ export function GameProvider({ children }: { children: ReactNode }) {
           usedChip === 'limitless' && manager.backupConstructors
             ? manager.backupConstructors
             : manager.constructors
+        const restoredTargets = resolveExtraDrsTargets(
+          restoredDrivers,
+          manager.drsBoostDriver,
+          manager.extraDrsDriver,
+        )
 
         return syncBudget(
           {
             ...manager,
             drivers: restoredDrivers,
             constructors: restoredConstructors,
-            drsBoostDriver: restoredDrivers.includes(manager.drsBoostDriver)
-              ? manager.drsBoostDriver
-              : restoredDrivers[0],
+            drsBoostDriver: restoredTargets.drsBoostDriver,
+            extraDrsDriver: restoredTargets.extraDrsDriver,
             chips: nextChipState,
             activeChip: null,
             backupDrivers: undefined,
@@ -1138,11 +1273,11 @@ export function GameProvider({ children }: { children: ReactNode }) {
         drivers: nextDrivers,
         constructors: nextConstructors,
         managers: updatedManagers,
-        currentRound: isSeasonComplete ? previous.currentRound : nextRound,
+        currentRound: nextRound,
         isSeasonComplete,
         lastProcessedRound: previous.currentRound,
         roundResults: [...previous.roundResults, roundResults],
-        currentView: isSeasonComplete ? 'standings' : previous.currentView,
+        currentView: isSeasonComplete ? previous.currentView : previous.currentView,
       }
     })
   }, [])
@@ -1203,28 +1338,34 @@ export function GameProvider({ children }: { children: ReactNode }) {
       humanManager,
       standings,
       selectSeason,
+      exitToSeasonSelect,
+      restartSeason,
       resetSeason,
       setCurrentView,
       replaceDriver,
       replaceConstructor,
       setDrsBoostDriver,
+      setExtraDrsTargets,
       setActiveChip,
       processCurrentRound,
       getTransferSummary,
     }),
     [
       currentRoundData,
+      exitToSeasonSelect,
       getTransferSummary,
       humanManager,
       processCurrentRound,
       replaceConstructor,
       replaceDriver,
+      restartSeason,
       resetSeason,
       selectSeason,
       selectedSeasonEntry,
       setActiveChip,
       setCurrentView,
       setDrsBoostDriver,
+      setExtraDrsTargets,
       standings,
       state,
     ],

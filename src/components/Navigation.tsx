@@ -1,4 +1,5 @@
 import type { GameView } from '../types'
+import { copyText } from '../lib/presentation'
 
 interface NavigationProps {
   currentView: GameView
@@ -6,9 +7,21 @@ interface NavigationProps {
 }
 
 const NAV_ITEMS: Array<{ view: Exclude<GameView, 'seasonSelect'>; label: string; shortLabel: string }> = [
-  { view: 'dashboard', label: 'Dashboard', shortLabel: 'Dash' },
-  { view: 'transfer', label: 'Transfer Center', shortLabel: 'Transfer' },
-  { view: 'standings', label: 'Standings', shortLabel: 'Table' },
+  {
+    view: 'dashboard',
+    label: copyText('Dashboard', '总览'),
+    shortLabel: copyText('Dash', '总览'),
+  },
+  {
+    view: 'transfer',
+    label: copyText('Transfer Center', '转会'),
+    shortLabel: copyText('Transfer', '转会'),
+  },
+  {
+    view: 'standings',
+    label: copyText('Standings', '排行'),
+    shortLabel: copyText('Table', '排行'),
+  },
 ]
 
 export function Navigation({ currentView, onNavigate }: NavigationProps) {

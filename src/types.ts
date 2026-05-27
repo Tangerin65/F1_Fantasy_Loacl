@@ -126,6 +126,7 @@ export interface ManagerTeam {
   drivers: string[];          // 5 driver abbreviations
   constructors: string[];     // 2 constructor names
   drsBoostDriver: string;     // abbreviation of DRS boosted driver
+  extraDrsDriver: string;     // abbreviation of 3X DRS driver when Extra DRS is armed
   activeChip: ChipType | null;
   chips: ChipStatus;
   totalPoints: number;
@@ -173,7 +174,12 @@ export interface ManagerRoundResult {
 
 // --- UI State ---
 
-export type GameView = 'seasonSelect' | 'dashboard' | 'transfer' | 'standings';
+export type GameView =
+  | 'seasonSelect'
+  | 'dashboard'
+  | 'transfer'
+  | 'standings'
+  | 'seasonSummary';
 
 export interface GameState {
   selectedSeason: number | null;

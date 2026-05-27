@@ -20,10 +20,18 @@ The project is no longer at the original scaffold-only stage. The following area
   - Dynamic pricing based on rolling recent scores is implemented.
   - Limitless rollback logic is implemented.
   - First-race transfer handling is now special-cased: the season opener has no transfer limit or transfer penalty, and opener changes do not generate extra carry-over transfers.
+  - Extra DRS now has separate 3X and 2X targets instead of reusing the standard single-target DRS flow.
+  - Human transfer changes now reject drivers who are not active in the currently selected round.
+  - When the last round has already been processed, the top action button opens a dedicated season wrap-up screen instead of trying to process another weekend.
 - `src/views/`
-  - `Dashboard.tsx`, `Transfer.tsx`, `RaceControl.tsx`, and `Standings.tsx` are implemented.
+  - `Dashboard.tsx`, `Transfer.tsx`, `RaceControl.tsx`, `Standings.tsx`, and `SeasonSummary.tsx` are implemented.
+  - Dashboard now places Garage Lineup above Weekend Summary, supports clickable last-round score breakdowns for current drivers/constructors, and exposes a full weekend breakdown modal.
+  - Transfer Center now uses team-colored market cards, a scrollable driver market, driver-number display, and an Extra DRS target-selection dialog.
+  - Standings now avoids duplicated manager naming, exposes explicit hover tooltips on the chart, and removes the old `X rounds scored` legend line.
 - `src/App.tsx` and styling
   - The Vite starter UI has been replaced with the actual game shell and season selector.
+  - The shell now supports Chinese UI copy for general interface text while preserving driver names, constructor names, and F1-specific terms in English where translation would be awkward.
+  - The sidebar now keeps only Bank, the header shows the country flag next to the current round, and the old Reset Season action is replaced by Exit back to season selection.
 
 ## 2. Verified So Far
 
@@ -32,21 +40,21 @@ The project is no longer at the original scaffold-only stage. The following area
 
 Known environment note:
 
-- In the restricted sandbox used during development, `npm run dev` can fail with Vite `spawn EPERM`.
-- Outside that restriction, the app can run normally.
+- In the restricted sandbox used during development, Vite commands can fail with `spawn EPERM`.
+- `npm run build` was re-run outside that restriction and completed successfully.
+- The user explicitly asked not to do browser/server validation in this round, so only lint/build verification was performed.
 
 ## 3. Remaining Gaps
 
-The main unfinished items are no longer core implementation, but real-data validation and delivery:
+The remaining gaps are now mostly QA and real-data verification rather than missing shell flows:
 
 1. Real FastF1 season JSON has not been generated in this workspace yet.
    - `src/data/seasons/` may not exist until the export script is actually run.
 2. End-to-end validation with a real exported season is still needed.
-   - The built-in fixture is enough for UI and logic smoke testing, not for final data validation.
+   - The built-in fixture is enough for logic and build verification, not for final historical-data validation.
 3. Full manual frontend QA is still incomplete.
-   - The user explicitly asked to stop browser-based validation.
-4. Git delivery work is not done.
-   - No commit / push / remote setup was performed.
+   - This handover round intentionally skipped `npm run dev` / browser inspection per user request.
+4. Git delivery depends on the current branch strategy and remote push being completed after review.
 
 ## 4. Important Behavior Notes
 
@@ -59,6 +67,11 @@ The main unfinished items are no longer core implementation, but real-data valid
 - First race transfers:
   - Pre-season edits before Round 1 are unrestricted.
   - Free-transfer accounting starts after the first processed round.
+- Extra DRS:
+  - Human managers can arm `Extra DRS`, then choose two different drivers: one for 3X and one for 2X.
+  - The dialog can be reopened later from Transfer Center to adjust the targets before processing the round.
+- Season completion:
+  - After the final weekend is processed, the main action button switches to the wrap-up flow instead of attempting another scoring pass.
 
 ## 5. Recommended Next Steps
 
