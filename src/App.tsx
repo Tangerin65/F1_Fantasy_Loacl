@@ -1,6 +1,7 @@
+import { useState } from 'react'
 import heroImage from './assets/hero.png'
 import './App.css'
-import { copyText, getCountryFlag } from './lib/presentation'
+import { copyText, getUiLanguage, setUiLanguage } from './lib/presentation'
 import { Navigation } from './components/Navigation'
 import { ValueChip } from './components/ValueChip'
 import { useGame } from './context/useGame'
@@ -73,12 +74,30 @@ function AppShell() {
     setCurrentView,
     state,
   } = useGame()
+  const [language, setLanguage] = useState(getUiLanguage())
+  const [isLoadingWeekend, setIsLoadingWeekend] = useState(false)
 
   if (!selectedSeasonEntry || !humanManager) {
     return null
   }
 
   const transferSummary = getTransferSummary(humanManager.id)
+  const switchLanguage = (nextLanguage: 'en' | 'zh') => {
+    setUiLanguage(nextLanguage)
+    setLanguage(nextLanguage)
+  }
+  const loadWeekend = () => {
+    if (state.isSeasonComplete) {
+      processCurrentRound()
+      return
+    }
+
+    setIsLoadingWeekend(true)
+    window.setTimeout(() => {
+      processCurrentRound()
+      setIsLoadingWeekend(false)
+    }, 1400)
+  }
 
   return (
     <main className="app-shell">
@@ -98,9 +117,26 @@ function AppShell() {
 
         <div className="sidebar-summary">
           <article className="sidebar-bank">
-            <span>{copyText('Bank', 'Bank')}</span>
+            <span>{copyText('Bank', '预算余额')}</span>
             <strong>${humanManager.budget.toFixed(1)}M</strong>
           </article>
+        </div>
+
+        <div className="language-switch" aria-label="Language">
+          <button
+            type="button"
+            className={language === 'en' ? 'is-active' : ''}
+            onClick={() => switchLanguage('en')}
+          >
+            EN
+          </button>
+          <button
+            type="button"
+            className={language === 'zh' ? 'is-active' : ''}
+            onClick={() => switchLanguage('zh')}
+          >
+            中文
+          </button>
         </div>
 
         <button type="button" className="secondary-button" onClick={exitToSeasonSelect}>
@@ -111,13 +147,13 @@ function AppShell() {
       <section className="app-main">
         <header className="hud-bar">
           <div className="hud-bar__left">
-            <ValueChip label="Bank" value={`$${humanManager.budget.toFixed(1)}M`} />
+            <ValueChip label={copyText('Bank', '预算')} value={`$${humanManager.budget.toFixed(1)}M`} />
             <ValueChip
-              label="Total Points"
+              label={copyText('Total Points', '总积分')}
               value={`${humanManager.totalPoints.toFixed(0)} pts`}
             />
             <ValueChip
-              label="Transfers"
+              label={copyText('Transfers', '转会')}
               value={`${transferSummary.transfersUsed}/${humanManager.freeTransfers}`}
               tone={transferSummary.penalty < 0 ? 'warning' : 'neutral'}
             />
@@ -133,13 +169,18 @@ function AppShell() {
             <button
               type="button"
               className="action-button"
-              onClick={processCurrentRound}
-              disabled={!state.isSeasonComplete && (!currentRoundData || !transferSummary.canProcess)}
+              onClick={loadWeekend}
+              disabled={
+                isLoadingWeekend ||
+                (!state.isSeasonComplete && (!currentRoundData || !transferSummary.canProcess))
+              }
             >
-              {state.isSeasonComplete
+              {isLoadingWeekend
+                ? copyText('Loading weekend...', '正在加载周末...')
+                : state.isSeasonComplete
                 ? copyText('Open Season Wrap-Up', '打开赛季结算')
                 : currentRoundData
-                ? copyText('Load & Process Weekend', 'Load & Process 本周末')
+                ? copyText('Load & Process Weekend', '加载并结算本周末')
                 : copyText('No Remaining Rounds', '没有剩余分站')}
             </button>
           </div>
@@ -162,7 +203,7 @@ function AppShell() {
           <div className="app-header__status">
             <span>
               {currentRoundData
-                ? `${getCountryFlag(currentRoundData.country)} ${currentRoundData.country}`
+                ? currentRoundData.country
                 : copyText('Season complete', '赛季结束')}
             </span>
             <strong>
@@ -180,6 +221,24 @@ function AppShell() {
         {state.currentView === 'standings' ? <Standings /> : null}
         {state.currentView === 'seasonSummary' ? <SeasonSummary /> : null}
       </section>
+
+      {isLoadingWeekend ? (
+        <div className="overlay-backdrop" role="presentation">
+          <section className="modal-panel modal-panel--loading" role="status" aria-live="polite">
+            <span className="loading-spinner" aria-hidden="true" />
+            <div>
+              <p className="panel__kicker">{copyText('Race control', '赛事控制')}</p>
+              <h3>{copyText('Loading weekend simulation', '正在加载周末模拟')}</h3>
+              <p className="muted-copy">
+                {copyText(
+                  'Timing sheets, pit stops, and fantasy scores are being processed.',
+                  '正在处理计时表、进站数据和 Fantasy 得分。',
+                )}
+              </p>
+            </div>
+          </section>
+        </div>
+      ) : null}
     </main>
   )
 }

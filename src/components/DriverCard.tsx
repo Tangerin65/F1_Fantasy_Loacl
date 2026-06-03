@@ -6,6 +6,7 @@ interface DriverCardProps {
   subtitle: string
   price: number
   points: number
+  lastScore?: number
   recentScores: number[]
   highlight?: string
   tag?: string
@@ -22,6 +23,7 @@ export function DriverCard({
   subtitle,
   price,
   points,
+  lastScore,
   recentScores,
   highlight,
   tag,
@@ -50,6 +52,12 @@ export function DriverCard({
           <span>Season</span>
           <strong>{points.toFixed(0)} pts</strong>
         </div>
+        {lastScore !== undefined ? (
+          <div>
+            <span>Last</span>
+            <strong>{lastScore.toFixed(0)} pts</strong>
+          </div>
+        ) : null}
       </div>
       <Sparkline values={recentScores} accent={accent} />
       {highlight ? <p className="asset-card__highlight">{highlight}</p> : null}

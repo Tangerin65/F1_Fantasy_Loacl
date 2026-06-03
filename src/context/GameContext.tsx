@@ -67,6 +67,7 @@ interface GameContextValue {
   setCurrentView: (view: GameView) => void
   replaceDriver: (slotIndex: number, driver: string) => void
   replaceConstructor: (slotIndex: number, constructorName: string) => void
+  resetHumanLineup: () => void
   setDrsBoostDriver: (driver: string) => void
   setExtraDrsTargets: (tripleDriver: string, doubleDriver: string) => void
   setActiveChip: (chip: ChipType | null) => void
@@ -176,6 +177,18 @@ const resolveExtraDrsTargets = (
   }
 }
 
+type RosterPlan = {
+  drivers: string[]
+  constructors: string[]
+  score: number
+  cost: number
+}
+
+const isBetterRosterPlan = (candidate: RosterPlan, current: RosterPlan | null) =>
+  !current ||
+  candidate.score > current.score ||
+  (candidate.score === current.score && candidate.cost > current.cost)
+
 const getManagerCost = (
   manager: ManagerTeam,
   driversMap: Map<string, DriverAsset>,
@@ -211,13 +224,13 @@ const createTransferSummary = (
   const transfersUsed =
     computePendingTransfers(manager.drivers, manager.lockedDrivers) +
     computePendingTransfers(manager.constructors, manager.lockedConstructors)
-  const canIgnoreBudget = manager.activeChip === 'limitless' || manager.activeChip === 'finalFix'
+  const canIgnoreBudget = manager.activeChip === 'limitless'
   const freeAllowance =
     isSeasonOpener
       ? Number.POSITIVE_INFINITY
       : manager.activeChip === 'wildcard' || manager.activeChip === 'limitless'
       ? Number.POSITIVE_INFINITY
-      : manager.freeTransfers + (manager.activeChip === 'finalFix' ? 1 : 0)
+      : manager.freeTransfers
   const penaltyTransfers =
     Number.isFinite(freeAllowance) && transfersUsed > freeAllowance
       ? transfersUsed - freeAllowance
@@ -234,8 +247,8 @@ const createTransferSummary = (
     overBudgetBy,
     canIgnoreBudget,
     canProcess: (remainingBudget >= 0 || canIgnoreBudget) &&
-      manager.drivers.length === MAX_DRIVERS &&
-      manager.constructors.length === MAX_CONSTRUCTORS,
+      manager.drivers.filter(Boolean).length === MAX_DRIVERS &&
+      manager.constructors.filter(Boolean).length === MAX_CONSTRUCTORS,
     isSeasonOpener,
   }
 }
@@ -410,8 +423,12 @@ const buildOpeningRoster = (
   constructors: ConstructorAsset[],
   performance: PerformanceSnapshot,
   style: AIStyle | 'balanced',
+  activeDrivers?: Set<string>,
 ) => {
-  const driverCandidates = [...drivers]
+  const driverCandidates =
+    activeDrivers && activeDrivers.size >= MAX_DRIVERS
+      ? drivers.filter((driver) => activeDrivers.has(driver.abbreviation))
+      : [...drivers]
   const constructorCandidates = [...constructors]
 
   const driverScore = (driver: DriverAsset) => {
@@ -451,16 +468,53 @@ const buildOpeningRoster = (
     return average * 1.2 - constructor.price * 0.1
   }
 
-  driverCandidates.sort((left, right) => driverScore(right) - driverScore(left))
-  constructorCandidates.sort((left, right) => constructorScore(right) - constructorScore(left))
+  const pickBestDriverPlan = (budget: number): RosterPlan | null => {
+    let bestPlan: RosterPlan | null = null
+    const selectedDrivers: DriverAsset[] = []
 
-  let bestPlan:
-    | {
-        drivers: string[]
-        constructors: string[]
-        score: number
+    const search = (
+      startIndex: number,
+      selectedCount: number,
+      currentCost: number,
+      currentScore: number,
+    ) => {
+      if (currentCost > budget) {
+        return
       }
-    | undefined
+
+      if (selectedCount === MAX_DRIVERS) {
+        const candidatePlan: RosterPlan = {
+          drivers: selectedDrivers.map((driver) => driver.abbreviation),
+          constructors: [],
+          score: currentScore,
+          cost: roundToTenth(currentCost),
+        }
+
+        if (isBetterRosterPlan(candidatePlan, bestPlan)) {
+          bestPlan = candidatePlan
+        }
+        return
+      }
+
+      const remainingSlots = MAX_DRIVERS - selectedCount
+      for (let index = startIndex; index <= driverCandidates.length - remainingSlots; index += 1) {
+        const driver = driverCandidates[index]
+        selectedDrivers.push(driver)
+        search(
+          index + 1,
+          selectedCount + 1,
+          roundToTenth(currentCost + driver.price),
+          currentScore + driverScore(driver),
+        )
+        selectedDrivers.pop()
+      }
+    }
+
+    search(0, 0, 0, 0)
+    return bestPlan
+  }
+
+  let bestPlan: RosterPlan | null = null
 
   for (let leftIndex = 0; leftIndex < constructorCandidates.length - 1; leftIndex += 1) {
     for (let rightIndex = leftIndex + 1; rightIndex < constructorCandidates.length; rightIndex += 1) {
@@ -468,57 +522,53 @@ const buildOpeningRoster = (
         constructorCandidates[leftIndex],
         constructorCandidates[rightIndex],
       ]
-      const constructorCost =
-        selectedConstructors[0].price + selectedConstructors[1].price
-      if (constructorCost >= INITIAL_BUDGET) {
+      const constructorCost = roundToTenth(
+        selectedConstructors[0].price + selectedConstructors[1].price,
+      )
+      if (constructorCost > INITIAL_BUDGET) {
         continue
       }
 
-      const selectedDrivers: DriverAsset[] = []
-      let remainingBudget = INITIAL_BUDGET - constructorCost
-
-      for (const driver of driverCandidates) {
-        if (selectedDrivers.length === MAX_DRIVERS) {
-          break
-        }
-
-        const remainingSlots = MAX_DRIVERS - selectedDrivers.length - 1
-        const cheapestRemainder = driverCandidates
-          .filter((candidate) => !selectedDrivers.includes(candidate) && candidate.abbreviation !== driver.abbreviation)
-          .slice(-remainingSlots)
-          .reduce((sum, candidate) => sum + candidate.price, 0)
-
-        if (driver.price <= remainingBudget - cheapestRemainder) {
-          selectedDrivers.push(driver)
-          remainingBudget -= driver.price
-        }
-      }
-
-      if (selectedDrivers.length !== MAX_DRIVERS) {
+      const driverPlan = pickBestDriverPlan(roundToTenth(INITIAL_BUDGET - constructorCost))
+      if (!driverPlan) {
         continue
       }
 
-      const totalScore =
-        selectedDrivers.reduce((sum, driver) => sum + driverScore(driver), 0) +
-        selectedConstructors.reduce((sum, constructor) => sum + constructorScore(constructor), 0)
+      const candidatePlan: RosterPlan = {
+        drivers: driverPlan.drivers,
+        constructors: selectedConstructors.map((constructor) => constructor.name),
+        score:
+          driverPlan.score +
+          selectedConstructors.reduce((sum, constructor) => sum + constructorScore(constructor), 0),
+        cost: roundToTenth(driverPlan.cost + constructorCost),
+      }
 
-      if (!bestPlan || totalScore > bestPlan.score) {
-        bestPlan = {
-          drivers: selectedDrivers.map((driver) => driver.abbreviation),
-          constructors: selectedConstructors.map((constructor) => constructor.name),
-          score: totalScore,
-        }
+      if (isBetterRosterPlan(candidatePlan, bestPlan)) {
+        bestPlan = candidatePlan
       }
     }
   }
 
   if (bestPlan) {
-    return bestPlan
+    return {
+      drivers: bestPlan.drivers,
+      constructors: bestPlan.constructors,
+      score: bestPlan.score,
+    }
   }
 
+  const fallbackDrivers = [...driverCandidates]
+    .sort((left, right) => driverScore(right) - driverScore(left) || left.price - right.price)
+    .slice(0, MAX_DRIVERS)
+    .map((driver) => driver.abbreviation)
+  const fallbackConstructors = [...constructorCandidates]
+    .sort((left, right) => constructorScore(right) - constructorScore(left) || left.price - right.price)
+    .slice(0, MAX_CONSTRUCTORS)
+    .map((constructor) => constructor.name)
+
   return {
-    drivers: driverCandidates.slice(0, MAX_DRIVERS).map((driver) => driver.abbreviation),
-    constructors: constructorCandidates.slice(0, MAX_CONSTRUCTORS).map((constructor) => constructor.name),
+    drivers: fallbackDrivers,
+    constructors: fallbackConstructors,
     score: 0,
   }
 }
@@ -579,10 +629,28 @@ const getPerformanceSnapshot = (
 
 const initializeManagers = (seasonData: SeasonData, drivers: DriverAsset[], constructors: ConstructorAsset[]) => {
   const performance = getPerformanceSnapshot(seasonData, drivers, constructors, -1)
-  const balancedRoster = buildOpeningRoster(drivers, constructors, performance, 'balanced')
-  const fanaticRoster = buildOpeningRoster(drivers, constructors, performance, 'fanatic')
-  const valueRoster = buildOpeningRoster(drivers, constructors, performance, 'value')
-  const underdogRoster = buildOpeningRoster(drivers, constructors, performance, 'underdog')
+  const openerActiveDrivers = getRoundActiveDrivers(seasonData.rounds[0] ?? null)
+  const fanaticRoster = buildOpeningRoster(
+    drivers,
+    constructors,
+    performance,
+    'fanatic',
+    openerActiveDrivers,
+  )
+  const valueRoster = buildOpeningRoster(
+    drivers,
+    constructors,
+    performance,
+    'value',
+    openerActiveDrivers,
+  )
+  const underdogRoster = buildOpeningRoster(
+    drivers,
+    constructors,
+    performance,
+    'underdog',
+    openerActiveDrivers,
+  )
 
   const driverMap = getDriversMap(drivers)
   const constructorMap = getConstructorsMap(constructors)
@@ -592,10 +660,10 @@ const initializeManagers = (seasonData: SeasonData, drivers: DriverAsset[], cons
       id: 'human',
       name: 'You',
       isHuman: true,
-      drivers: balancedRoster.drivers,
-      constructors: balancedRoster.constructors,
-      drsBoostDriver: balancedRoster.drivers[0],
-      extraDrsDriver: balancedRoster.drivers[1] ?? balancedRoster.drivers[0],
+      drivers: [],
+      constructors: [],
+      drsBoostDriver: '',
+      extraDrsDriver: '',
       activeChip: null,
       chips: { ...ALL_CHIPS_AVAILABLE },
       totalPoints: 0,
@@ -696,7 +764,13 @@ const applyAiStrategy = (
   }
 
   const performance = getPerformanceSnapshot(seasonData, drivers, constructors, lastProcessedRound)
-  const roster = buildOpeningRoster(drivers, constructors, performance, manager.aiStyle)
+  const roster = buildOpeningRoster(
+    drivers,
+    constructors,
+    performance,
+    manager.aiStyle,
+    getRoundActiveDrivers(roundData),
+  )
   const driverMap = getDriversMap(drivers)
   const constructorMap = getConstructorsMap(constructors)
   const candidateDrivers = roster.drivers
@@ -788,7 +862,9 @@ const scoreManager = (
     isSeasonOpener,
   )
 
-  const driverScores = manager.drivers.map((driver) => {
+  const lineupDrivers = manager.drivers.filter(Boolean)
+  const lineupConstructors = manager.constructors.filter(Boolean)
+  const driverScores = lineupDrivers.map((driver) => {
     const score = driverScoreMap.get(driver)
     return score ?? {
       driver,
@@ -804,10 +880,10 @@ const scoreManager = (
   const highestDriver = [...driverScores].sort((left, right) => right.totalRaw - left.totalRaw)[0]
   const secondHighestDriver = [...driverScores]
     .sort((left, right) => right.totalRaw - left.totalRaw)[1]
-  let drsDriver = manager.drivers.includes(manager.drsBoostDriver)
+  let drsDriver = lineupDrivers.includes(manager.drsBoostDriver)
     ? manager.drsBoostDriver
     : highestDriver?.driver
-  let tripleDrsDriver = manager.drivers.includes(manager.extraDrsDriver)
+  let tripleDrsDriver = lineupDrivers.includes(manager.extraDrsDriver)
     ? manager.extraDrsDriver
     : secondHighestDriver?.driver ?? highestDriver?.driver
 
@@ -817,7 +893,7 @@ const scoreManager = (
 
   if (manager.activeChip === 'extraDrs') {
     const resolvedTargets = resolveExtraDrsTargets(
-      manager.drivers,
+      lineupDrivers,
       drsDriver,
       tripleDrsDriver,
     )
@@ -844,7 +920,7 @@ const scoreManager = (
     }
   })
 
-  let constructorScores = manager.constructors.map((constructorName) => {
+  let constructorScores = lineupConstructors.map((constructorName) => {
     const score = constructorScoreMap.get(constructorName)
     return score ?? {
       constructor: constructorName,
@@ -937,7 +1013,12 @@ export function GameProvider({ children }: { children: ReactNode }) {
   const replaceDriver = useCallback((slotIndex: number, driver: string) => {
     setState((previous) => {
       const manager = previous.managers.find((entry) => entry.isHuman)
-      if (!manager || manager.drivers.includes(driver)) {
+      if (!manager || slotIndex < 0 || slotIndex >= MAX_DRIVERS) {
+        return previous
+      }
+
+      const currentSlotDriver = manager.drivers[slotIndex]
+      if (manager.drivers.includes(driver) && currentSlotDriver !== driver) {
         return previous
       }
 
@@ -956,10 +1037,11 @@ export function GameProvider({ children }: { children: ReactNode }) {
           return entry
         }
 
-        const nextDrivers = [...entry.drivers]
+        const nextDrivers = Array.from({ length: MAX_DRIVERS }, (_, index) => entry.drivers[index] ?? '')
         nextDrivers[slotIndex] = driver
+        const completedDrivers = nextDrivers.filter(Boolean)
         const { drsBoostDriver, extraDrsDriver } = resolveExtraDrsTargets(
-          nextDrivers,
+          completedDrivers,
           entry.drsBoostDriver,
           entry.extraDrsDriver,
         )
@@ -986,7 +1068,15 @@ export function GameProvider({ children }: { children: ReactNode }) {
   const replaceConstructor = useCallback((slotIndex: number, constructorName: string) => {
     setState((previous) => {
       const manager = previous.managers.find((entry) => entry.isHuman)
-      if (!manager || manager.constructors.includes(constructorName)) {
+      if (!manager || slotIndex < 0 || slotIndex >= MAX_CONSTRUCTORS) {
+        return previous
+      }
+
+      const currentSlotConstructor = manager.constructors[slotIndex]
+      if (
+        manager.constructors.includes(constructorName) &&
+        currentSlotConstructor !== constructorName
+      ) {
         return previous
       }
 
@@ -998,7 +1088,10 @@ export function GameProvider({ children }: { children: ReactNode }) {
           return entry
         }
 
-        const nextConstructors = [...entry.constructors]
+        const nextConstructors = Array.from(
+          { length: MAX_CONSTRUCTORS },
+          (_, index) => entry.constructors[index] ?? '',
+        )
         nextConstructors[slotIndex] = constructorName
 
         return syncBudget(
@@ -1014,6 +1107,46 @@ export function GameProvider({ children }: { children: ReactNode }) {
       return {
         ...previous,
         managers: nextManagers,
+      }
+    })
+  }, [])
+
+  const resetHumanLineup = useCallback(() => {
+    setState((previous) => {
+      const driversMap = getDriversMap(previous.drivers)
+      const constructorsMap = getConstructorsMap(previous.constructors)
+
+      return {
+        ...previous,
+        managers: previous.managers.map((manager) => {
+          if (!manager.isHuman) {
+            return manager
+          }
+
+          const restoredDrivers = manager.lockedDrivers ?? []
+          const restoredConstructors = manager.lockedConstructors ?? []
+          const restoredTargets = resolveExtraDrsTargets(
+            restoredDrivers,
+            manager.drsBoostDriver,
+            manager.extraDrsDriver,
+          )
+
+          return syncBudget(
+            {
+              ...manager,
+              drivers: restoredDrivers,
+              constructors: restoredConstructors,
+              drsBoostDriver: restoredTargets.drsBoostDriver,
+              extraDrsDriver: restoredTargets.extraDrsDriver,
+              activeChip: null,
+              backupDrivers: undefined,
+              backupConstructors: undefined,
+              backupBudget: undefined,
+            },
+            driversMap,
+            constructorsMap,
+          )
+        }),
       }
     })
   }, [])
@@ -1344,6 +1477,7 @@ export function GameProvider({ children }: { children: ReactNode }) {
       setCurrentView,
       replaceDriver,
       replaceConstructor,
+      resetHumanLineup,
       setDrsBoostDriver,
       setExtraDrsTargets,
       setActiveChip,
@@ -1358,6 +1492,7 @@ export function GameProvider({ children }: { children: ReactNode }) {
       processCurrentRound,
       replaceConstructor,
       replaceDriver,
+      resetHumanLineup,
       restartSeason,
       resetSeason,
       selectSeason,

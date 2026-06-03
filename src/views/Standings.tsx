@@ -1,6 +1,6 @@
 import { useMemo, useState } from 'react'
 import { TrendArrow } from '../components/TrendArrow'
-import { copyText } from '../lib/presentation'
+import { copyText, getDriverNumber } from '../lib/presentation'
 import { useGame } from '../context/useGame'
 
 const CHART_WIDTH = 820
@@ -13,7 +13,7 @@ type Point = { x: number; y: number; round: number; total: number; weekly: numbe
 
 type HoveredPoint = {
   manager: string
-  round: number
+  raceName: string
   total: number
   weekly: number
   x: number
@@ -41,6 +41,7 @@ const buildSmoothPath = (points: Point[]) => {
 export function Standings() {
   const { standings, state } = useGame()
   const [hoveredPoint, setHoveredPoint] = useState<HoveredPoint>(null)
+  const [selectedManagerId, setSelectedManagerId] = useState<string | null>(null)
 
   const previousRankByManager = useMemo(() => {
     const previousTotals = state.managers.map((manager) => {
@@ -94,12 +95,25 @@ export function Standings() {
     })
   }, [standings])
 
+  const selectedManager = selectedManagerId
+    ? state.managers.find((manager) => manager.id === selectedManagerId) ?? null
+    : null
+  const lastResult =
+    selectedManager && state.lastProcessedRound >= 0
+      ? state.roundResults[state.lastProcessedRound]?.find(
+          (entry) => entry.managerId === selectedManager.id,
+        ) ?? null
+      : null
+  const lastRoundData =
+    state.lastProcessedRound >= 0 ? state.seasonData?.rounds[state.lastProcessedRound] : null
+  const driverMap = new Map(state.drivers.map((driver) => [driver.abbreviation, driver]))
+
   return (
     <section className="view-stack">
       <section className="panel">
         <div className="panel__header">
           <div>
-            <p className="panel__kicker">{copyText('Standings', '排行榜')}</p>
+            <p className="panel__kicker">{copyText('Standings', '积分榜')}</p>
             <h3>{copyText('Championship ladder', '赛季积分榜')}</h3>
           </div>
         </div>
@@ -110,10 +124,14 @@ export function Standings() {
             return (
               <li key={manager.id}>
                 <span>{index + 1}</span>
-                <div>
+                <button
+                  type="button"
+                  className="ranking-list__manager"
+                  onClick={() => setSelectedManagerId(manager.id)}
+                >
                   <strong>{manager.name}</strong>
                   <small>{manager.isHuman ? copyText('Player', '玩家') : copyText('AI manager', 'AI 经理')}</small>
-                </div>
+                </button>
                 <TrendArrow delta={delta} />
                 <strong>{formatPoints(manager.totalPoints)}</strong>
               </li>
@@ -182,7 +200,9 @@ export function Standings() {
                       onMouseEnter={() =>
                         setHoveredPoint({
                           manager: series.manager.name,
-                          round: point.round,
+                          raceName:
+                            state.seasonData?.rounds[point.round - 1]?.raceName ??
+                            `Round ${point.round}`,
                           total: point.total,
                           weekly: point.weekly,
                           x: point.x,
@@ -205,9 +225,7 @@ export function Standings() {
                 }}
               >
                 <strong>{hoveredPoint.manager}</strong>
-                <span>
-                  {copyText('Round', '第')} {hoveredPoint.round}
-                </span>
+                <span>{hoveredPoint.raceName}</span>
                 <small>
                   {copyText('Weekly', '单站')} {hoveredPoint.weekly.toFixed(0)} ·{' '}
                   {copyText('Total', '累计')} {hoveredPoint.total.toFixed(0)}
@@ -245,6 +263,103 @@ export function Standings() {
             )}
           </p>
         </section>
+      ) : null}
+
+      {selectedManager ? (
+        <div className="overlay-backdrop" role="presentation" onClick={() => setSelectedManagerId(null)}>
+          <section
+            className="modal-panel modal-panel--wide"
+            role="dialog"
+            aria-modal="true"
+            onClick={(event) => event.stopPropagation()}
+          >
+            <div className="panel__header">
+              <div>
+                <p className="panel__kicker">
+                  {lastRoundData?.raceName ?? copyText('No processed round', '尚无已结算分站')}
+                </p>
+                <h3>
+                  {selectedManager.name} ·{' '}
+                  {selectedManager.isHuman ? copyText('Player lineup', '玩家阵容') : copyText('AI manager lineup', 'AI 经理阵容')}
+                </h3>
+              </div>
+              <button
+                type="button"
+                className="secondary-button"
+                onClick={() => setSelectedManagerId(null)}
+              >
+                {copyText('Close', '关闭')}
+              </button>
+            </div>
+
+            {lastResult ? (
+              <>
+                <div className="summary-grid">
+                  <article className="summary-card">
+                    <span>{copyText('Chip used', '使用 Chip')}</span>
+                    <strong>{lastResult.chipApplied ? lastResult.chipApplied : copyText('None', '无')}</strong>
+                  </article>
+                  <article className="summary-card">
+                    <span>{copyText('Gross points', '原始得分')}</span>
+                    <strong>{formatPoints(lastResult.grossPoints)}</strong>
+                  </article>
+                  <article className="summary-card">
+                    <span>{copyText('Transfer penalty', '转会罚分')}</span>
+                    <strong>{formatPoints(lastResult.transferPenalty)}</strong>
+                  </article>
+                  <article className="summary-card">
+                    <span>{copyText('Net points', '净得分')}</span>
+                    <strong>{formatPoints(lastResult.netPoints)}</strong>
+                  </article>
+                </div>
+
+                <div className="detail-grid manager-breakdown">
+                  <section className="detail-card">
+                    <h4>{copyText('Driver scoring', '车手得分')}</h4>
+                    <div className="detail-table">
+                      {lastResult.driverScores.map((score) => (
+                        <div key={score.driver} className="detail-table__row">
+                          <span>#{getDriverNumber(score.driver)}</span>
+                          <strong>{driverMap.get(score.driver)?.fullName ?? score.driver}</strong>
+                          <small>
+                            Q {score.qualifyingPoints} · S {score.sprintPoints} · R {score.racePoints}
+                          </small>
+                          <span>
+                            {score.totalFinal.toFixed(0)}
+                            {score.drsMultiplier > 1 ? ` (${score.drsMultiplier}X DRS)` : ''}
+                          </span>
+                        </div>
+                      ))}
+                    </div>
+                  </section>
+
+                  <section className="detail-card">
+                    <h4>{copyText('Constructor scoring', '车队得分')}</h4>
+                    <div className="detail-table">
+                      {lastResult.constructorScores.map((score) => (
+                        <div key={score.constructor} className="detail-table__row">
+                          <span>{copyText('Team', '车队')}</span>
+                          <strong>{score.constructor}</strong>
+                          <small>
+                            Q {score.qualifyingPoints} · S {score.sprintPoints} · R {score.racePoints} · P {score.pitStopPoints}
+                          </small>
+                          <span>{score.total.toFixed(0)}</span>
+                        </div>
+                      ))}
+                    </div>
+                  </section>
+                </div>
+              </>
+            ) : (
+              <p className="muted-copy">
+                {copyText(
+                  'Process a race weekend to unlock the last-race lineup and scoring breakdown.',
+                  '结算一个比赛周后，可以查看上一站阵容和详细得分构成。',
+                )}
+              </p>
+            )}
+          </section>
+        </div>
       ) : null}
     </section>
   )

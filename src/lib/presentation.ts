@@ -1,38 +1,26 @@
 import type { CSSProperties } from 'react'
 import type { RoundData } from '../types'
 
-const isZhLanguage =
+type UiLanguage = 'en' | 'zh'
+
+const browserLanguage: UiLanguage =
   typeof navigator !== 'undefined' &&
   navigator.language.toLowerCase().startsWith('zh')
+    ? 'zh'
+    : 'en'
 
-export const isChineseUi = () => isZhLanguage
+let activeLanguage: UiLanguage = browserLanguage
+
+export const setUiLanguage = (language: UiLanguage) => {
+  activeLanguage = language
+}
+
+export const getUiLanguage = () => activeLanguage
+
+export const isChineseUi = () => activeLanguage === 'zh'
 
 export const copyText = (english: string, chinese: string) =>
-  isZhLanguage ? chinese : english
-
-const COUNTRY_FLAGS: Record<string, string> = {
-  Bahrain: '🇧🇭',
-  'Saudi Arabia': '🇸🇦',
-  Australia: '🇦🇺',
-  Japan: '🇯🇵',
-  China: '🇨🇳',
-  'United States': '🇺🇸',
-  Italy: '🇮🇹',
-  Monaco: '🇲🇨',
-  Canada: '🇨🇦',
-  Spain: '🇪🇸',
-  Austria: '🇦🇹',
-  'United Kingdom': '🇬🇧',
-  Hungary: '🇭🇺',
-  Belgium: '🇧🇪',
-  Netherlands: '🇳🇱',
-  Azerbaijan: '🇦🇿',
-  Singapore: '🇸🇬',
-  Mexico: '🇲🇽',
-  Brazil: '🇧🇷',
-  Qatar: '🇶🇦',
-  'United Arab Emirates': '🇦🇪',
-}
+  isChineseUi() ? chinese : english
 
 const TEAM_COLORS: Record<string, { base: string; edge: string; text?: string }> = {
   'Red Bull Racing': { base: '#1e3a8a', edge: '#dc2626' },
@@ -69,9 +57,6 @@ const DRIVER_NUMBERS: Record<string, string> = {
   BOT: '77',
   ZHO: '24',
 }
-
-export const getCountryFlag = (country?: string) =>
-  (country && COUNTRY_FLAGS[country]) || '🏁'
 
 export const getDriverNumber = (abbreviation: string) =>
   DRIVER_NUMBERS[abbreviation] ?? '--'

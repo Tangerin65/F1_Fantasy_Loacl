@@ -8,17 +8,10 @@ import {
   getTeamSurfaceStyle,
 } from '../lib/presentation'
 import { useGame } from '../context/useGame'
-import { CHIP_NAMES, type ChipType } from '../types'
+import { CHIP_NAMES, MAX_CONSTRUCTORS, MAX_DRIVERS, type ChipType } from '../types'
 
 const formatMoney = (value: number) => `$${value.toFixed(1)}M`
-const CHIPS: ChipType[] = [
-  'extraDrs',
-  'autopilot',
-  'noNegative',
-  'limitless',
-  'wildcard',
-  'finalFix',
-]
+const CHIPS: ChipType[] = ['extraDrs', 'autopilot', 'noNegative', 'limitless', 'wildcard']
 
 type MarketMode = 'driver' | 'constructor'
 
@@ -29,6 +22,7 @@ export function Transfer() {
     humanManager,
     replaceConstructor,
     replaceDriver,
+    resetHumanLineup,
     setActiveChip,
     setDrsBoostDriver,
     setExtraDrsTargets,
@@ -55,13 +49,6 @@ export function Transfer() {
     [currentRoundData],
   )
 
-  const marketDrivers = [...state.drivers]
-    .filter((driver) => roundActiveDrivers.size === 0 || roundActiveDrivers.has(driver.abbreviation))
-    .sort((left, right) => right.price - left.price)
-  const marketConstructors = [...state.constructors].sort(
-    (left, right) => right.price - left.price,
-  )
-
   if (!humanManager) {
     return null
   }
@@ -69,6 +56,24 @@ export function Transfer() {
   const summary = getTransferSummary(humanManager.id)
   const activeChipName = humanManager.activeChip ? CHIP_NAMES[humanManager.activeChip] : 'None'
   const budgetUsage = Math.min(100, Math.max(0, summary.lineupCost))
+  const driverSlots = Array.from(
+    { length: MAX_DRIVERS },
+    (_, index) => humanManager.drivers[index] ?? '',
+  )
+  const constructorSlots = Array.from(
+    { length: MAX_CONSTRUCTORS },
+    (_, index) => humanManager.constructors[index] ?? '',
+  )
+  const selectedDrivers = new Set(humanManager.drivers)
+  const selectedConstructors = new Set(humanManager.constructors)
+  const selectedDrsDrivers = humanManager.drivers.filter(Boolean)
+
+  const marketDrivers = [...state.drivers]
+    .filter((driver) => roundActiveDrivers.size === 0 || roundActiveDrivers.has(driver.abbreviation))
+    .sort((left, right) => right.price - left.price)
+  const marketConstructors = [...state.constructors].sort(
+    (left, right) => right.price - left.price,
+  )
 
   const openExtraDrsDialog = () => {
     setTripleDriverSelection(humanManager.extraDrsDriver)
@@ -94,9 +99,12 @@ export function Transfer() {
       <section className="panel">
         <div className="panel__header">
           <div>
-            <p className="panel__kicker">{copyText('Transfer center', 'Transfer center')}</p>
-            <h3>{copyText('Pick, compare, swap', '挑选、对比、替换')}</h3>
+            <p className="panel__kicker">{copyText('Transfer center', '转会中心')}</p>
+            <h3>{copyText('Pick, compare, swap', '挑选、对比、换入')}</h3>
           </div>
+          <button type="button" className="secondary-button" onClick={resetHumanLineup}>
+            {copyText('Restore pre-race lineup', '恢复到本场赛前阵容')}
+          </button>
         </div>
 
         <div className="budget-meter">
@@ -129,7 +137,7 @@ export function Transfer() {
             tone={summary.overBudgetBy > 0 ? 'warning' : 'positive'}
           />
           <ValueChip
-            label={copyText('Transfers', '换人')}
+            label={copyText('Transfers', '转会')}
             value={`${summary.transfersUsed} / ${humanManager.freeTransfers}`}
             tone={summary.penalty < 0 ? 'warning' : 'neutral'}
           />
@@ -140,7 +148,7 @@ export function Transfer() {
           />
           <ValueChip
             label={copyText('2X DRS', '2X DRS')}
-            value={humanManager.drsBoostDriver}
+            value={humanManager.drsBoostDriver || copyText('Not selected', '未选择')}
             tone="accent"
           />
         </div>
@@ -157,7 +165,7 @@ export function Transfer() {
           <p className="notice-banner notice-banner--subtle">
             {copyText(
               `Extra transfer penalty: ${summary.penalty} pts`,
-              `额外换人罚分：${summary.penalty} 分`,
+              `额外转会罚分：${summary.penalty} 分`,
             )}
           </p>
         ) : null}
@@ -173,23 +181,25 @@ export function Transfer() {
           </div>
 
           <div className="roster-list">
-            {humanManager.drivers.map((driverId, index) => {
+            {driverSlots.map((driverId, index) => {
               const driver = driverMap.get(driverId)
               return (
                 <article
-                  key={`${driverId}-${index}`}
+                  key={`${driverId || 'empty-driver'}-${index}`}
                   className={`roster-row roster-row--team${
                     marketMode === 'driver' && activeDriverSlot === index ? ' is-selected' : ''
-                  }`}
-                  style={getTeamSurfaceStyle(driver?.team)}
+                  }${!driver ? ' roster-row--empty' : ''}`}
+                  style={driver ? getTeamSurfaceStyle(driver.team) : undefined}
                 >
                   <div>
                     <small>{copyText(`Driver slot ${index + 1}`, `车手槽位 ${index + 1}`)}</small>
                     <strong>
-                      #{getDriverNumber(driverId)} {driver?.fullName ?? driverId}
+                      {driver ? `#${getDriverNumber(driverId)} ${driver.fullName}` : copyText('Empty slot', '空槽位')}
                     </strong>
                     <span>
-                      {driver?.team ?? 'Unknown'} · {formatMoney(driver?.price ?? 0)}
+                      {driver
+                        ? `${driver.team} · ${formatMoney(driver.price)}`
+                        : copyText('Pick a driver from the market', '从市场中选择一名车手')}
                     </span>
                   </div>
                   <button
@@ -206,24 +216,26 @@ export function Transfer() {
               )
             })}
 
-            {humanManager.constructors.map((constructorName, index) => {
+            {constructorSlots.map((constructorName, index) => {
               const constructor = constructorMap.get(constructorName)
               return (
                 <article
-                  key={`${constructorName}-${index}`}
+                  key={`${constructorName || 'empty-constructor'}-${index}`}
                   className={`roster-row roster-row--team${
                     marketMode === 'constructor' && activeConstructorSlot === index
                       ? ' is-selected'
                       : ''
-                  }`}
-                  style={getTeamSurfaceStyle(constructor?.name)}
+                  }${!constructor ? ' roster-row--empty' : ''}`}
+                  style={constructor ? getTeamSurfaceStyle(constructor.name) : undefined}
                 >
                   <div>
-                    <small>
-                      {copyText(`Constructor slot ${index + 1}`, `车队槽位 ${index + 1}`)}
-                    </small>
-                    <strong>{constructor?.name ?? constructorName}</strong>
-                    <span>{formatMoney(constructor?.price ?? 0)}</span>
+                    <small>{copyText(`Constructor slot ${index + 1}`, `车队槽位 ${index + 1}`)}</small>
+                    <strong>{constructor?.name ?? copyText('Empty slot', '空槽位')}</strong>
+                    <span>
+                      {constructor
+                        ? formatMoney(constructor.price)
+                        : copyText('Pick a constructor from the market', '从市场中选择一支车队')}
+                    </span>
                   </div>
                   <button
                     type="button"
@@ -244,18 +256,24 @@ export function Transfer() {
             <div className="drs-panel__group">
               <p className="panel__kicker">2X DRS</p>
               <div className="drs-grid">
-                {humanManager.drivers.map((driverId) => (
-                  <button
-                    key={driverId}
-                    type="button"
-                    className={`drs-pill${
-                      humanManager.drsBoostDriver === driverId ? ' is-active' : ''
-                    }`}
-                    onClick={() => setDrsBoostDriver(driverId)}
-                  >
-                    #{getDriverNumber(driverId)} {driverId}
-                  </button>
-                ))}
+                {selectedDrsDrivers.length > 0 ? (
+                  selectedDrsDrivers.map((driverId) => (
+                    <button
+                      key={driverId}
+                      type="button"
+                      className={`drs-pill${
+                        humanManager.drsBoostDriver === driverId ? ' is-active' : ''
+                      }`}
+                      onClick={() => setDrsBoostDriver(driverId)}
+                    >
+                      #{getDriverNumber(driverId)} {driverId}
+                    </button>
+                  ))
+                ) : (
+                  <p className="muted-copy">
+                    {copyText('Pick drivers before assigning DRS.', '先选择车手，再分配 DRS。')}
+                  </p>
+                )}
               </div>
             </div>
 
@@ -264,7 +282,7 @@ export function Transfer() {
                 <p className="panel__kicker">3X DRS</p>
                 <div className="drs-panel__summary">
                   <span>
-                    3X: {humanManager.extraDrsDriver} · 2X: {humanManager.drsBoostDriver}
+                    3X: {humanManager.extraDrsDriver || '--'} · 2X: {humanManager.drsBoostDriver || '--'}
                   </span>
                   <button
                     type="button"
@@ -283,7 +301,11 @@ export function Transfer() {
           <div className="panel__header">
             <div>
               <p className="panel__kicker">{copyText('Transfer market', '转会市场')}</p>
-              <h3>{marketMode === 'driver' ? 'All drivers' : 'All constructors'}</h3>
+              <h3>
+                {marketMode === 'driver'
+                  ? copyText('All drivers', '全部车手')
+                  : copyText('All constructors', '全部车队')}
+              </h3>
             </div>
             <div className="segmented-control">
               <button
@@ -305,54 +327,62 @@ export function Transfer() {
 
           <div className="market-list market-list--scroll">
             {marketMode === 'driver'
-              ? marketDrivers.map((driver) => (
-                  <article
-                    key={driver.abbreviation}
-                    className="market-row market-row--team"
-                    style={getTeamSurfaceStyle(driver.team)}
-                  >
-                    <div>
-                      <strong>
-                        #{getDriverNumber(driver.abbreviation)} {driver.fullName}
-                      </strong>
-                      <span>
-                        {driver.abbreviation} · {driver.team}
-                      </span>
-                    </div>
-                    <div className="market-row__side">
-                      <strong>{formatMoney(driver.price)}</strong>
-                      <button
-                        type="button"
-                        className="action-button"
-                        onClick={() => replaceDriver(activeDriverSlot, driver.abbreviation)}
-                      >
-                        {copyText('Swap in', '换入')}
-                      </button>
-                    </div>
-                  </article>
-                ))
-              : marketConstructors.map((constructor) => (
-                  <article
-                    key={constructor.name}
-                    className="market-row market-row--team"
-                    style={getTeamSurfaceStyle(constructor.name)}
-                  >
-                    <div>
-                      <strong>{constructor.name}</strong>
-                      <span>{copyText('Constructor', '车队')}</span>
-                    </div>
-                    <div className="market-row__side">
-                      <strong>{formatMoney(constructor.price)}</strong>
-                      <button
-                        type="button"
-                        className="action-button"
-                        onClick={() => replaceConstructor(activeConstructorSlot, constructor.name)}
-                      >
-                        {copyText('Swap in', '换入')}
-                      </button>
-                    </div>
-                  </article>
-                ))}
+              ? marketDrivers.map((driver) => {
+                  const isSelected = selectedDrivers.has(driver.abbreviation)
+                  return (
+                    <article
+                      key={driver.abbreviation}
+                      className={`market-row market-row--team${isSelected ? ' is-disabled' : ''}`}
+                      style={getTeamSurfaceStyle(driver.team)}
+                    >
+                      <div>
+                        <strong>
+                          #{getDriverNumber(driver.abbreviation)} {driver.fullName}
+                        </strong>
+                        <span>
+                          {driver.abbreviation} · {driver.team}
+                        </span>
+                      </div>
+                      <div className="market-row__side">
+                        <strong>{formatMoney(driver.price)}</strong>
+                        <button
+                          type="button"
+                          className="action-button"
+                          onClick={() => replaceDriver(activeDriverSlot, driver.abbreviation)}
+                          disabled={isSelected}
+                        >
+                          {isSelected ? copyText('Selected', '已选') : copyText('Swap in', '换入')}
+                        </button>
+                      </div>
+                    </article>
+                  )
+                })
+              : marketConstructors.map((constructor) => {
+                  const isSelected = selectedConstructors.has(constructor.name)
+                  return (
+                    <article
+                      key={constructor.name}
+                      className={`market-row market-row--team${isSelected ? ' is-disabled' : ''}`}
+                      style={getTeamSurfaceStyle(constructor.name)}
+                    >
+                      <div>
+                        <strong>{constructor.name}</strong>
+                        <span>{copyText('Constructor', '车队')}</span>
+                      </div>
+                      <div className="market-row__side">
+                        <strong>{formatMoney(constructor.price)}</strong>
+                        <button
+                          type="button"
+                          className="action-button"
+                          onClick={() => replaceConstructor(activeConstructorSlot, constructor.name)}
+                          disabled={isSelected}
+                        >
+                          {isSelected ? copyText('Selected', '已选') : copyText('Swap in', '换入')}
+                        </button>
+                      </div>
+                    </article>
+                  )
+                })}
           </div>
         </div>
       </section>
@@ -395,7 +425,7 @@ export function Transfer() {
             <div className="panel__header">
               <div>
                 <p className="panel__kicker">Extra DRS</p>
-                <h3>{copyText('Choose your 3X and 2X drivers', '选择 3X 与 2X 两位车手')}</h3>
+                <h3>{copyText('Choose your 3X and 2X drivers', '选择 3X 和 2X 车手')}</h3>
               </div>
               <button
                 type="button"
@@ -410,7 +440,7 @@ export function Transfer() {
               <section className="detail-card">
                 <h4>3X DRS</h4>
                 <div className="selector-stack">
-                  {humanManager.drivers.map((driverId) => (
+                  {selectedDrsDrivers.map((driverId) => (
                     <button
                       key={`triple-${driverId}`}
                       type="button"
@@ -428,7 +458,7 @@ export function Transfer() {
               <section className="detail-card">
                 <h4>2X DRS</h4>
                 <div className="selector-stack">
-                  {humanManager.drivers.map((driverId) => (
+                  {selectedDrsDrivers.map((driverId) => (
                     <button
                       key={`double-${driverId}`}
                       type="button"

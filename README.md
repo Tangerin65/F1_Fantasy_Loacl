@@ -209,6 +209,7 @@ Output path:
 - `src/data/seasons/{year}.json`
 
 The frontend auto-discovers `src/data/seasons/*.json` in the season selector.
+To add another season, rerun the script with `--season YEAR`; it will write a new JSON file into the same folder.
 
 ### 5. Gameplay Summary
 
@@ -240,4 +241,3 @@ src/
 scripts/
   fetch_season_data.py   FastF1 season exporter
 ```
-

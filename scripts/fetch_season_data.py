@@ -2,26 +2,35 @@
 """
 fetch_season_data.py — F1 Historical Data Extractor
 
-Uses the fastf1 library to extract real Formula 1 historical data (2018–2025)
-and export it as structured JSON files for the local F1 Fantasy game frontend.
-
-Usage:
-    python fetch_season_data.py --season 2024
-    python fetch_season_data.py --all
+Uses FastF1 first, with OpenF1 fallback for:
+- pit stop data
+- fastest lap driver
 
 Output:
     src/data/seasons/{year}.json
+
+Usage:
+    python scripts/fetch_season_data.py --season 2025
+    python scripts/fetch_season_data.py --season 2025 --force
+    python scripts/fetch_season_data.py --season 2025 --start-round 1 --end-round 1 --force
+    python scripts/fetch_season_data.py --all
 """
 
 import argparse
 import json
 import math
 import os
+import ssl
 import sys
+import time
+import urllib.error
+import urllib.request
 from pathlib import Path
+from urllib.parse import urlencode
 
 import fastf1
 import pandas as pd
+
 
 # ---------------------------------------------------------------------------
 # Constants
@@ -32,53 +41,138 @@ PROJECT_ROOT = SCRIPT_DIR.parent
 CACHE_DIR = SCRIPT_DIR / "f1_cache"
 OUTPUT_DIR = PROJECT_ROOT / "src" / "data" / "seasons"
 
-SEASON_RANGE = range(2018, 2026)  # 2018 through 2025 inclusive
+SEASON_RANGE = range(2018, 2026)
+
+SESSION_DELAY_SECONDS = 25
+ROUND_DELAY_SECONDS = 60
+
+OPENF1_BASE_URL = "https://api.openf1.org/v1"
+OPENF1_RETRY_COUNT = 5
+OPENF1_RETRY_DELAY_SECONDS = 5
+OPENF1_TIMEOUT_SECONDS = 30
+
 
 # ---------------------------------------------------------------------------
 # Helpers
 # ---------------------------------------------------------------------------
 
+class FastF1RateLimitHit(Exception):
+    """Raised when FastF1 API rate limit is hit."""
+    pass
+
 
 def ensure_directories():
-    """Create cache and output directories if they don't exist."""
     CACHE_DIR.mkdir(parents=True, exist_ok=True)
     OUTPUT_DIR.mkdir(parents=True, exist_ok=True)
 
 
+def is_rate_limit_error(exc):
+    msg = str(exc).lower()
+    return (
+        "500 calls/h" in msg
+        or "ratelimit" in msg
+        or "rate limit" in msg
+        or "too many requests" in msg
+    )
+
+
+def get_json_from_url(url):
+    """
+    Load JSON data from URL with retries.
+
+    OpenF1 sometimes closes HTTPS connections early, causing:
+        SSL: UNEXPECTED_EOF_WHILE_READING
+
+    This function retries before giving up.
+    """
+    last_error = None
+
+    headers = {
+        "User-Agent": "f1-fantasy-data-fetcher/1.0",
+        "Accept": "application/json",
+        "Connection": "close",
+    }
+
+    ssl_context = ssl.create_default_context()
+
+    for attempt in range(1, OPENF1_RETRY_COUNT + 1):
+        try:
+            request = urllib.request.Request(
+                url,
+                headers=headers,
+                method="GET",
+            )
+
+            with urllib.request.urlopen(
+                request,
+                timeout=OPENF1_TIMEOUT_SECONDS,
+                context=ssl_context,
+            ) as response:
+                raw = response.read().decode("utf-8")
+                return json.loads(raw)
+
+        except (
+            ssl.SSLError,
+            urllib.error.URLError,
+            TimeoutError,
+            json.JSONDecodeError,
+        ) as exc:
+            last_error = exc
+
+            if attempt < OPENF1_RETRY_COUNT:
+                wait_seconds = OPENF1_RETRY_DELAY_SECONDS * attempt
+                print(
+                    f"  ⚠  OpenF1 request failed "
+                    f"({attempt}/{OPENF1_RETRY_COUNT}): {exc}"
+                )
+                print(f"     Retrying in {wait_seconds} seconds...")
+                time.sleep(wait_seconds)
+            else:
+                print(
+                    f"  ⚠  OpenF1 request failed after "
+                    f"{OPENF1_RETRY_COUNT} attempts: {exc}"
+                )
+
+    raise last_error
+
+
 def timedelta_to_formatted_string(td):
-    """
-    Convert a pandas Timedelta to a human-readable lap-time string
-    like '1:30.031'. Returns None for NaT / NaN / None.
-    """
     if td is None or pd.isna(td):
         return None
+
     total_seconds = td.total_seconds()
+
     if math.isnan(total_seconds) or total_seconds <= 0:
         return None
+
     minutes = int(total_seconds // 60)
     seconds = total_seconds - minutes * 60
+
     return f"{minutes}:{seconds:06.3f}"
 
 
 def safe_value(val):
-    """Return None for NaN / NaT / pd.NA, otherwise the value itself."""
     if val is None:
         return None
+
     if isinstance(val, float) and math.isnan(val):
         return None
+
     try:
         if pd.isna(val):
             return None
     except (TypeError, ValueError):
         pass
+
     return val
 
 
 def safe_int(val):
-    """Convert to int if possible, else None."""
     v = safe_value(val)
+
     if v is None:
         return None
+
     try:
         return int(v)
     except (TypeError, ValueError):
@@ -86,10 +180,11 @@ def safe_int(val):
 
 
 def safe_float(val):
-    """Convert to float if possible, else None."""
     v = safe_value(val)
+
     if v is None:
         return None
+
     try:
         return float(v)
     except (TypeError, ValueError):
@@ -97,58 +192,231 @@ def safe_float(val):
 
 
 def clean_for_json(obj):
-    """
-    Recursively walk a data structure and replace any remaining
-    float('nan') / NaT values with None so json.dumps doesn't choke.
-    """
     if isinstance(obj, dict):
         return {k: clean_for_json(v) for k, v in obj.items()}
+
     if isinstance(obj, list):
         return [clean_for_json(v) for v in obj]
+
     if isinstance(obj, float) and math.isnan(obj):
         return None
+
     try:
         if pd.isna(obj):
             return None
     except (TypeError, ValueError):
         pass
+
     return obj
 
 
-# ---------------------------------------------------------------------------
-# Session loaders
-# ---------------------------------------------------------------------------
+def event_has_sprint(event):
+    for i in range(1, 6):
+        value = event.get(f"Session{i}")
 
+        if not isinstance(value, str):
+            continue
+
+        if "sprint" in value.strip().lower():
+            return True
+
+    return False
+
+
+def load_existing_season(year):
+    output_path = OUTPUT_DIR / f"{year}.json"
+
+    if not output_path.exists():
+        return {}
+
+    try:
+        with open(output_path, "r", encoding="utf-8") as f:
+            data = json.load(f)
+
+        rounds = data.get("rounds", [])
+        result = {}
+
+        for round_entry in rounds:
+            round_number = safe_int(round_entry.get("round"))
+
+            if round_number is not None:
+                result[round_number] = round_entry
+
+        print(f"  Loaded existing season file: {output_path}")
+
+        return result
+
+    except Exception as exc:
+        print(f"  ⚠  Could not read existing season file {output_path}: {exc}")
+        return {}
+
+
+def save_season_progress(year, rounds_map):
+    ordered_rounds = [
+        rounds_map[round_number]
+        for round_number in sorted(rounds_map.keys())
+    ]
+
+    season_data = {
+        "season": year,
+        "rounds": ordered_rounds,
+    }
+
+    season_data = clean_for_json(season_data)
+
+    output_path = OUTPUT_DIR / f"{year}.json"
+    temp_path = OUTPUT_DIR / f"{year}.json.tmp"
+
+    with open(temp_path, "w", encoding="utf-8") as f:
+        json.dump(season_data, f, indent=2, ensure_ascii=False, default=str)
+
+    os.replace(temp_path, output_path)
+
+    return output_path
+
+
+def has_result_rows(session_data):
+    if not isinstance(session_data, dict):
+        return False
+
+    results = session_data.get("results")
+
+    if not isinstance(results, list):
+        return False
+
+    return len(results) > 0
+
+
+def qualifying_complete(round_entry):
+    if not round_entry:
+        return False
+
+    return has_result_rows(round_entry.get("qualifying"))
+
+
+def race_complete(round_entry):
+    if not round_entry:
+        return False
+
+    return has_result_rows(round_entry.get("race"))
+
+
+def sprint_complete(round_entry, event):
+    if not event_has_sprint(event):
+        return True
+
+    if not round_entry:
+        return False
+
+    return has_result_rows(round_entry.get("sprint"))
+
+
+# ---------------------------------------------------------------------------
+# FastF1 session loader
+# ---------------------------------------------------------------------------
 
 def load_session_safe(year, round_number, session_name):
-    """
-    Attempt to load a fastf1 session. Returns the loaded session on
-    success, or None if the session doesn't exist or fails to load.
-    """
     try:
         session = fastf1.get_session(year, round_number, session_name)
-        session.load(telemetry=False, weather=False, messages=False)
+
+        session.load(
+            laps=True,
+            telemetry=False,
+            weather=False,
+            messages=False,
+        )
+
+        time.sleep(SESSION_DELAY_SECONDS)
+
         return session
+
     except Exception as exc:
+        if is_rate_limit_error(exc):
+            raise FastF1RateLimitHit(
+                f"FastF1 rate limit hit while loading "
+                f"{year} round {round_number} {session_name}: {exc}"
+            )
+
+        msg = str(exc)
+
+        if "does not exist for this event" in msg:
+            print(f"  - {session_name} does not exist for round {round_number}, skipped")
+            return None
+
         print(f"  ⚠  Could not load {session_name} for round {round_number}: {exc}")
         return None
 
 
 # ---------------------------------------------------------------------------
-# Data extractors
+# OpenF1 helpers
 # ---------------------------------------------------------------------------
 
+def get_openf1_race_session_key(year, country_name):
+    if not year or not country_name:
+        return None
+
+    session_params = urlencode({
+        "year": year,
+        "country_name": country_name,
+        "session_name": "Race",
+    })
+
+    sessions_url = f"{OPENF1_BASE_URL}/sessions?{session_params}"
+    sessions = get_json_from_url(sessions_url)
+
+    if not sessions:
+        print(f"  ⚠  OpenF1: No Race session found for {year} {country_name}")
+        return None
+
+    session_key = sessions[0].get("session_key")
+
+    if session_key is None:
+        print(f"  ⚠  OpenF1: Missing session_key for {year} {country_name}")
+        return None
+
+    return session_key
+
+
+def get_openf1_driver_maps(session_key):
+    drivers_url = f"{OPENF1_BASE_URL}/drivers?session_key={session_key}"
+    drivers = get_json_from_url(drivers_url)
+
+    number_to_team = {}
+    number_to_abbreviation = {}
+
+    for driver in drivers:
+        driver_number = driver.get("driver_number")
+
+        if driver_number is None:
+            continue
+
+        team_name = driver.get("team_name")
+        abbreviation = driver.get("name_acronym")
+
+        if team_name:
+            number_to_team[driver_number] = team_name
+
+        if abbreviation:
+            number_to_abbreviation[driver_number] = abbreviation
+
+    return number_to_team, number_to_abbreviation
+
+
+# ---------------------------------------------------------------------------
+# Extractors: qualifying
+# ---------------------------------------------------------------------------
 
 def extract_qualifying(session):
-    """Extract qualifying results from a loaded Qualifying session."""
     if session is None:
         return {"results": []}
 
     results = session.results
+
     if results is None or results.empty:
         return {"results": []}
 
     quali_results = []
+
     for _, row in results.iterrows():
         quali_results.append({
             "driver": safe_value(row.get("Abbreviation")),
@@ -164,41 +432,157 @@ def extract_qualifying(session):
     return {"results": quali_results}
 
 
-def extract_fastest_lap_driver(session):
+# ---------------------------------------------------------------------------
+# Extractors: fastest lap
+# ---------------------------------------------------------------------------
+
+def extract_fastest_lap_driver_from_fastf1(session):
     """
-    Determine the driver with the fastest lap in the given session
-    by inspecting session.laps. Returns the driver abbreviation or None.
+    Return driver abbreviation from FastF1, for example:
+        "NOR"
+        "VER"
+        "LEC"
     """
     if session is None:
         return None
+
     try:
         laps = session.laps
+
         if laps is None or laps.empty:
             return None
-        # Filter out laps with no time
+
         valid_laps = laps.dropna(subset=["LapTime"])
+
         if valid_laps.empty:
             return None
+
         fastest = valid_laps.loc[valid_laps["LapTime"].idxmin()]
+
         return safe_value(fastest.get("Driver"))
+
     except Exception as exc:
-        print(f"  ⚠  Could not determine fastest lap: {exc}")
+        print(f"  ⚠  Could not determine fastest lap from FastF1: {exc}")
         return None
 
 
-def extract_pit_stops(session):
+def extract_fastest_lap_driver_from_openf1(year, country_name):
     """
-    For each constructor in the race, find the minimum pit-stop duration
-    (in seconds). Returns a list of dicts sorted by fastest stop.
+    Fallback fastest-lap extractor using OpenF1.
+
+    Returns only the driver abbreviation string, matching frontend expectation:
+        fastestLapDriver: "NOR"
+
+    If no data is found, returns None.
+    """
+    if not year or not country_name:
+        return None
+
+    try:
+        session_key = get_openf1_race_session_key(year, country_name)
+
+        if session_key is None:
+            return None
+
+        _, number_to_abbreviation = get_openf1_driver_maps(session_key)
+
+        laps_url = f"{OPENF1_BASE_URL}/laps?session_key={session_key}"
+        laps = get_json_from_url(laps_url)
+
+        if not laps:
+            print(f"  ⚠  OpenF1: No lap rows found for {year} {country_name}")
+            return None
+
+        fastest_driver_number = None
+        fastest_lap_duration = None
+
+        for row in laps:
+            driver_number = row.get("driver_number")
+            lap_duration = safe_float(row.get("lap_duration"))
+
+            if driver_number is None:
+                continue
+
+            if lap_duration is None or lap_duration <= 0:
+                continue
+
+            if fastest_lap_duration is None or lap_duration < fastest_lap_duration:
+                fastest_lap_duration = lap_duration
+                fastest_driver_number = driver_number
+
+        if fastest_driver_number is None:
+            return None
+
+        abbreviation = number_to_abbreviation.get(fastest_driver_number)
+
+        if not abbreviation:
+            print(
+                f"  ⚠  OpenF1: Fastest lap driver number found "
+                f"but abbreviation missing: {fastest_driver_number}"
+            )
+            return None
+
+        return abbreviation
+
+    except Exception as exc:
+        print(f"  ⚠  OpenF1 fastest lap fallback failed: {exc}")
+        return None
+
+
+def extract_fastest_lap_driver_with_fallback(session, year, country_name):
+    """
+    Fastest lap strategy:
+    1. Try FastF1.
+    2. If FastF1 has no fastest lap, fallback to OpenF1.
+
+    Output remains:
+        fastestLapDriver: string | null
+    """
+    fastest_lap_driver = extract_fastest_lap_driver_from_fastf1(session)
+
+    if fastest_lap_driver:
+        print(f"  ✓ Fastest lap extracted from FastF1: {fastest_lap_driver}")
+        return fastest_lap_driver
+
+    print("  ⚠  FastF1 returned no fastest lap. Trying OpenF1 fastest lap fallback...")
+
+    fastest_lap_driver = extract_fastest_lap_driver_from_openf1(
+        year=year,
+        country_name=country_name,
+    )
+
+    if fastest_lap_driver:
+        print(f"  ✓ Fastest lap extracted from OpenF1: {fastest_lap_driver}")
+    else:
+        print("  ⚠  No fastest lap found from OpenF1 either.")
+
+    return fastest_lap_driver
+
+
+# ---------------------------------------------------------------------------
+# Extractors: pit stops
+# ---------------------------------------------------------------------------
+
+def extract_pit_stops_from_fastf1(session):
+    """
+    Return frontend-required structure only:
+
+        [
+          { "constructor": "McLaren", "fastestStop": 18.03 },
+          { "constructor": "Ferrari", "fastestStop": 18.21 }
+        ]
     """
     if session is None:
         return []
 
     try:
         pit_stops = getattr(session, "pit_stops", None)
+
         if pit_stops is not None and not pit_stops.empty:
             working = pit_stops.copy()
+
             duration_column = None
+
             for candidate in ("PitLaneTime", "Duration", "StopTime"):
                 if candidate in working.columns:
                     duration_column = candidate
@@ -206,36 +590,47 @@ def extract_pit_stops(session):
 
             if duration_column is not None:
                 working[duration_column] = pd.to_timedelta(
-                    working[duration_column], errors="coerce"
+                    working[duration_column],
+                    errors="coerce",
                 )
                 working["PitDuration"] = working[duration_column].dt.total_seconds()
+
             elif {"PitInTime", "PitOutTime"}.issubset(working.columns):
                 working["PitDuration"] = (
                     working["PitOutTime"] - working["PitInTime"]
                 ).dt.total_seconds()
+
             else:
                 working["PitDuration"] = pd.NA
+
         else:
             laps = session.laps
+
             if laps is None or laps.empty:
                 return []
+
             working = laps.dropna(subset=["PitInTime", "PitOutTime"]).copy()
+
             if working.empty:
                 return []
+
             working["PitDuration"] = (
                 working["PitOutTime"] - working["PitInTime"]
             ).dt.total_seconds()
 
         driver_team_map = {}
+
         if session.results is not None and not session.results.empty:
             for _, row in session.results.iterrows():
                 abbr = safe_value(row.get("Abbreviation"))
                 team = safe_value(row.get("TeamName"))
+
                 if abbr and team:
                     driver_team_map[abbr] = team
 
         driver_column = "Driver" if "Driver" in working.columns else "Abbreviation"
         team_column = "Team" if "Team" in working.columns else "TeamName"
+
         if team_column in working.columns:
             working["Constructor"] = working[team_column]
         else:
@@ -249,40 +644,178 @@ def extract_pit_stops(session):
         grouped = working.groupby("Constructor")["PitDuration"].min().reset_index()
         grouped = grouped.sort_values("PitDuration")
 
-        pit_stops = []
+        pit_stop_results = []
+
         for _, row in grouped.iterrows():
             duration = safe_float(row["PitDuration"])
+
             if duration is not None and duration > 0:
-                pit_stops.append({
-                    "constructor": row["Constructor"],
+                pit_stop_results.append({
+                    "constructor": safe_value(row["Constructor"]),
                     "fastestStop": round(duration, 2),
                 })
 
-        return pit_stops
+        return pit_stop_results
 
     except Exception as exc:
-        print(f"  ⚠  Could not extract pit stops: {exc}")
+        print(f"  ⚠  Could not extract pit stops from FastF1: {exc}")
         return []
 
 
-def extract_race(session):
-    """Extract race results, fastest lap, and pit stops."""
+def extract_pit_stops_from_openf1(year, country_name):
+    """
+    OpenF1 fallback for pit stops.
+
+    Return frontend-required structure only:
+
+        [
+          { "constructor": "McLaren", "fastestStop": 18.03 },
+          { "constructor": "Ferrari", "fastestStop": 18.21 }
+        ]
+    """
+    if not year or not country_name:
+        return []
+
+    try:
+        session_key = get_openf1_race_session_key(year, country_name)
+
+        if session_key is None:
+            return []
+
+        number_to_team, _ = get_openf1_driver_maps(session_key)
+
+        pit_url = f"{OPENF1_BASE_URL}/pit?session_key={session_key}"
+        pit_rows = get_json_from_url(pit_url)
+
+        if not pit_rows:
+            print(f"  ⚠  OpenF1: No pit rows found for {year} {country_name}")
+            return []
+
+        constructor_fastest = {}
+
+        for row in pit_rows:
+            driver_number = row.get("driver_number")
+            pit_duration = safe_float(row.get("pit_duration"))
+
+            if driver_number is None:
+                continue
+
+            if pit_duration is None or pit_duration <= 0:
+                continue
+
+            constructor = number_to_team.get(driver_number)
+
+            if not constructor:
+                continue
+
+            current_fastest = constructor_fastest.get(constructor)
+
+            if current_fastest is None or pit_duration < current_fastest:
+                constructor_fastest[constructor] = pit_duration
+
+        pit_stop_results = []
+
+        for constructor, fastest_stop in constructor_fastest.items():
+            fastest_stop = safe_float(fastest_stop)
+
+            if fastest_stop is None or fastest_stop <= 0:
+                continue
+
+            pit_stop_results.append({
+                "constructor": constructor,
+                "fastestStop": round(fastest_stop, 2),
+            })
+
+        pit_stop_results = sorted(
+            pit_stop_results,
+            key=lambda item: item["fastestStop"],
+        )
+
+        return pit_stop_results
+
+    except Exception as exc:
+        print(f"  ⚠  OpenF1 pit stop fallback failed: {exc}")
+        return []
+
+
+def extract_pit_stops_with_fallback(session, year, country_name):
+    """
+    Pit stop strategy:
+    1. Try FastF1.
+    2. If FastF1 has no pit stops, fallback to OpenF1.
+
+    Output remains:
+        race.pitStops: PitStopData[]
+    """
+    pit_stops = extract_pit_stops_from_fastf1(session)
+
+    if pit_stops:
+        print(f"  ✓ Pit stops extracted from FastF1: {len(pit_stops)}")
+        return pit_stops
+
+    print("  ⚠  FastF1 returned no pit stops. Trying OpenF1 pit stop fallback...")
+
+    pit_stops = extract_pit_stops_from_openf1(
+        year=year,
+        country_name=country_name,
+    )
+
+    if pit_stops:
+        print(f"  ✓ Pit stops extracted from OpenF1: {len(pit_stops)}")
+    else:
+        print("  ⚠  No pit stops found from OpenF1 either.")
+
+    return pit_stops
+
+
+# ---------------------------------------------------------------------------
+# Extractors: race and sprint
+# ---------------------------------------------------------------------------
+
+def extract_race(session, year=None, country_name=None):
+    """
+    Extract race results, fastest lap, and pit stops.
+
+    race output shape:
+
+        {
+          "results": [],
+          "fastestLapDriver": "NOR",
+          "pitStops": [
+            { "constructor": "McLaren", "fastestStop": 18.03 }
+          ]
+        }
+    """
+    fastest_lap_driver = extract_fastest_lap_driver_with_fallback(
+        session=session,
+        year=year,
+        country_name=country_name,
+    )
+
+    pit_stops = extract_pit_stops_with_fallback(
+        session=session,
+        year=year,
+        country_name=country_name,
+    )
+
     if session is None:
         return {
             "results": [],
-            "fastestLapDriver": None,
-            "pitStops": [],
+            "fastestLapDriver": fastest_lap_driver,
+            "pitStops": pit_stops,
         }
 
     results = session.results
+
     if results is None or results.empty:
         return {
             "results": [],
-            "fastestLapDriver": None,
-            "pitStops": [],
+            "fastestLapDriver": fastest_lap_driver,
+            "pitStops": pit_stops,
         }
 
     race_results = []
+
     for _, row in results.iterrows():
         race_results.append({
             "driver": safe_value(row.get("Abbreviation")),
@@ -296,21 +829,22 @@ def extract_race(session):
 
     return {
         "results": race_results,
-        "fastestLapDriver": extract_fastest_lap_driver(session),
-        "pitStops": extract_pit_stops(session),
+        "fastestLapDriver": fastest_lap_driver,
+        "pitStops": pit_stops,
     }
 
 
 def extract_sprint(session):
-    """Extract sprint race results and fastest lap."""
     if session is None:
         return None
 
     results = session.results
+
     if results is None or results.empty:
         return None
 
     sprint_results = []
+
     for _, row in results.iterrows():
         sprint_results.append({
             "driver": safe_value(row.get("Abbreviation")),
@@ -322,9 +856,11 @@ def extract_sprint(session):
             "points": safe_float(row.get("Points")),
         })
 
+    fastest_lap_driver = extract_fastest_lap_driver_from_fastf1(session)
+
     return {
         "results": sprint_results,
-        "fastestLapDriver": extract_fastest_lap_driver(session),
+        "fastestLapDriver": fastest_lap_driver,
     }
 
 
@@ -332,32 +868,40 @@ def extract_sprint(session):
 # Main per-season logic
 # ---------------------------------------------------------------------------
 
-
-def fetch_season(year):
-    """
-    Fetch all round data for a given season year and write the JSON output
-    to src/data/seasons/{year}.json.
-    """
-    print(f"\n{'='*60}")
+def fetch_season(year, start_round=None, end_round=None, only_missing=True):
+    print(f"\n{'=' * 60}")
     print(f"  Fetching season {year}")
-    print(f"{'='*60}")
+    print(f"{'=' * 60}")
 
-    # Get the full event schedule for this season
-    schedule = fastf1.get_event_schedule(year, include_testing=False)
+    try:
+        schedule = fastf1.get_event_schedule(year, include_testing=False)
 
-    rounds_data = []
+    except Exception as exc:
+        if is_rate_limit_error(exc):
+            raise FastF1RateLimitHit(
+                f"FastF1 rate limit hit while loading event schedule for {year}: {exc}"
+            )
+
+        raise
+
+    rounds_map = load_existing_season(year)
 
     for _, event in schedule.iterrows():
         round_number = int(event["RoundNumber"])
+
         if round_number == 0:
-            # Skip pre-season testing rows
+            continue
+
+        if start_round is not None and round_number < start_round:
+            continue
+
+        if end_round is not None and round_number > end_round:
             continue
 
         race_name = event.get("EventName", f"Round {round_number}")
         country = safe_value(event.get("Country"))
         event_date = event.get("EventDate")
 
-        # Format date as YYYY-MM-DD string
         if pd.notna(event_date):
             date_str = pd.Timestamp(event_date).strftime("%Y-%m-%d")
         else:
@@ -365,79 +909,133 @@ def fetch_season(year):
 
         print(f"\n  Round {round_number}: {race_name} ({country})")
 
-        # --- Qualifying ---
-        print(f"    Loading Qualifying...")
-        quali_session = load_session_safe(year, round_number, "Qualifying")
-        qualifying_data = extract_qualifying(quali_session)
-
-        # --- Sprint (may not exist) ---
-        print(f"    Checking for Sprint...")
-        sprint_session = load_session_safe(year, round_number, "Sprint")
-        sprint_data = extract_sprint(sprint_session)
-        is_sprint = sprint_data is not None
-
-        # --- Race ---
-        print(f"    Loading Race...")
-        race_session = load_session_safe(year, round_number, "Race")
-        race_data = extract_race(race_session)
+        existing_round = rounds_map.get(round_number, {})
 
         round_entry = {
             "round": round_number,
             "raceName": race_name,
             "country": country,
             "date": date_str,
-            "isSprint": is_sprint,
-            "qualifying": qualifying_data,
-            "sprint": sprint_data,
-            "race": race_data,
+            "isSprint": bool(existing_round.get("isSprint", False)),
+            "qualifying": existing_round.get("qualifying", {"results": []}),
+            "sprint": existing_round.get("sprint", None),
+            "race": existing_round.get("race", {
+                "results": [],
+                "fastestLapDriver": None,
+                "pitStops": [],
+            }),
         }
 
-        rounds_data.append(round_entry)
-        print(f"    ✓ Round {round_number} complete")
+        # --- Qualifying ---
+        if only_missing and qualifying_complete(round_entry):
+            print("    ✓ Qualifying already exists, skipped")
+        else:
+            print("    Loading Qualifying...")
+            quali_session = load_session_safe(year, round_number, "Qualifying")
+            round_entry["qualifying"] = extract_qualifying(quali_session)
 
-    # Assemble the final season object
-    season_data = {
-        "season": year,
-        "rounds": rounds_data,
-    }
+        # --- Sprint ---
+        if not event_has_sprint(event):
+            print("    - No Sprint for this event, skipped")
+            round_entry["sprint"] = None
+            round_entry["isSprint"] = False
 
-    # Clean any remaining NaN/NaT values before serialization
-    season_data = clean_for_json(season_data)
+        elif only_missing and sprint_complete(round_entry, event):
+            print("    ✓ Sprint already exists, skipped")
+            round_entry["isSprint"] = True
 
-    # Write to JSON
-    output_path = OUTPUT_DIR / f"{year}.json"
-    with open(output_path, "w", encoding="utf-8") as f:
-        json.dump(season_data, f, indent=2, ensure_ascii=False, default=str)
+        else:
+            print("    Loading Sprint...")
+            sprint_session = load_session_safe(year, round_number, "Sprint")
+            sprint_data = extract_sprint(sprint_session)
+            round_entry["sprint"] = sprint_data
+            round_entry["isSprint"] = sprint_data is not None
+
+        # --- Race ---
+        if only_missing and race_complete(round_entry):
+            print("    ✓ Race already exists, skipped")
+        else:
+            print("    Loading Race...")
+            race_session = load_session_safe(year, round_number, "Race")
+            round_entry["race"] = extract_race(
+                session=race_session,
+                year=year,
+                country_name=country,
+            )
+
+        rounds_map[round_number] = round_entry
+
+        output_path = save_season_progress(year, rounds_map)
+
+        print(f"    ✓ Round {round_number} saved")
+        print(f"    Saved to: {output_path}")
+
+        time.sleep(ROUND_DELAY_SECONDS)
+
+    output_path = save_season_progress(year, rounds_map)
 
     print(f"\n  ✓ Season {year} saved to {output_path}")
+
     return output_path
 
 
 # ---------------------------------------------------------------------------
-# CLI entry point
+# CLI
 # ---------------------------------------------------------------------------
-
 
 def parse_args():
     parser = argparse.ArgumentParser(
         description="Fetch F1 historical data and export as JSON for F1 Fantasy."
     )
+
     parser.add_argument(
         "--season",
         type=int,
-        choices=list(SEASON_RANGE),
-        help="Season year to fetch (2018–2025).",
+        help="Season year to fetch, for example 2024 or 2025.",
     )
+
     parser.add_argument(
         "--all",
         action="store_true",
         dest="fetch_all",
-        help="Fetch data for all seasons (2018–2025).",
+        help="Fetch data for all seasons defined in SEASON_RANGE.",
     )
+
+    parser.add_argument(
+        "--start-round",
+        type=int,
+        help="Start fetching from this round number.",
+    )
+
+    parser.add_argument(
+        "--end-round",
+        type=int,
+        help="Stop fetching at this round number.",
+    )
+
+    parser.add_argument(
+        "--force",
+        action="store_true",
+        help="Force re-fetch data even if existing JSON already contains it.",
+    )
+
     args = parser.parse_args()
 
     if not args.fetch_all and args.season is None:
         parser.error("Please specify --season YEAR or --all.")
+
+    if args.season is not None and args.season not in SEASON_RANGE:
+        print(
+            f"  ⚠  Warning: season {args.season} is outside the default range "
+            f"{SEASON_RANGE.start}-{SEASON_RANGE.stop - 1}."
+        )
+
+    if (
+        args.start_round is not None
+        and args.end_round is not None
+        and args.start_round > args.end_round
+    ):
+        parser.error("--start-round cannot be greater than --end-round.")
 
     return args
 
@@ -445,9 +1043,9 @@ def parse_args():
 def main():
     args = parse_args()
 
-    # Enable fastf1 cache
     ensure_directories()
     fastf1.Cache.enable_cache(str(CACHE_DIR))
+
     print(f"Cache directory: {CACHE_DIR}")
     print(f"Output directory: {OUTPUT_DIR}")
 
@@ -455,14 +1053,28 @@ def main():
 
     for year in seasons:
         try:
-            fetch_season(year)
+            fetch_season(
+                year,
+                start_round=args.start_round,
+                end_round=args.end_round,
+                only_missing=not args.force,
+            )
+
+        except FastF1RateLimitHit as exc:
+            print(f"\n  ⚠ FastF1 request limit reached:")
+            print(f"  {exc}")
+            print("\n  操作已停止。")
+            print("  请等待 60-90 分钟后，重新运行同一条命令。")
+            print("  已经成功保存的数据不会丢失。")
+            break
+
         except Exception as exc:
             print(f"\n  ✗ Failed to fetch season {year}: {exc}", file=sys.stderr)
             continue
 
-    print(f"\n{'='*60}")
+    print(f"\n{'=' * 60}")
     print("  All done!")
-    print(f"{'='*60}")
+    print(f"{'=' * 60}")
 
 
 if __name__ == "__main__":

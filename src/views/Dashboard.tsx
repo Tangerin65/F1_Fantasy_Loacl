@@ -5,7 +5,6 @@ import type { ConstructorRoundScore, DriverRoundScore } from '../types'
 import {
   copyText,
   formatDriverNameTwoLines,
-  getCountryFlag,
   getOvertakeLeaders,
 } from '../lib/presentation'
 import { useGame } from '../context/useGame'
@@ -79,7 +78,7 @@ export function Dashboard() {
           </p>
           <h2>
             {currentRoundData
-              ? `${getCountryFlag(currentRoundData.country)} ROUND ${currentRoundData.round}: ${currentRoundData.raceName}`
+              ? `ROUND ${currentRoundData.round}: ${currentRoundData.raceName}`
               : copyText(
                   `${selectedSeasonEntry.season} archive replay complete`,
                   `${selectedSeasonEntry.season} 历史赛季重放完成`,
@@ -132,6 +131,7 @@ export function Dashboard() {
                   subtitle={copyText('Constructor', '车队')}
                   price={constructor.price}
                   points={constructor.fantasyPoints}
+                  lastScore={constructor.recentScores.at(-1)}
                   recentScores={constructor.recentScores}
                   accent="gold"
                   highlight={copyText(
@@ -163,6 +163,7 @@ export function Dashboard() {
                   subtitle={driver.team}
                   price={driver.price}
                   points={driver.fantasyPoints}
+                  lastScore={driver.recentScores.at(-1)}
                   recentScores={driver.recentScores}
                   accent={isDrs ? 'cyan' : 'red'}
                   tag={isDrs ? '2X DRS' : undefined}
@@ -202,7 +203,7 @@ export function Dashboard() {
           {lastRoundData ? (
             <div className="round-chip">
               <span>
-                {getCountryFlag(lastRoundData.country)} {lastRoundData.country}
+                {lastRoundData.country}
               </span>
               <strong>{lastRoundData.raceName}</strong>
             </div>
@@ -281,7 +282,7 @@ export function Dashboard() {
                   {copyText('Weekend deep dive', 'Weekend 深度信息')}
                 </p>
                 <h3>
-                  {getCountryFlag(lastRoundData.country)} {lastRoundData.raceName}
+                  {lastRoundData.raceName}
                 </h3>
               </div>
               <button
@@ -294,7 +295,7 @@ export function Dashboard() {
             </div>
 
             <div className="detail-grid">
-              <section className="detail-card">
+              <section className="detail-card detail-card--hidden">
                 <h4>{copyText('Qualifying results', '排位赛全结果')}</h4>
                 <div className="detail-table">
                   {lastRoundData.qualifying.results.map((result) => (
@@ -325,7 +326,7 @@ export function Dashboard() {
               <section className="detail-card">
                 <h4>{copyText('Top pit stops', '最快进站前三')}</h4>
                 <div className="detail-table">
-                  {lastRoundData.race.pitStops.slice(0, 3).map((stop, index) => (
+                  {lastRoundData.race.pitStops.map((stop, index) => (
                     <div key={`${stop.constructor}-${index}`} className="detail-table__row">
                       <span>P{index + 1}</span>
                       <strong>{stop.constructor}</strong>
@@ -402,7 +403,6 @@ export function Dashboard() {
                   <span>{copyText('Final', '最终得分')}</span>
                   <strong>
                     {driverDetail.totalFinal.toFixed(0)}
-                    {driverDetail.drsMultiplier > 1 ? ` x${driverDetail.drsMultiplier}` : ''}
                   </strong>
                 </article>
               </div>

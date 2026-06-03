@@ -67,7 +67,7 @@ export interface SeasonData {
 
 // --- Game State Types ---
 
-export type ChipType = 'extraDrs' | 'autopilot' | 'noNegative' | 'limitless' | 'wildcard' | 'finalFix';
+export type ChipType = 'extraDrs' | 'autopilot' | 'noNegative' | 'limitless' | 'wildcard';
 
 export const CHIP_NAMES: Record<ChipType, string> = {
   extraDrs: 'Extra DRS (3x)',
@@ -75,7 +75,6 @@ export const CHIP_NAMES: Record<ChipType, string> = {
   noNegative: 'No Negative',
   limitless: 'Limitless',
   wildcard: 'Wildcard',
-  finalFix: 'Final Fix',
 };
 
 export interface ChipStatus {
@@ -84,7 +83,6 @@ export interface ChipStatus {
   noNegative: boolean;
   limitless: boolean;
   wildcard: boolean;
-  finalFix: boolean;
 }
 
 export const ALL_CHIPS_AVAILABLE: ChipStatus = {
@@ -93,7 +91,6 @@ export const ALL_CHIPS_AVAILABLE: ChipStatus = {
   noNegative: true,
   limitless: true,
   wildcard: true,
-  finalFix: true,
 };
 
 // --- Market Assets ---
