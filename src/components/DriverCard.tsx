@@ -59,7 +59,7 @@ export function DriverCard({
           </div>
         ) : null}
       </div>
-      <Sparkline values={recentScores} accent={accent} />
+      {recentScores.length >= 2 ? <Sparkline values={recentScores} accent={accent} /> : null}
       {highlight ? <p className="asset-card__highlight">{highlight}</p> : null}
     </>
   )

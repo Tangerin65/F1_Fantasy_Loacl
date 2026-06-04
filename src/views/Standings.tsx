@@ -1,6 +1,6 @@
 import { useMemo, useState } from 'react'
 import { TrendArrow } from '../components/TrendArrow'
-import { copyText, getDriverNumber } from '../lib/presentation'
+import { copyText, getDriverNumber, normalizeTeamName } from '../lib/presentation'
 import { useGame } from '../context/useGame'
 
 const CHART_WIDTH = 820
@@ -70,9 +70,16 @@ export function Standings() {
         return running
       })
     })
-    const maxValue = Math.max(...totals.flat(), 1)
+    const allValues = totals.flat()
+    const maxValue = Math.max(...allValues, 1)
+    const minValue = Math.min(...allValues, 0)
+    const valueRange = maxValue - minValue || 1
+    const zeroY =
+      CHART_HEIGHT -
+      CHART_PADDING -
+      ((0 - minValue) / valueRange) * (CHART_HEIGHT - CHART_PADDING * 2)
 
-    return allManagers.map((manager, index) => {
+    const series = allManagers.map((manager, index) => {
       let running = 0
       const points: Point[] = manager.weeklyPoints.map((score, roundIndex) => {
         running += score
@@ -82,7 +89,7 @@ export function Standings() {
         const y =
           CHART_HEIGHT -
           CHART_PADDING -
-          (running / maxValue) * (CHART_HEIGHT - CHART_PADDING * 2)
+          ((running - minValue) / valueRange) * (CHART_HEIGHT - CHART_PADDING * 2)
         return { x, y, round: roundIndex + 1, total: running, weekly: score }
       })
 
@@ -93,6 +100,8 @@ export function Standings() {
         points,
       }
     })
+
+    return { series, zeroY }
   }, [standings])
 
   const selectedManager = selectedManagerId
@@ -133,7 +142,7 @@ export function Standings() {
                   <small>{manager.isHuman ? copyText('Player', '玩家') : copyText('AI manager', 'AI 经理')}</small>
                 </button>
                 <TrendArrow delta={delta} />
-                <strong>{formatPoints(manager.totalPoints)}</strong>
+                <strong className="ranking-list__score">{formatPoints(manager.totalPoints)}</strong>
               </li>
             )
           })}
@@ -180,7 +189,16 @@ export function Standings() {
                 )
               })}
 
-              {chartSeries.map((series) => (
+              {/* Zero baseline */}
+              <line
+                x1={CHART_PADDING}
+                x2={CHART_WIDTH - CHART_PADDING}
+                y1={chartSeries.zeroY}
+                y2={chartSeries.zeroY}
+                className="trend-chart__zero"
+              />
+
+              {chartSeries.series.map((series) => (
                 <g key={series.manager.id}>
                   <path
                     d={series.path}
@@ -235,7 +253,7 @@ export function Standings() {
           </div>
 
           <div className="chart-legend">
-            {chartSeries.map((series) => (
+            {chartSeries.series.map((series) => (
               <div key={series.manager.id} className="chart-legend__item">
                 <span style={{ backgroundColor: series.stroke }} />
                 <strong>{series.manager.name}</strong>
@@ -319,14 +337,18 @@ export function Standings() {
                     <div className="detail-table">
                       {lastResult.driverScores.map((score) => (
                         <div key={score.driver} className="detail-table__row">
-                          <span>#{getDriverNumber(score.driver)}</span>
+                          <span>{getDriverNumber(score.driver)}</span>
                           <strong>{driverMap.get(score.driver)?.fullName ?? score.driver}</strong>
                           <small>
-                            Q {score.qualifyingPoints} · S {score.sprintPoints} · R {score.racePoints}
+                            <span className="score-breakdown-tags">
+                              <span>Q {score.qualifyingPoints}</span>
+                              <span>S {score.sprintPoints}</span>
+                              <span>R {score.racePoints}</span>
+                            </span>
                           </small>
                           <span>
                             {score.totalFinal.toFixed(0)}
-                            {score.drsMultiplier > 1 ? ` (${score.drsMultiplier}X DRS)` : ''}
+                            {score.drsMultiplier > 1 ? ` (${score.drsMultiplier}X)` : ''}
                           </span>
                         </div>
                       ))}
@@ -339,9 +361,14 @@ export function Standings() {
                       {lastResult.constructorScores.map((score) => (
                         <div key={score.constructor} className="detail-table__row">
                           <span>{copyText('Team', '车队')}</span>
-                          <strong>{score.constructor}</strong>
+                          <strong>{normalizeTeamName(score.constructor, state.selectedSeason ?? undefined)}</strong>
                           <small>
-                            Q {score.qualifyingPoints} · S {score.sprintPoints} · R {score.racePoints} · P {score.pitStopPoints}
+                            <span className="score-breakdown-tags">
+                              <span>Q {score.qualifyingPoints}</span>
+                              <span>S {score.sprintPoints}</span>
+                              <span>R {score.racePoints}</span>
+                              <span>P {score.pitStopPoints}</span>
+                            </span>
                           </small>
                           <span>{score.total.toFixed(0)}</span>
                         </div>

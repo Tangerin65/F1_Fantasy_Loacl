@@ -6,6 +6,7 @@ import {
   getDriverNumber,
   getRoundActiveDrivers,
   getTeamSurfaceStyle,
+  normalizeTeamName,
 } from '../lib/presentation'
 import { useGame } from '../context/useGame'
 import { CHIP_NAMES, MAX_CONSTRUCTORS, MAX_DRIVERS, type ChipType } from '../types'
@@ -189,16 +190,16 @@ export function Transfer() {
                   className={`roster-row roster-row--team${
                     marketMode === 'driver' && activeDriverSlot === index ? ' is-selected' : ''
                   }${!driver ? ' roster-row--empty' : ''}`}
-                  style={driver ? getTeamSurfaceStyle(driver.team) : undefined}
+                  style={driver ? getTeamSurfaceStyle(driver.team, state.selectedSeason ?? undefined) : undefined}
                 >
                   <div>
                     <small>{copyText(`Driver slot ${index + 1}`, `车手槽位 ${index + 1}`)}</small>
                     <strong>
-                      {driver ? `#${getDriverNumber(driverId)} ${driver.fullName}` : copyText('Empty slot', '空槽位')}
+                      {driver ? `${getDriverNumber(driverId)} ${driver.fullName}` : copyText('Empty slot', '空槽位')}
                     </strong>
                     <span>
                       {driver
-                        ? `${driver.team} · ${formatMoney(driver.price)}`
+                        ? `${normalizeTeamName(driver.team, state.selectedSeason ?? undefined)} · ${formatMoney(driver.price)}`
                         : copyText('Pick a driver from the market', '从市场中选择一名车手')}
                     </span>
                   </div>
@@ -226,11 +227,11 @@ export function Transfer() {
                       ? ' is-selected'
                       : ''
                   }${!constructor ? ' roster-row--empty' : ''}`}
-                  style={constructor ? getTeamSurfaceStyle(constructor.name) : undefined}
+                  style={constructor ? getTeamSurfaceStyle(constructor.name, state.selectedSeason ?? undefined) : undefined}
                 >
                   <div>
                     <small>{copyText(`Constructor slot ${index + 1}`, `车队槽位 ${index + 1}`)}</small>
-                    <strong>{constructor?.name ?? copyText('Empty slot', '空槽位')}</strong>
+                    <strong>{constructor ? normalizeTeamName(constructor.name, state.selectedSeason ?? undefined) : copyText('Empty slot', '空槽位')}</strong>
                     <span>
                       {constructor
                         ? formatMoney(constructor.price)
@@ -266,7 +267,7 @@ export function Transfer() {
                       }`}
                       onClick={() => setDrsBoostDriver(driverId)}
                     >
-                      #{getDriverNumber(driverId)} {driverId}
+                      {getDriverNumber(driverId)} {driverId}
                     </button>
                   ))
                 ) : (
@@ -325,30 +326,43 @@ export function Transfer() {
             </div>
           </div>
 
-          <div className="market-list market-list--scroll">
+          <div className="market-list market-list--fill">
             {marketMode === 'driver'
               ? marketDrivers.map((driver) => {
                   const isSelected = selectedDrivers.has(driver.abbreviation)
+                  const showPriceChange = state.lastProcessedRound >= 0
                   return (
                     <article
                       key={driver.abbreviation}
                       className={`market-row market-row--team${isSelected ? ' is-disabled' : ''}`}
-                      style={getTeamSurfaceStyle(driver.team)}
+                      style={getTeamSurfaceStyle(driver.team, state.selectedSeason ?? undefined)}
                     >
                       <div>
                         <strong>
-                          #{getDriverNumber(driver.abbreviation)} {driver.fullName}
+                          {getDriverNumber(driver.abbreviation)} {driver.fullName}
                         </strong>
                         <span>
-                          {driver.abbreviation} · {driver.team}
+                          {driver.abbreviation} · {normalizeTeamName(driver.team, state.selectedSeason ?? undefined)}
                         </span>
                       </div>
                       <div className="market-row__side">
-                        <strong>{formatMoney(driver.price)}</strong>
+                        <div className="market-row__price">
+                          <strong>{formatMoney(driver.price)}</strong>
+                          {showPriceChange && driver.lastPriceChange !== 0 ? (
+                            <small className={`price-change${driver.lastPriceChange > 0 ? ' price-change--up' : ' price-change--down'}`}>
+                              {driver.lastPriceChange > 0 ? '+' : ''}{driver.lastPriceChange.toFixed(1)}M
+                            </small>
+                          ) : null}
+                        </div>
                         <button
                           type="button"
                           className="action-button"
-                          onClick={() => replaceDriver(activeDriverSlot, driver.abbreviation)}
+                          onClick={() => {
+                            replaceDriver(activeDriverSlot, driver.abbreviation)
+                            if (activeDriverSlot < MAX_DRIVERS - 1) {
+                              setActiveDriverSlot(activeDriverSlot + 1)
+                            }
+                          }}
                           disabled={isSelected}
                         >
                           {isSelected ? copyText('Selected', '已选') : copyText('Swap in', '换入')}
@@ -359,22 +373,35 @@ export function Transfer() {
                 })
               : marketConstructors.map((constructor) => {
                   const isSelected = selectedConstructors.has(constructor.name)
+                  const showPriceChange = state.lastProcessedRound >= 0
                   return (
                     <article
                       key={constructor.name}
                       className={`market-row market-row--team${isSelected ? ' is-disabled' : ''}`}
-                      style={getTeamSurfaceStyle(constructor.name)}
+                      style={getTeamSurfaceStyle(constructor.name, state.selectedSeason ?? undefined)}
                     >
                       <div>
-                        <strong>{constructor.name}</strong>
+                        <strong>{normalizeTeamName(constructor.name, state.selectedSeason ?? undefined)}</strong>
                         <span>{copyText('Constructor', '车队')}</span>
                       </div>
                       <div className="market-row__side">
-                        <strong>{formatMoney(constructor.price)}</strong>
+                        <div className="market-row__price">
+                          <strong>{formatMoney(constructor.price)}</strong>
+                          {showPriceChange && constructor.lastPriceChange !== 0 ? (
+                            <small className={`price-change${constructor.lastPriceChange > 0 ? ' price-change--up' : ' price-change--down'}`}>
+                              {constructor.lastPriceChange > 0 ? '+' : ''}{constructor.lastPriceChange.toFixed(1)}M
+                            </small>
+                          ) : null}
+                        </div>
                         <button
                           type="button"
                           className="action-button"
-                          onClick={() => replaceConstructor(activeConstructorSlot, constructor.name)}
+                          onClick={() => {
+                            replaceConstructor(activeConstructorSlot, constructor.name)
+                            if (activeConstructorSlot < MAX_CONSTRUCTORS - 1) {
+                              setActiveConstructorSlot(activeConstructorSlot + 1)
+                            }
+                          }}
                           disabled={isSelected}
                         >
                           {isSelected ? copyText('Selected', '已选') : copyText('Swap in', '换入')}
@@ -449,7 +476,7 @@ export function Transfer() {
                       }`}
                       onClick={() => setTripleDriverSelection(driverId)}
                     >
-                      #{getDriverNumber(driverId)} {driverMap.get(driverId)?.fullName ?? driverId}
+                      {getDriverNumber(driverId)} {driverMap.get(driverId)?.fullName ?? driverId}
                     </button>
                   ))}
                 </div>
@@ -457,7 +484,7 @@ export function Transfer() {
 
               <section className="detail-card">
                 <h4>2X DRS</h4>
-                <div className="selector-stack">
+                <div className="selector-row">
                   {selectedDrsDrivers.map((driverId) => (
                     <button
                       key={`double-${driverId}`}
@@ -467,7 +494,7 @@ export function Transfer() {
                       }`}
                       onClick={() => setDoubleDriverSelection(driverId)}
                     >
-                      #{getDriverNumber(driverId)} {driverMap.get(driverId)?.fullName ?? driverId}
+                      {getDriverNumber(driverId)} {driverMap.get(driverId)?.fullName ?? driverId}
                     </button>
                   ))}
                 </div>

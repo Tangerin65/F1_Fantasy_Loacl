@@ -11,27 +11,26 @@ import { Standings } from './views/Standings'
 import { Transfer } from './views/Transfer'
 
 function SeasonSelect() {
-  const { seasonCatalog, selectSeason } = useGame()
+  const { seasonCatalog, selectSeason, hasSavedGame, loadSavedGame } = useGame()
 
   return (
     <main className="season-select">
       <section className="season-select__hero">
         <div className="season-select__copy">
-          <p className="season-select__meta">
-            {copyText('F1 fantasy local engine', 'F1 Fantasy 本地引擎')}
-          </p>
-          <h1>
-            {copyText(
-              'Historical season management, rendered as a local race wall.',
-              '把历史赛季重放成一面可操作的本地比赛指挥墙。',
-            )}
+          <h1 className="season-select__title">
+            F1 Fantasy Loacl Edition
           </h1>
-          <p>
+          <p className="season-select__blurb">
             {copyText(
-              'Choose an exported FastF1 season to run a full fantasy campaign. A built-in development fixture is kept in the catalog so the UI stays runnable before real JSON exports exist.',
-              '选择一个已导出的 FastF1 赛季，启动完整的 Fantasy 赛季模拟。在真实 JSON 还没准备好之前，内置 fixture 仍可保证界面可运行。',
+              'Relive any season from 2018–2025. Pick your drivers, manage the budget, play chips, and race AI managers across a full calendar.',
+              '从 2018 到 2025 任选一个完整赛季，掌管一支属于你的梦幻车队。调配五位车手与两支制造商，在真实历史赛历的每一站中运筹预算、使用策略芯片、与 AI 经理同场竞技。',
             )}
           </p>
+          {hasSavedGame ? (
+            <button type="button" className="action-button" onClick={loadSavedGame}>
+              {copyText('Continue saved game', '继续游戏')}
+            </button>
+          ) : null}
         </div>
         <img src={heroImage} alt="" className="season-select__image" />
       </section>
@@ -46,7 +45,7 @@ function SeasonSelect() {
           >
             <span>
               {entry.source === 'json'
-                ? copyText('Real export', '真实导出')
+                ? copyText('Real season', '真实赛季')
                 : copyText('Dev fixture', '开发样例')}
             </span>
             <strong>{entry.season}</strong>
@@ -70,12 +69,21 @@ function AppShell() {
     getTransferSummary,
     humanManager,
     processCurrentRound,
+    saveGame,
     selectedSeasonEntry,
     setCurrentView,
     state,
   } = useGame()
   const [language, setLanguage] = useState(getUiLanguage())
   const [isLoadingWeekend, setIsLoadingWeekend] = useState(false)
+  const [showSettings, setShowSettings] = useState(false)
+  const [autoNavigate, setAutoNavigate] = useState(() => {
+    try {
+      return localStorage.getItem('f1_fantasy_auto_navigate') !== 'false'
+    } catch {
+      return true
+    }
+  })
 
   if (!selectedSeasonEntry || !humanManager) {
     return null
@@ -105,9 +113,6 @@ function AppShell() {
         <div className="brand-block">
           <p>F1 Fantasy</p>
           <strong>{selectedSeasonEntry.season}</strong>
-          <small>
-            {selectedSeasonEntry.source === 'json' ? 'FastF1 export' : 'Fixture mode'}
-          </small>
         </div>
 
         <Navigation
@@ -122,23 +127,65 @@ function AppShell() {
           </article>
         </div>
 
-        <div className="language-switch" aria-label="Language">
+        <div className="settings-area">
           <button
             type="button"
-            className={language === 'en' ? 'is-active' : ''}
-            onClick={() => switchLanguage('en')}
+            className="secondary-button settings-toggle"
+            onClick={() => setShowSettings(!showSettings)}
           >
-            EN
+            {copyText('Settings', '设置')}
           </button>
-          <button
-            type="button"
-            className={language === 'zh' ? 'is-active' : ''}
-            onClick={() => switchLanguage('zh')}
-          >
-            中文
-          </button>
+          {showSettings ? (
+            <div className="settings-dropdown">
+              <div className="settings-dropdown__group">
+                <span className="settings-dropdown__label">{copyText('Language', '语言')}</span>
+                <div className="settings-dropdown__lang">
+                  <button
+                    type="button"
+                    className={language === 'en' ? 'is-active' : ''}
+                    onClick={() => switchLanguage('en')}
+                  >
+                    EN
+                  </button>
+                  <button
+                    type="button"
+                    className={language === 'zh' ? 'is-active' : ''}
+                    onClick={() => switchLanguage('zh')}
+                  >
+                    中文
+                  </button>
+                </div>
+              </div>
+              <div className="settings-dropdown__group">
+                <label className="settings-dropdown__toggle">
+                  <input
+                    type="checkbox"
+                    checked={autoNavigate}
+                    onChange={() => {
+                      const next = !autoNavigate
+                      setAutoNavigate(next)
+                      try {
+                        localStorage.setItem('f1_fantasy_auto_navigate', String(next))
+                      } catch {
+                        // silently fail
+                      }
+                    }}
+                  />
+                  <span>
+                    {copyText(
+                      'Auto-navigate to dashboard after weekend processing',
+                      '结算周末后自动回到总览',
+                    )}
+                  </span>
+                </label>
+              </div>
+            </div>
+          ) : null}
         </div>
 
+        <button type="button" className="secondary-button" onClick={saveGame}>
+          {copyText('Save', '保存')}
+        </button>
         <button type="button" className="secondary-button" onClick={exitToSeasonSelect}>
           {copyText('Exit', '退出')}
         </button>
@@ -161,9 +208,6 @@ function AppShell() {
           <div className="hud-bar__center">
             <span className="hud-pulse" />
             <strong>{selectedSeasonEntry.season} SEASON</strong>
-            <small>
-              {selectedSeasonEntry.source === 'json' ? 'Real Export' : 'Dev Fixture'}
-            </small>
           </div>
           <div className="hud-bar__right">
             <button

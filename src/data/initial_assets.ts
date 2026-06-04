@@ -43,7 +43,9 @@ export const CONSTRUCTOR_SEEDS: ConstructorSeed[] = [
   { name: 'Aston Martin', defaultPrice: 16.4 },
   { name: 'Alpine', defaultPrice: 12.2 },
   { name: 'Williams', defaultPrice: 11.4 },
-  { name: 'RB', defaultPrice: 10.7 },
+  { name: 'RB F1 Team', defaultPrice: 10.7 },
+  { name: 'AlphaTauri', defaultPrice: 10.7 },
+  { name: 'Toro Rosso', defaultPrice: 10.7 },
   { name: 'Haas F1 Team', defaultPrice: 9.8 },
   { name: 'Stake F1 Team Kick Sauber', defaultPrice: 8.9 },
 ]
@@ -70,6 +72,41 @@ const getDriverScoreHint = (seasonData: SeasonData, abbreviation: string) => {
   return qualifyingPoints + sprintPoints + racePoints
 }
 
+const isRbFamily = (lower: string): boolean =>
+  lower.includes('rb') ||
+  lower.includes('racing bulls') ||
+  lower.includes('alphatauri') ||
+  lower.includes('alpha tauri') ||
+  lower.includes('tororosso') ||
+  lower.includes('toro rosso')
+
+const rbFamilyName = (season: number): string => {
+  if (season >= 2024) return 'RB F1 Team'
+  if (season >= 2020) return 'AlphaTauri'
+  return 'Toro Rosso'
+}
+
+const normalizeName = (raw: string, season?: number): string => {
+  const lower = raw.toLowerCase()
+  if (lower.includes('red bull')) return 'Red Bull Racing'
+  if (lower.includes('ferrari')) return 'Ferrari'
+  if (lower.includes('mclaren')) return 'McLaren'
+  if (lower.includes('mercedes')) return 'Mercedes'
+  if (lower.includes('aston martin')) return 'Aston Martin'
+  if (lower.includes('alpine')) return 'Alpine'
+  if (lower.includes('williams')) return 'Williams'
+  if (isRbFamily(lower)) return season ? rbFamilyName(season) : 'RB F1 Team'
+  if (lower.includes('haas')) return 'Haas F1 Team'
+  if (
+    lower.includes('sauber') ||
+    lower.includes('alfa romeo') ||
+    lower.includes('alfa') ||
+    lower.includes('kick') ||
+    lower.includes('stake')
+  ) return 'Sauber'
+  return raw
+}
+
 const getConstructorScoreHint = (seasonData: SeasonData, constructor: string) => {
   const firstRound = seasonData.rounds[0]
   if (!firstRound) {
@@ -77,7 +114,7 @@ const getConstructorScoreHint = (seasonData: SeasonData, constructor: string) =>
   }
 
   return firstRound.race.results
-    .filter((entry) => entry.team === constructor)
+    .filter((entry) => normalizeName(entry.team, seasonData.season) === constructor)
     .reduce((sum, entry) => sum + (entry.points ?? 0), 0)
 }
 
@@ -99,6 +136,7 @@ export const buildInitialDrivers = (seasonData: SeasonData): DriverAsset[] => {
         price: clampPrice(seed?.defaultPrice ?? fallbackBase),
         fantasyPoints: 0,
         recentScores: [],
+        lastPriceChange: 0,
       })
     }
   }
@@ -111,33 +149,37 @@ export const buildInitialConstructors = (seasonData: SeasonData): ConstructorAss
 
   for (const round of seasonData.rounds) {
     for (const stop of round.race.pitStops) {
-      if (seen.has(stop.constructor)) {
+      const key = normalizeName(stop.constructor, seasonData.season)
+      if (seen.has(key)) {
         continue
       }
 
-      const seed = CONSTRUCTOR_SEED_MAP.get(stop.constructor)
-      const fallbackBase = 8 + getConstructorScoreHint(seasonData, stop.constructor) * 0.9
-      seen.set(stop.constructor, {
-        name: stop.constructor,
+      const seed = CONSTRUCTOR_SEED_MAP.get(key)
+      const fallbackBase = 8 + getConstructorScoreHint(seasonData, key) * 0.9
+      seen.set(key, {
+        name: key,
         price: clampPrice(seed?.defaultPrice ?? fallbackBase),
         fantasyPoints: 0,
         recentScores: [],
+        lastPriceChange: 0,
       })
     }
   }
 
   for (const result of seasonData.rounds[0]?.race.results ?? []) {
-    if (seen.has(result.team)) {
+    const key = normalizeName(result.team, seasonData.season)
+    if (seen.has(key)) {
       continue
     }
 
-    const seed = CONSTRUCTOR_SEED_MAP.get(result.team)
-    const fallbackBase = 8 + getConstructorScoreHint(seasonData, result.team) * 0.9
-    seen.set(result.team, {
-      name: result.team,
+    const seed = CONSTRUCTOR_SEED_MAP.get(key)
+    const fallbackBase = 8 + getConstructorScoreHint(seasonData, key) * 0.9
+    seen.set(key, {
+      name: key,
       price: clampPrice(seed?.defaultPrice ?? fallbackBase),
       fantasyPoints: 0,
       recentScores: [],
+      lastPriceChange: 0,
     })
   }
 

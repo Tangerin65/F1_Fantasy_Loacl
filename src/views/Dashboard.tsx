@@ -1,11 +1,13 @@
 import { useState } from 'react'
 import { DriverCard } from '../components/DriverCard'
 import { ValueChip } from '../components/ValueChip'
-import type { ConstructorRoundScore, DriverRoundScore } from '../types'
+import type { ConstructorRoundScore, DriverRoundScore, ScoreBreakdownItem } from '../types'
 import {
   copyText,
   formatDriverNameTwoLines,
   getOvertakeLeaders,
+  getTeamSurfaceStyle,
+  normalizeTeamName,
 } from '../lib/presentation'
 import { useGame } from '../context/useGame'
 
@@ -16,15 +18,30 @@ type SelectedAsset =
   | { kind: 'constructor'; id: string }
   | null
 
+type ExpandedStage = 'qualifying' | 'sprint' | 'race' | 'pitStop' | null
+
+const renderBreakdownList = (items: ScoreBreakdownItem[]) => (
+  <ul className="breakdown-list">
+    {items.map((item, index) => (
+      <li key={index} className="breakdown-list__item">
+        <span>{copyText(item.label, item.labelZh ?? item.label)}</span>
+        <strong>{item.points >= 0 ? `+${item.points}` : `${item.points}`}</strong>
+      </li>
+    ))}
+  </ul>
+)
+
 export function Dashboard() {
   const { currentRoundData, humanManager, selectedSeasonEntry, state } = useGame()
   const [selectedAsset, setSelectedAsset] = useState<SelectedAsset>(null)
   const [showWeekendBreakdown, setShowWeekendBreakdown] = useState(false)
+  const [expandedStage, setExpandedStage] = useState<ExpandedStage>(null)
 
   if (!humanManager || !selectedSeasonEntry || !state.seasonData) {
     return null
   }
 
+  const season = selectedSeasonEntry.season
   const driverMap = new Map(state.drivers.map((driver) => [driver.abbreviation, driver]))
   const constructorMap = new Map(
     state.constructors.map((constructor) => [constructor.name, constructor]),
@@ -66,15 +83,15 @@ export function Dashboard() {
       ? (assetDetail as ConstructorRoundScore | null)
       : null
 
+  const hasSprint = lastRoundData?.isSprint ?? false
+
   return (
     <section className="view-stack">
+      {/* D1: hero panel without the deleted description lines */}
       <section className="hero-panel">
         <div className="hero-panel__copy">
           <p className="hero-panel__meta">
-            {selectedSeasonEntry.season} {copyText('season', '赛季')} ·{' '}
-            {selectedSeasonEntry.source === 'json'
-              ? copyText('real export', '真实导出')
-              : copyText('dev fixture', '开发样例')}
+            {selectedSeasonEntry.season} {copyText('season', '赛季')}
           </p>
           <h2>
             {currentRoundData
@@ -84,12 +101,6 @@ export function Dashboard() {
                   `${selectedSeasonEntry.season} 历史赛季重放完成`,
                 )}
           </h2>
-          <p className="hero-panel__description">
-            {copyText(
-              'Load and process each weekend from the top bar. Use the garage below to inspect the previous round score breakdown for every current asset.',
-              '通过顶部按钮逐站推进赛季。下方 Garage lineup 中的每位车手和车队都可以直接查看上一站的得分细则。',
-            )}
-          </p>
         </div>
         <div className="metric-grid">
           <ValueChip
@@ -109,6 +120,7 @@ export function Dashboard() {
         </div>
       </section>
 
+      {/* D2: team-coloured garage cards */}
       <section className="panel">
         <div className="panel__header">
           <div>
@@ -127,13 +139,14 @@ export function Dashboard() {
               return (
                 <DriverCard
                   key={constructor.name}
-                  title={constructor.name}
+                  title={normalizeTeamName(constructor.name, season)}
                   subtitle={copyText('Constructor', '车队')}
                   price={constructor.price}
                   points={constructor.fantasyPoints}
                   lastScore={constructor.recentScores.at(-1)}
                   recentScores={constructor.recentScores}
                   accent="gold"
+                  style={getTeamSurfaceStyle(constructor.name, season)}
                   highlight={copyText(
                     'Open the last-round point split',
                     '点击查看上一站得分细则',
@@ -160,13 +173,14 @@ export function Dashboard() {
                 <DriverCard
                   key={driver.abbreviation}
                   title={formatDriverNameTwoLines(driver.fullName)}
-                  subtitle={driver.team}
+                  subtitle={normalizeTeamName(driver.team, season)}
                   price={driver.price}
                   points={driver.fantasyPoints}
                   lastScore={driver.recentScores.at(-1)}
                   recentScores={driver.recentScores}
                   accent={isDrs ? 'cyan' : 'red'}
-                  tag={isDrs ? '2X DRS' : undefined}
+                  tag={isDrs ? '2X' : undefined}
+                  style={getTeamSurfaceStyle(driver.team, season)}
                   isDrs={isDrs}
                   highlight={copyText(
                     `Form ${driver.recentScores.length ? driver.recentScores.join(' / ') : 'No rounds yet'}`,
@@ -200,11 +214,9 @@ export function Dashboard() {
                 : copyText('No processed rounds yet', '尚未处理任何分站')}
             </h3>
           </div>
+          {/* D7: removed country name, keep only raceName */}
           {lastRoundData ? (
             <div className="round-chip">
-              <span>
-                {lastRoundData.country}
-              </span>
               <strong>{lastRoundData.raceName}</strong>
             </div>
           ) : null}
@@ -219,7 +231,7 @@ export function Dashboard() {
               </article>
               <article className="report-card">
                 <span>{copyText('Fastest pit team', '最快进站车队')}</span>
-                <strong>{lastRoundData.race.pitStops[0]?.constructor ?? 'N/A'}</strong>
+                <strong>{lastRoundData.race.pitStops[0] ? normalizeTeamName(lastRoundData.race.pitStops[0].constructor, season) : 'N/A'}</strong>
               </article>
               <article className="report-card">
                 <span>{copyText('DRS return', 'DRS 收益')}</span>
@@ -249,12 +261,13 @@ export function Dashboard() {
                   ))}
                 </ul>
               </div>
+              {/* D6: updated button text */}
               <button
                 type="button"
                 className="action-button weekend-summary__button"
                 onClick={() => setShowWeekendBreakdown(true)}
               >
-                {copyText('Open full weekend breakdown', '查看完整 weekend 详情')}
+                {copyText('Open full weekend details', '查看完整周末详情')}
               </button>
             </div>
           </>
@@ -268,6 +281,7 @@ export function Dashboard() {
         )}
       </section>
 
+      {/* D6: reordered weekend breakdown — qualifying + race on top, pit stops + overtakes below, sprint at bottom */}
       {showWeekendBreakdown && lastRoundData ? (
         <div className="overlay-backdrop" role="presentation" onClick={() => setShowWeekendBreakdown(false)}>
           <section
@@ -295,14 +309,15 @@ export function Dashboard() {
             </div>
 
             <div className="detail-grid">
-              <section className="detail-card detail-card--hidden">
+              {/* Qualifying — restored, no longer hidden */}
+              <section className="detail-card">
                 <h4>{copyText('Qualifying results', '排位赛全结果')}</h4>
                 <div className="detail-table">
                   {lastRoundData.qualifying.results.map((result) => (
                     <div key={`qual-${result.driver}`} className="detail-table__row">
                       <span>P{result.position}</span>
                       <strong>{result.fullName}</strong>
-                      <small>{result.team}</small>
+                      <small>{normalizeTeamName(result.team, season)}</small>
                       <span>{result.q3 ?? result.q2 ?? result.q1 ?? result.status}</span>
                     </div>
                   ))}
@@ -323,13 +338,14 @@ export function Dashboard() {
                 </div>
               </section>
 
+              {/* Pit stops — now below qualifying + race */}
               <section className="detail-card">
                 <h4>{copyText('Top pit stops', '最快进站前三')}</h4>
                 <div className="detail-table">
                   {lastRoundData.race.pitStops.map((stop, index) => (
                     <div key={`${stop.constructor}-${index}`} className="detail-table__row">
                       <span>P{index + 1}</span>
-                      <strong>{stop.constructor}</strong>
+                      <strong>{normalizeTeamName(stop.constructor, season)}</strong>
                       <small>{copyText('Pit crew', '维修区')}</small>
                       <span>{stop.fastestStop.toFixed(3)}s</span>
                     </div>
@@ -346,21 +362,41 @@ export function Dashboard() {
                       <div key={`gain-${entry.driver}`} className="detail-table__row">
                         <span>{entry.driver}</span>
                         <strong>{entry.fullName}</strong>
-                        <small>{entry.team}</small>
+                        <small>{normalizeTeamName(entry.team, season)}</small>
                         <span>{entry.gained >= 0 ? `+${entry.gained}` : entry.gained}</span>
                       </div>
                     ))}
                 </div>
               </section>
             </div>
+
+            {/* Sprint results — conditionally shown at the bottom */}
+            {hasSprint && lastRoundData.sprint ? (
+              <div className="detail-grid" style={{ marginTop: 16 }}>
+                <section className="detail-card">
+                  <h4>{copyText('Sprint results', '冲刺赛结果')}</h4>
+                  <div className="detail-table">
+                    {lastRoundData.sprint.results.map((result) => (
+                      <div key={`sprint-${result.driver}`} className="detail-table__row">
+                        <span>P{result.position}</span>
+                        <strong>{result.fullName}</strong>
+                        <small>{copyText('Grid', '发车位')} {result.grid}</small>
+                        <span>{result.status}</span>
+                      </div>
+                    ))}
+                  </div>
+                </section>
+              </div>
+            ) : null}
           </section>
         </div>
       ) : null}
 
+      {/* D5: score breakdown with expandable stage details */}
       {selectedAsset && assetDetail ? (
-        <div className="overlay-backdrop" role="presentation" onClick={() => setSelectedAsset(null)}>
+        <div className="overlay-backdrop" role="presentation" onClick={() => { setSelectedAsset(null); setExpandedStage(null); }}>
           <section
-            className="modal-panel"
+            className={`modal-panel${hasSprint ? ' modal-panel--wide' : ''}`}
             role="dialog"
             aria-modal="true"
             onClick={(event) => event.stopPropagation()}
@@ -373,58 +409,113 @@ export function Dashboard() {
                 <h3>
                   {selectedAsset.kind === 'driver'
                     ? driverMap.get(selectedAsset.id)?.fullName ?? selectedAsset.id
-                    : selectedAsset.id}
+                    : normalizeTeamName(selectedAsset.id, season)}
                 </h3>
               </div>
               <button
                 type="button"
                 className="secondary-button"
-                onClick={() => setSelectedAsset(null)}
+                onClick={() => { setSelectedAsset(null); setExpandedStage(null); }}
               >
                 {copyText('Close', '关闭')}
               </button>
             </div>
 
             {driverDetail ? (
-              <div className="summary-grid">
-                <article className="summary-card">
-                  <span>{copyText('Qualifying', '排位赛')}</span>
-                  <strong>{driverDetail.qualifyingPoints}</strong>
-                </article>
-                <article className="summary-card">
-                  <span>{copyText('Sprint', '冲刺赛')}</span>
-                  <strong>{driverDetail.sprintPoints}</strong>
-                </article>
-                <article className="summary-card">
-                  <span>{copyText('Race', '正赛')}</span>
-                  <strong>{driverDetail.racePoints}</strong>
-                </article>
-                <article className="summary-card">
-                  <span>{copyText('Final', '最终得分')}</span>
-                  <strong>
-                    {driverDetail.totalFinal.toFixed(0)}
-                  </strong>
-                </article>
-              </div>
+              <>
+                <div className="summary-grid">
+                  <button
+                    type="button"
+                    className={`summary-card summary-card--clickable${expandedStage === 'qualifying' ? ' is-expanded' : ''}`}
+                    onClick={() => setExpandedStage(expandedStage === 'qualifying' ? null : 'qualifying')}
+                  >
+                    <span>{copyText('Qualifying', '排位赛')}</span>
+                    <strong>{driverDetail.qualifyingPoints}</strong>
+                  </button>
+                  {hasSprint ? (
+                    <button
+                      type="button"
+                      className={`summary-card summary-card--clickable${expandedStage === 'sprint' ? ' is-expanded' : ''}`}
+                      onClick={() => setExpandedStage(expandedStage === 'sprint' ? null : 'sprint')}
+                    >
+                      <span>{copyText('Sprint', '冲刺赛')}</span>
+                      <strong>{driverDetail.sprintPoints}</strong>
+                    </button>
+                  ) : null}
+                  <button
+                    type="button"
+                    className={`summary-card summary-card--clickable${expandedStage === 'race' ? ' is-expanded' : ''}`}
+                    onClick={() => setExpandedStage(expandedStage === 'race' ? null : 'race')}
+                  >
+                    <span>{copyText('Race', '正赛')}</span>
+                    <strong>{driverDetail.racePoints}</strong>
+                  </button>
+                  <article className="summary-card summary-card--final">
+                    <span>{copyText('Final', '最终得分')}</span>
+                    <strong>{driverDetail.totalFinal.toFixed(0)}</strong>
+                  </article>
+                </div>
+                {expandedStage && driverDetail.breakdown ? (
+                  <div className="breakdown-detail">
+                    <h4>
+                      {expandedStage === 'qualifying' ? copyText('Qualifying detail', '排位赛细则') :
+                       expandedStage === 'sprint' ? copyText('Sprint detail', '冲刺赛细则') :
+                       copyText('Race detail', '正赛细则')}
+                    </h4>
+                    {renderBreakdownList(driverDetail.breakdown[expandedStage])}
+                  </div>
+                ) : null}
+              </>
             ) : (
-              <div className="summary-grid">
-                <article className="summary-card">
-                  <span>{copyText('Qualifying', '排位赛')}</span>
-                  <strong>{constructorDetail?.qualifyingPoints ?? 0}</strong>
-                </article>
-                <article className="summary-card">
-                  <span>{copyText('Sprint', '冲刺赛')}</span>
-                  <strong>{constructorDetail?.sprintPoints ?? 0}</strong>
-                </article>
-                <article className="summary-card">
-                  <span>{copyText('Race', '正赛')}</span>
-                  <strong>{constructorDetail?.racePoints ?? 0}</strong>
-                </article>
-                <article className="summary-card">
-                  <span>{copyText('Pit stop', '进站')}</span>
-                  <strong>{constructorDetail?.pitStopPoints ?? 0}</strong>
-                </article>
-              </div>
+              <>
+                <div className="summary-grid">
+                  <button
+                    type="button"
+                    className={`summary-card summary-card--clickable${expandedStage === 'qualifying' ? ' is-expanded' : ''}`}
+                    onClick={() => setExpandedStage(expandedStage === 'qualifying' ? null : 'qualifying')}
+                  >
+                    <span>{copyText('Qualifying', '排位赛')}</span>
+                    <strong>{constructorDetail?.qualifyingPoints ?? 0}</strong>
+                  </button>
+                  {hasSprint ? (
+                    <button
+                      type="button"
+                      className={`summary-card summary-card--clickable${expandedStage === 'sprint' ? ' is-expanded' : ''}`}
+                      onClick={() => setExpandedStage(expandedStage === 'sprint' ? null : 'sprint')}
+                    >
+                      <span>{copyText('Sprint', '冲刺赛')}</span>
+                      <strong>{constructorDetail?.sprintPoints ?? 0}</strong>
+                    </button>
+                  ) : null}
+                  <button
+                    type="button"
+                    className={`summary-card summary-card--clickable${expandedStage === 'race' ? ' is-expanded' : ''}`}
+                    onClick={() => setExpandedStage(expandedStage === 'race' ? null : 'race')}
+                  >
+                    <span>{copyText('Race', '正赛')}</span>
+                    <strong>{constructorDetail?.racePoints ?? 0}</strong>
+                  </button>
+                  <button
+                    type="button"
+                    className={`summary-card summary-card--clickable${expandedStage === 'pitStop' ? ' is-expanded' : ''}`}
+                    onClick={() => setExpandedStage(expandedStage === 'pitStop' ? null : 'pitStop')}
+                  >
+                    <span>{copyText('Pit stop', '进站')}</span>
+                    <strong>{constructorDetail?.pitStopPoints ?? 0}</strong>
+                  </button>
+                </div>
+                {expandedStage && constructorDetail?.breakdown ? (
+                  <div className="breakdown-detail">
+                    <h4>
+                      {expandedStage === 'qualifying' ? copyText('Qualifying detail', '排位赛细则') :
+                       expandedStage === 'sprint' ? copyText('Sprint detail', '冲刺赛细则') :
+                       expandedStage === 'race' ? copyText('Race detail', '正赛细则') :
+                       copyText('Pit stop detail', '进站细则')}
+                    </h4>
+                    {renderBreakdownList(constructorDetail.breakdown[expandedStage])}
+                  </div>
+                ) : null}
+              </>
             )}
           </section>
         </div>
