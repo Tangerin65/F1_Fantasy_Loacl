@@ -5,6 +5,7 @@ import {
   useState,
   type ReactNode,
 } from 'react'
+import { getRoundActiveDrivers } from '../lib/presentation'
 import {
   ALL_CHIPS_AVAILABLE,
   FREE_TRANSFERS_PER_ROUND,
@@ -28,6 +29,7 @@ import {
   type ManagerTeam,
   type RaceResult,
   type RoundData,
+  type ScoreBreakdownItem,
   type SeasonData,
   type SprintResult,
 } from '../types'
@@ -59,18 +61,72 @@ interface GameContextValue {
   currentRoundData: RoundData | null
   humanManager: ManagerTeam | null
   standings: ManagerTeam[]
+  hasSavedGame: boolean
   selectSeason: (season: number) => void
+  exitToSeasonSelect: () => void
+  restartSeason: () => void
   resetSeason: () => void
+  saveGame: () => void
+  loadSavedGame: () => void
   setCurrentView: (view: GameView) => void
   replaceDriver: (slotIndex: number, driver: string) => void
   replaceConstructor: (slotIndex: number, constructorName: string) => void
+  resetHumanLineup: () => void
   setDrsBoostDriver: (driver: string) => void
+  setExtraDrsTargets: (tripleDriver: string, doubleDriver: string) => void
   setActiveChip: (chip: ChipType | null) => void
   processCurrentRound: () => void
   getTransferSummary: (managerId: string) => TransferSummary
 }
 
 const seasonCatalog = getSeasonCatalog()
+
+const SAVE_KEY = 'f1_fantasy_save'
+const SAVE_VERSION = 1
+
+interface SaveFile {
+  version: number
+  savedAt: string
+  state: GameState
+}
+
+const hasSavedGame = (): boolean => {
+  try {
+    const raw = localStorage.getItem(SAVE_KEY)
+    if (!raw) return false
+    const save: SaveFile = JSON.parse(raw)
+    if (save.version !== SAVE_VERSION) return false
+    if (!save.state?.selectedSeason || !save.state?.seasonData) return false
+    return true
+  } catch {
+    return false
+  }
+}
+
+const writeSaveFile = (state: GameState): void => {
+  const save: SaveFile = {
+    version: SAVE_VERSION,
+    savedAt: new Date().toISOString(),
+    state,
+  }
+  localStorage.setItem(SAVE_KEY, JSON.stringify(save))
+}
+
+const readSaveFile = (): GameState | null => {
+  try {
+    const raw = localStorage.getItem(SAVE_KEY)
+    if (!raw) return null
+    const save: SaveFile = JSON.parse(raw)
+    if (save.version !== SAVE_VERSION) return null
+    return save.state ?? null
+  } catch {
+    return null
+  }
+}
+
+const deleteSaveFile = (): void => {
+  localStorage.removeItem(SAVE_KEY)
+}
 
 const createEmptyState = (): GameState => ({
   selectedSeason: null,
@@ -143,6 +199,47 @@ const getDriversMap = (drivers: DriverAsset[]) => new Map(drivers.map((driver) =
 const getConstructorsMap = (constructors: ConstructorAsset[]) =>
   new Map(constructors.map((constructor) => [constructor.name, constructor]))
 
+const resolveExtraDrsTargets = (
+  drivers: string[],
+  currentDoubleDriver?: string,
+  currentTripleDriver?: string,
+) => {
+  const fallbackDriver = drivers[0] ?? ''
+  let doubleDriver =
+    currentDoubleDriver && drivers.includes(currentDoubleDriver)
+      ? currentDoubleDriver
+      : fallbackDriver
+  let tripleDriver =
+    currentTripleDriver && drivers.includes(currentTripleDriver)
+      ? currentTripleDriver
+      : doubleDriver
+
+  if (tripleDriver === doubleDriver) {
+    tripleDriver = drivers.find((driver) => driver !== doubleDriver) ?? doubleDriver
+  }
+
+  if (doubleDriver === tripleDriver) {
+    doubleDriver = drivers.find((driver) => driver !== tripleDriver) ?? tripleDriver
+  }
+
+  return {
+    drsBoostDriver: doubleDriver,
+    extraDrsDriver: tripleDriver,
+  }
+}
+
+type RosterPlan = {
+  drivers: string[]
+  constructors: string[]
+  score: number
+  cost: number
+}
+
+const isBetterRosterPlan = (candidate: RosterPlan, current: RosterPlan | null) =>
+  !current ||
+  candidate.score > current.score ||
+  (candidate.score === current.score && candidate.cost > current.cost)
+
 const getManagerCost = (
   manager: ManagerTeam,
   driversMap: Map<string, DriverAsset>,
@@ -178,13 +275,13 @@ const createTransferSummary = (
   const transfersUsed =
     computePendingTransfers(manager.drivers, manager.lockedDrivers) +
     computePendingTransfers(manager.constructors, manager.lockedConstructors)
-  const canIgnoreBudget = manager.activeChip === 'limitless' || manager.activeChip === 'finalFix'
+  const canIgnoreBudget = manager.activeChip === 'limitless'
   const freeAllowance =
     isSeasonOpener
       ? Number.POSITIVE_INFINITY
       : manager.activeChip === 'wildcard' || manager.activeChip === 'limitless'
       ? Number.POSITIVE_INFINITY
-      : manager.freeTransfers + (manager.activeChip === 'finalFix' ? 1 : 0)
+      : manager.freeTransfers
   const penaltyTransfers =
     Number.isFinite(freeAllowance) && transfersUsed > freeAllowance
       ? transfersUsed - freeAllowance
@@ -201,8 +298,8 @@ const createTransferSummary = (
     overBudgetBy,
     canIgnoreBudget,
     canProcess: (remainingBudget >= 0 || canIgnoreBudget) &&
-      manager.drivers.length === MAX_DRIVERS &&
-      manager.constructors.length === MAX_CONSTRUCTORS,
+      manager.drivers.filter(Boolean).length === MAX_DRIVERS &&
+      manager.constructors.filter(Boolean).length === MAX_CONSTRUCTORS,
     isSeasonOpener,
   }
 }
@@ -219,11 +316,45 @@ const scoreQualifyingDriver = (result: RoundData['qualifying']['results'][number
   return getQualifyingPositionPoints(result.position)
 }
 
+const isRbFamily = (lower: string): boolean =>
+  lower.includes('rb') ||
+  lower.includes('racing bulls') ||
+  lower.includes('alphatauri') ||
+  lower.includes('alpha tauri') ||
+  lower.includes('tororosso') ||
+  lower.includes('toro rosso')
+
+const rbFamilyName = (season: number): string => {
+  if (season >= 2024) return 'RB F1 Team'
+  if (season >= 2020) return 'AlphaTauri'
+  return 'Toro Rosso'
+}
+
 const getQualifyingConstructorBonus = (
   results: RoundData['qualifying']['results'],
   constructorName: string,
+  season?: number,
 ) => {
-  const constructorResults = results.filter((entry) => entry.team === constructorName)
+  const constructorResults = results.filter((entry) => {
+    const lower = entry.team.toLowerCase()
+    if (lower.includes('red bull')) return 'Red Bull Racing' === constructorName
+    if (lower.includes('ferrari')) return 'Ferrari' === constructorName
+    if (lower.includes('mclaren')) return 'McLaren' === constructorName
+    if (lower.includes('mercedes')) return 'Mercedes' === constructorName
+    if (lower.includes('aston martin')) return 'Aston Martin' === constructorName
+    if (lower.includes('alpine')) return 'Alpine' === constructorName
+    if (lower.includes('williams')) return 'Williams' === constructorName
+    if (isRbFamily(lower)) return (season ? rbFamilyName(season) : 'RB F1 Team') === constructorName
+    if (lower.includes('haas')) return 'Haas F1 Team' === constructorName
+    if (
+      lower.includes('sauber') ||
+      lower.includes('alfa romeo') ||
+      lower.includes('alfa') ||
+      lower.includes('kick') ||
+      lower.includes('stake')
+    ) return 'Sauber' === constructorName
+    return entry.team === constructorName
+  })
   const q2Count = constructorResults.filter((entry) => Boolean(entry.q2)).length
   const q3Count = constructorResults.filter((entry) => Boolean(entry.q3)).length
 
@@ -275,6 +406,93 @@ const scoreRaceDriver = (result: RaceResult, fastestLapDriver: string) => {
   }
 }
 
+const getQualifyingBreakdown = (
+  result: RoundData['qualifying']['results'][number],
+): ScoreBreakdownItem[] => {
+  const items: ScoreBreakdownItem[] = []
+
+  if (isDsqStatus(result.status)) {
+    items.push({ label: 'Disqualified (DSQ)', labelZh: '取消排位赛资格 (DSQ)', points: -5 })
+    return items
+  }
+
+  if (!result.q1 && !isFinishedStatus(result.status)) {
+    items.push({ label: 'No time set in Q1', labelZh: 'Q1 未做出有效时间', points: -5 })
+    return items
+  }
+
+  const posPoints = getQualifyingPositionPoints(result.position)
+  if (posPoints !== 0) {
+    items.push({ label: `Qualified P${result.position}`, labelZh: `排位赛 P${result.position} 完赛`, points: posPoints })
+  } else {
+    items.push({ label: `Qualified P${result.position} (outside top 10)`, labelZh: `排位赛 P${result.position}（前十名外）`, points: 0 })
+  }
+
+  return items
+}
+
+const getSprintBreakdown = (
+  result: SprintResult,
+  fastestLapDriver: string | undefined,
+): ScoreBreakdownItem[] => {
+  const items: ScoreBreakdownItem[] = []
+
+  const posPoints = getSprintPositionPoints(result.position)
+  items.push({ label: `Sprint finish P${result.position}`, labelZh: `冲刺赛 P${result.position} 完赛`, points: posPoints })
+
+  const delta = result.grid - result.position
+  if (delta > 0) {
+    items.push({ label: `Positions gained: +${delta}`, labelZh: `提升名次: +${delta}`, points: delta })
+  } else if (delta < 0) {
+    const penalty = Math.max(delta, -10)
+    items.push({ label: `Positions lost: ${delta}`, labelZh: `下降名次: ${delta}`, points: penalty })
+  }
+
+  if (result.driver === fastestLapDriver) {
+    items.push({ label: 'Sprint fastest lap', labelZh: '冲刺赛最快圈速', points: 5 })
+  }
+
+  if (!isFinishedStatus(result.status)) {
+    items.push({ label: 'Sprint DNF', labelZh: '冲刺赛 DNF', points: -10 })
+  }
+
+  return items
+}
+
+const getRaceBreakdown = (
+  result: RaceResult,
+  fastestLapDriver: string,
+): ScoreBreakdownItem[] => {
+  const items: ScoreBreakdownItem[] = []
+
+  const posPoints = getRacePositionPoints(result.position)
+  if (posPoints > 0) {
+    items.push({ label: `Race finish P${result.position}`, labelZh: `正赛 P${result.position} 完赛`, points: posPoints })
+  } else {
+    items.push({ label: `Race finish P${result.position} (outside top 10)`, labelZh: `正赛 P${result.position}（前十名外）`, points: 0 })
+  }
+
+  const delta = result.grid - result.position
+  if (delta > 0) {
+    items.push({ label: `Positions gained: +${delta}`, labelZh: `提升名次: +${delta}`, points: delta })
+  } else if (delta < 0) {
+    const penalty = Math.max(delta, -10)
+    items.push({ label: `Positions lost: ${delta}`, labelZh: `下降名次: ${delta}`, points: penalty })
+  }
+
+  if (result.driver === fastestLapDriver) {
+    items.push({ label: 'Race fastest lap', labelZh: '正赛最快圈速', points: 10 })
+  }
+
+  if (isDsqStatus(result.status)) {
+    items.push({ label: 'Disqualified (DSQ)', labelZh: '取消正赛资格 (DSQ)', points: -20 })
+  } else if (!isFinishedStatus(result.status)) {
+    items.push({ label: 'Race DNF', labelZh: '正赛 DNF', points: -20 })
+  }
+
+  return items
+}
+
 const buildDriverScoreMap = (roundData: RoundData) => {
   const qualifyingMap = new Map(
     roundData.qualifying.results.map((entry) => [entry.driver, scoreQualifyingDriver(entry)]),
@@ -291,6 +509,23 @@ const buildDriverScoreMap = (roundData: RoundData) => {
     roundData.race.results.map((entry) => [entry.driver, scoreRaceDriver(entry, roundData.race.fastestLapDriver)]),
   )
 
+  // Build detailed breakdowns per driver from raw results.
+  const qualifyingBreakdownMap = new Map(
+    roundData.qualifying.results.map((entry) => [entry.driver, getQualifyingBreakdown(entry)]),
+  )
+  const sprintBreakdownMap = new Map(
+    (roundData.sprint?.results ?? []).map((entry) => [
+      entry.driver,
+      getSprintBreakdown(entry, roundData.sprint?.fastestLapDriver),
+    ]),
+  )
+  const raceBreakdownMap = new Map(
+    roundData.race.results.map((entry) => [
+      entry.driver,
+      getRaceBreakdown(entry, roundData.race.fastestLapDriver),
+    ]),
+  )
+
   return roundData.race.results.reduce((map, result) => {
     const qualifyingPoints = qualifyingMap.get(result.driver) ?? 0
     const sprintPoints = sprintMap.get(result.driver) ?? 0
@@ -303,70 +538,164 @@ const buildDriverScoreMap = (roundData: RoundData) => {
       totalRaw: qualifyingPoints + sprintPoints + racePoints,
       drsMultiplier: 1,
       totalFinal: qualifyingPoints + sprintPoints + racePoints,
+      breakdown: {
+        qualifying: qualifyingBreakdownMap.get(result.driver) ?? [],
+        sprint: sprintBreakdownMap.get(result.driver) ?? [],
+        race: raceBreakdownMap.get(result.driver) ?? [],
+      },
     })
     return map
   }, new Map<string, DriverRoundScore>())
 }
 
-const buildConstructorScoreMap = (roundData: RoundData) => {
+const buildConstructorScoreMap = (roundData: RoundData, season?: number) => {
   const constructorScores = new Map<string, ConstructorRoundScore>()
 
-  for (const qualifyingResult of roundData.qualifying.results) {
-    const current = constructorScores.get(qualifyingResult.team) ?? {
-      constructor: qualifyingResult.team,
-      qualifyingPoints: 0,
-      sprintPoints: 0,
-      racePoints: 0,
-      pitStopPoints: 0,
-      total: 0,
-    }
-    current.qualifyingPoints += getQualifyingPositionPoints(qualifyingResult.position)
-    constructorScores.set(qualifyingResult.team, current)
+  // Track breakdown items alongside totals for each constructor.
+  const qualifyingItems = new Map<string, ScoreBreakdownItem[]>()
+  const sprintItems = new Map<string, ScoreBreakdownItem[]>()
+  const raceItems = new Map<string, ScoreBreakdownItem[]>()
+  const pitStopItems = new Map<string, ScoreBreakdownItem[]>()
+
+  // Normalize constructor names to canonical form to match assets.
+  const normalizeName = (raw: string): string => {
+    const lower = raw.toLowerCase()
+    if (lower.includes('red bull')) return 'Red Bull Racing'
+    if (lower.includes('ferrari')) return 'Ferrari'
+    if (lower.includes('mclaren')) return 'McLaren'
+    if (lower.includes('mercedes')) return 'Mercedes'
+    if (lower.includes('aston martin')) return 'Aston Martin'
+    if (lower.includes('alpine')) return 'Alpine'
+    if (lower.includes('williams')) return 'Williams'
+    if (isRbFamily(lower)) return season ? rbFamilyName(season) : 'RB F1 Team'
+    if (lower.includes('haas')) return 'Haas F1 Team'
+    if (
+      lower.includes('sauber') ||
+      lower.includes('alfa romeo') ||
+      lower.includes('alfa') ||
+      lower.includes('kick') ||
+      lower.includes('stake')
+    ) return 'Sauber'
+    return raw
   }
 
-  for (const [constructorName, score] of constructorScores) {
-    score.qualifyingPoints += getQualifyingConstructorBonus(roundData.qualifying.results, constructorName)
-  }
-
-  if (roundData.sprint) {
-    for (const sprintResult of roundData.sprint.results) {
-      const current = constructorScores.get(sprintResult.team) ?? {
-        constructor: sprintResult.team,
+  const ensureEntry = (constructorName: string) => {
+    if (!constructorScores.has(constructorName)) {
+      constructorScores.set(constructorName, {
+        constructor: constructorName,
         qualifyingPoints: 0,
         sprintPoints: 0,
         racePoints: 0,
         pitStopPoints: 0,
         total: 0,
-      }
-      current.sprintPoints += scoreSprintDriver(sprintResult, roundData.sprint.fastestLapDriver)
-      constructorScores.set(sprintResult.team, current)
+      })
+    }
+    if (!qualifyingItems.has(constructorName)) qualifyingItems.set(constructorName, [])
+    if (!sprintItems.has(constructorName)) sprintItems.set(constructorName, [])
+    if (!raceItems.has(constructorName)) raceItems.set(constructorName, [])
+    if (!pitStopItems.has(constructorName)) pitStopItems.set(constructorName, [])
+  }
+
+  for (const qualifyingResult of roundData.qualifying.results) {
+    const qualTeam = normalizeName(qualifyingResult.team)
+    ensureEntry(qualTeam)
+    const score = constructorScores.get(qualTeam)!
+    const posPoints = getQualifyingPositionPoints(qualifyingResult.position)
+    score.qualifyingPoints += posPoints
+    qualifyingItems.get(qualTeam)!.push({
+      label: `${qualifyingResult.driver} — Qualified P${qualifyingResult.position}`,
+      labelZh: `${qualifyingResult.driver} — 排位赛 P${qualifyingResult.position}`,
+      points: posPoints,
+    })
+  }
+
+  for (const [constructorName, score] of constructorScores) {
+    const bonus = getQualifyingConstructorBonus(roundData.qualifying.results, constructorName, season)
+    score.qualifyingPoints += bonus
+    if (bonus === 10) {
+      qualifyingItems.get(constructorName)!.push({ label: 'Both drivers reached Q3', labelZh: '两位车手进入 Q3', points: 10 })
+    } else if (bonus === 5) {
+      qualifyingItems.get(constructorName)!.push({ label: 'One driver reached Q3', labelZh: '一位车手进入 Q3', points: 5 })
+    } else if (bonus === 3) {
+      qualifyingItems.get(constructorName)!.push({ label: 'Both drivers reached Q2', labelZh: '两位车手进入 Q2', points: 3 })
+    } else if (bonus === 1) {
+      qualifyingItems.get(constructorName)!.push({ label: 'One driver reached Q2', labelZh: '一位车手进入 Q2', points: 1 })
+    } else if (bonus === -1) {
+      qualifyingItems.get(constructorName)!.push({ label: 'Both drivers eliminated in Q1', labelZh: '两位车手在 Q1 被淘汰', points: -1 })
     }
   }
 
-  const pitStopPoints = new Map(
+  if (roundData.sprint) {
+    for (const sprintResult of roundData.sprint.results) {
+      const sprintTeam = normalizeName(sprintResult.team)
+      ensureEntry(sprintTeam)
+      const score = constructorScores.get(sprintTeam)!
+      const sprintPointsForDriver = scoreSprintDriver(sprintResult, roundData.sprint.fastestLapDriver)
+      score.sprintPoints += sprintPointsForDriver
+      sprintItems.get(sprintTeam)!.push({
+        label: `${sprintResult.driver} — Sprint P${sprintResult.position}`,
+        labelZh: `${sprintResult.driver} — 冲刺赛 P${sprintResult.position}`,
+        points: sprintPointsForDriver,
+      })
+    }
+  }
+
+  const pitStopRanking = new Map(
     roundData.race.pitStops.slice(0, 3).map((entry, index) => [
-      entry.constructor,
-      [15, 10, 5][index] ?? 0,
+      normalizeName(entry.constructor),
+      { points: [15, 10, 5][index] ?? 0, rank: index + 1 },
     ]),
   )
 
   for (const raceResult of roundData.race.results) {
-    const current = constructorScores.get(raceResult.team) ?? {
-      constructor: raceResult.team,
-      qualifyingPoints: 0,
-      sprintPoints: 0,
-      racePoints: 0,
-      pitStopPoints: 0,
-      total: 0,
+    const raceTeam = normalizeName(raceResult.team)
+    ensureEntry(raceTeam)
+    const score = constructorScores.get(raceTeam)!
+    const raceDriverScore = scoreRaceDriver(raceResult, roundData.race.fastestLapDriver)
+    score.racePoints += raceDriverScore.withoutFastestLap
+
+    const delta = raceResult.grid - raceResult.position
+    let raceLabel = `${raceResult.driver} — Race P${raceResult.position}`
+    let raceLabelZh = `${raceResult.driver} — 正赛 P${raceResult.position}`
+    if (delta > 0) {
+      raceLabel += ` (+${delta})`
+      raceLabelZh += ` (+${delta})`
     }
-    current.racePoints += scoreRaceDriver(raceResult, roundData.race.fastestLapDriver).withoutFastestLap
-    current.pitStopPoints = pitStopPoints.get(raceResult.team) ?? current.pitStopPoints
-    constructorScores.set(raceResult.team, current)
+    else if (delta < 0) {
+      raceLabel += ` (${delta})`
+      raceLabelZh += ` (${delta})`
+    }
+    raceItems.get(raceTeam)!.push({
+      label: raceLabel,
+      labelZh: raceLabelZh,
+      points: raceDriverScore.withoutFastestLap,
+    })
+
+    const pitInfo = pitStopRanking.get(raceTeam)
+    if (pitInfo && !pitStopItems.get(raceTeam)!.length) {
+      score.pitStopPoints = pitInfo.points
+      const pitTime = roundData.race.pitStops.find((p) => normalizeName(p.constructor) === raceTeam)?.fastestStop.toFixed(3) ?? '--'
+      pitStopItems.get(raceTeam)!.push({
+        label: `Pit stop ranked #${pitInfo.rank} overall (${pitTime}s)`,
+        labelZh: `进站排名第 #${pitInfo.rank}（${pitTime}s）`,
+        points: pitInfo.points,
+      })
+    }
   }
 
   for (const score of constructorScores.values()) {
     score.total =
       score.qualifyingPoints + score.sprintPoints + score.racePoints + score.pitStopPoints
+  }
+
+  // Attach breakdowns.
+  for (const [constructorName, score] of constructorScores) {
+    score.breakdown = {
+      qualifying: qualifyingItems.get(constructorName) ?? [],
+      sprint: sprintItems.get(constructorName) ?? [],
+      race: raceItems.get(constructorName) ?? [],
+      pitStop: pitStopItems.get(constructorName) ?? [],
+    }
   }
 
   return constructorScores
@@ -377,8 +706,12 @@ const buildOpeningRoster = (
   constructors: ConstructorAsset[],
   performance: PerformanceSnapshot,
   style: AIStyle | 'balanced',
+  activeDrivers?: Set<string>,
 ) => {
-  const driverCandidates = [...drivers]
+  const driverCandidates =
+    activeDrivers && activeDrivers.size >= MAX_DRIVERS
+      ? drivers.filter((driver) => activeDrivers.has(driver.abbreviation))
+      : [...drivers]
   const constructorCandidates = [...constructors]
 
   const driverScore = (driver: DriverAsset) => {
@@ -386,48 +719,103 @@ const buildOpeningRoster = (
     const ppm = performance.driverPointsPerMillion.get(driver.abbreviation) ?? 0
     const gains = performance.driverGainAverage.get(driver.abbreviation) ?? 0
 
+    // Stability bonus: reward consistent scoring (lower variance = higher bonus).
+    const scores = driver.recentScores
+    const scoreRange = scores.length >= 2
+      ? Math.max(...scores) - Math.min(...scores)
+      : average * 0.5
+    const stability = Math.max(0, 1 - scoreRange / Math.max(average, 1))
+    const stabilityBonus = stability * 4
+
     if (style === 'fanatic') {
-      return average * 1.3 + driver.price * 0.8 + (FANATIC_TEAMS.has(driver.team) ? 16 : 0)
+      return average * 1.4 + driver.price * 0.7 + (FANATIC_TEAMS.has(driver.team) ? 14 : 0) + stabilityBonus
     }
 
     if (style === 'value') {
-      return ppm * 22 + average * 1.6 - driver.price * 0.15
+      return ppm * 24 + average * 1.7 - driver.price * 0.18 + stabilityBonus
     }
 
     if (style === 'underdog') {
-      return average * 0.9 + gains * 6 + Math.max(0, 15 - driver.price) * 0.7
+      return average * 1.0 + gains * 5 + Math.max(0, 15 - driver.price) * 0.8 + stabilityBonus * 0.8
     }
 
-    return average * 1.4 + ppm * 10 - driver.price * 0.1
+    // balanced (used by opening roster)
+    return average * 1.5 + ppm * 12 - driver.price * 0.12 + stabilityBonus
   }
 
   const constructorScore = (constructor: ConstructorAsset) => {
     const average = performance.constructorAverages.get(constructor.name) ?? 0
+
+    // Stability bonus for constructors too.
+    const scores = constructor.recentScores
+    const scoreRange = scores.length >= 2
+      ? Math.max(...scores) - Math.min(...scores)
+      : average * 0.5
+    const stability = Math.max(0, 1 - scoreRange / Math.max(average, 1))
+    const stabilityBonus = stability * 4
+
     if (style === 'fanatic') {
-      return average * 1.25 + constructor.price * 0.7 + (FANATIC_TEAMS.has(constructor.name) ? 14 : 0)
+      return average * 1.35 + constructor.price * 0.65 + (FANATIC_TEAMS.has(constructor.name) ? 12 : 0) + stabilityBonus
     }
 
     if (style === 'value') {
-      return average * 1.4 - constructor.price * 0.15
+      return average * 1.5 - constructor.price * 0.18 + stabilityBonus
     }
 
     if (style === 'underdog') {
-      return average + Math.max(0, 16 - constructor.price) * 0.9
+      return average * 1.1 + Math.max(0, 16 - constructor.price) * 1.0 + stabilityBonus * 0.8
     }
 
-    return average * 1.2 - constructor.price * 0.1
+    return average * 1.3 - constructor.price * 0.12 + stabilityBonus
   }
 
-  driverCandidates.sort((left, right) => driverScore(right) - driverScore(left))
-  constructorCandidates.sort((left, right) => constructorScore(right) - constructorScore(left))
+  const pickBestDriverPlan = (budget: number): RosterPlan | null => {
+    let bestPlan: RosterPlan | null = null
+    const selectedDrivers: DriverAsset[] = []
 
-  let bestPlan:
-    | {
-        drivers: string[]
-        constructors: string[]
-        score: number
+    const search = (
+      startIndex: number,
+      selectedCount: number,
+      currentCost: number,
+      currentScore: number,
+    ) => {
+      if (currentCost > budget) {
+        return
       }
-    | undefined
+
+      if (selectedCount === MAX_DRIVERS) {
+        const candidatePlan: RosterPlan = {
+          drivers: selectedDrivers.map((driver) => driver.abbreviation),
+          constructors: [],
+          score: currentScore,
+          cost: roundToTenth(currentCost),
+        }
+
+        if (isBetterRosterPlan(candidatePlan, bestPlan)) {
+          bestPlan = candidatePlan
+        }
+        return
+      }
+
+      const remainingSlots = MAX_DRIVERS - selectedCount
+      for (let index = startIndex; index <= driverCandidates.length - remainingSlots; index += 1) {
+        const driver = driverCandidates[index]
+        selectedDrivers.push(driver)
+        search(
+          index + 1,
+          selectedCount + 1,
+          roundToTenth(currentCost + driver.price),
+          currentScore + driverScore(driver),
+        )
+        selectedDrivers.pop()
+      }
+    }
+
+    search(0, 0, 0, 0)
+    return bestPlan
+  }
+
+  let bestPlan: RosterPlan | null = null
 
   for (let leftIndex = 0; leftIndex < constructorCandidates.length - 1; leftIndex += 1) {
     for (let rightIndex = leftIndex + 1; rightIndex < constructorCandidates.length; rightIndex += 1) {
@@ -435,57 +823,53 @@ const buildOpeningRoster = (
         constructorCandidates[leftIndex],
         constructorCandidates[rightIndex],
       ]
-      const constructorCost =
-        selectedConstructors[0].price + selectedConstructors[1].price
-      if (constructorCost >= INITIAL_BUDGET) {
+      const constructorCost = roundToTenth(
+        selectedConstructors[0].price + selectedConstructors[1].price,
+      )
+      if (constructorCost > INITIAL_BUDGET) {
         continue
       }
 
-      const selectedDrivers: DriverAsset[] = []
-      let remainingBudget = INITIAL_BUDGET - constructorCost
-
-      for (const driver of driverCandidates) {
-        if (selectedDrivers.length === MAX_DRIVERS) {
-          break
-        }
-
-        const remainingSlots = MAX_DRIVERS - selectedDrivers.length - 1
-        const cheapestRemainder = driverCandidates
-          .filter((candidate) => !selectedDrivers.includes(candidate) && candidate.abbreviation !== driver.abbreviation)
-          .slice(-remainingSlots)
-          .reduce((sum, candidate) => sum + candidate.price, 0)
-
-        if (driver.price <= remainingBudget - cheapestRemainder) {
-          selectedDrivers.push(driver)
-          remainingBudget -= driver.price
-        }
-      }
-
-      if (selectedDrivers.length !== MAX_DRIVERS) {
+      const driverPlan = pickBestDriverPlan(roundToTenth(INITIAL_BUDGET - constructorCost))
+      if (!driverPlan) {
         continue
       }
 
-      const totalScore =
-        selectedDrivers.reduce((sum, driver) => sum + driverScore(driver), 0) +
-        selectedConstructors.reduce((sum, constructor) => sum + constructorScore(constructor), 0)
+      const candidatePlan: RosterPlan = {
+        drivers: driverPlan.drivers,
+        constructors: selectedConstructors.map((constructor) => constructor.name),
+        score:
+          driverPlan.score +
+          selectedConstructors.reduce((sum, constructor) => sum + constructorScore(constructor), 0),
+        cost: roundToTenth(driverPlan.cost + constructorCost),
+      }
 
-      if (!bestPlan || totalScore > bestPlan.score) {
-        bestPlan = {
-          drivers: selectedDrivers.map((driver) => driver.abbreviation),
-          constructors: selectedConstructors.map((constructor) => constructor.name),
-          score: totalScore,
-        }
+      if (isBetterRosterPlan(candidatePlan, bestPlan)) {
+        bestPlan = candidatePlan
       }
     }
   }
 
   if (bestPlan) {
-    return bestPlan
+    return {
+      drivers: bestPlan.drivers,
+      constructors: bestPlan.constructors,
+      score: bestPlan.score,
+    }
   }
 
+  const fallbackDrivers = [...driverCandidates]
+    .sort((left, right) => driverScore(right) - driverScore(left) || left.price - right.price)
+    .slice(0, MAX_DRIVERS)
+    .map((driver) => driver.abbreviation)
+  const fallbackConstructors = [...constructorCandidates]
+    .sort((left, right) => constructorScore(right) - constructorScore(left) || left.price - right.price)
+    .slice(0, MAX_CONSTRUCTORS)
+    .map((constructor) => constructor.name)
+
   return {
-    drivers: driverCandidates.slice(0, MAX_DRIVERS).map((driver) => driver.abbreviation),
-    constructors: constructorCandidates.slice(0, MAX_CONSTRUCTORS).map((constructor) => constructor.name),
+    drivers: fallbackDrivers,
+    constructors: fallbackConstructors,
     score: 0,
   }
 }
@@ -546,10 +930,28 @@ const getPerformanceSnapshot = (
 
 const initializeManagers = (seasonData: SeasonData, drivers: DriverAsset[], constructors: ConstructorAsset[]) => {
   const performance = getPerformanceSnapshot(seasonData, drivers, constructors, -1)
-  const balancedRoster = buildOpeningRoster(drivers, constructors, performance, 'balanced')
-  const fanaticRoster = buildOpeningRoster(drivers, constructors, performance, 'fanatic')
-  const valueRoster = buildOpeningRoster(drivers, constructors, performance, 'value')
-  const underdogRoster = buildOpeningRoster(drivers, constructors, performance, 'underdog')
+  const openerActiveDrivers = getRoundActiveDrivers(seasonData.rounds[0] ?? null)
+  const fanaticRoster = buildOpeningRoster(
+    drivers,
+    constructors,
+    performance,
+    'fanatic',
+    openerActiveDrivers,
+  )
+  const valueRoster = buildOpeningRoster(
+    drivers,
+    constructors,
+    performance,
+    'value',
+    openerActiveDrivers,
+  )
+  const underdogRoster = buildOpeningRoster(
+    drivers,
+    constructors,
+    performance,
+    'underdog',
+    openerActiveDrivers,
+  )
 
   const driverMap = getDriversMap(drivers)
   const constructorMap = getConstructorsMap(constructors)
@@ -559,9 +961,10 @@ const initializeManagers = (seasonData: SeasonData, drivers: DriverAsset[], cons
       id: 'human',
       name: 'You',
       isHuman: true,
-      drivers: balancedRoster.drivers,
-      constructors: balancedRoster.constructors,
-      drsBoostDriver: balancedRoster.drivers[0],
+      drivers: [],
+      constructors: [],
+      drsBoostDriver: '',
+      extraDrsDriver: '',
       activeChip: null,
       chips: { ...ALL_CHIPS_AVAILABLE },
       totalPoints: 0,
@@ -579,6 +982,7 @@ const initializeManagers = (seasonData: SeasonData, drivers: DriverAsset[], cons
       drivers: fanaticRoster.drivers,
       constructors: fanaticRoster.constructors,
       drsBoostDriver: fanaticRoster.drivers[0],
+      extraDrsDriver: fanaticRoster.drivers[1] ?? fanaticRoster.drivers[0],
       activeChip: null,
       chips: { ...ALL_CHIPS_AVAILABLE },
       totalPoints: 0,
@@ -596,6 +1000,7 @@ const initializeManagers = (seasonData: SeasonData, drivers: DriverAsset[], cons
       drivers: valueRoster.drivers,
       constructors: valueRoster.constructors,
       drsBoostDriver: valueRoster.drivers[0],
+      extraDrsDriver: valueRoster.drivers[1] ?? valueRoster.drivers[0],
       activeChip: null,
       chips: { ...ALL_CHIPS_AVAILABLE },
       totalPoints: 0,
@@ -613,6 +1018,7 @@ const initializeManagers = (seasonData: SeasonData, drivers: DriverAsset[], cons
       drivers: underdogRoster.drivers,
       constructors: underdogRoster.constructors,
       drsBoostDriver: underdogRoster.drivers[0],
+      extraDrsDriver: underdogRoster.drivers[1] ?? underdogRoster.drivers[0],
       activeChip: null,
       chips: { ...ALL_CHIPS_AVAILABLE },
       totalPoints: 0,
@@ -659,16 +1065,99 @@ const applyAiStrategy = (
   }
 
   const performance = getPerformanceSnapshot(seasonData, drivers, constructors, lastProcessedRound)
-  const roster = buildOpeningRoster(drivers, constructors, performance, manager.aiStyle)
+  const roster = buildOpeningRoster(
+    drivers,
+    constructors,
+    performance,
+    manager.aiStyle,
+    getRoundActiveDrivers(roundData),
+  )
   const driverMap = getDriversMap(drivers)
   const constructorMap = getConstructorsMap(constructors)
-  const candidateDrivers = roster.drivers
-  const topDriver = [...candidateDrivers]
-    .sort((left, right) => (driverMap.get(right)?.price ?? 0) - (driverMap.get(left)?.price ?? 0))[0]
+
+  // Conservative transfer: only swap if the candidate is significantly better.
+  // Compute a "keep score" for each current driver vs the candidate.
+  const currentDrivers = manager.drivers.filter(Boolean)
+  const computeDriverScore = (abbreviation: string) => {
+    const driver = driverMap.get(abbreviation)
+    if (!driver) return 0
+    const avg = performance.driverAverages.get(abbreviation) ?? 0
+    const ppm = performance.driverPointsPerMillion.get(abbreviation) ?? 0
+    return avg * 1.5 + ppm * 10
+  }
+
+  // Start with the AI's optimal picks, then replace with current drivers
+  // when the gain doesn't justify the transfer cost.
+  const optimalDrivers = [...roster.drivers]
+  const optimalSet = new Set(optimalDrivers)
+  const currentSet = new Set(currentDrivers)
+
+  // Keep current drivers that are already in the optimal set.
+  // For drivers not in the optimal set, only swap them out if the replacement
+  // scores significantly higher (threshold based on AI style).
+  const replacementThreshold = manager.aiStyle === 'fanatic' ? 5 : manager.aiStyle === 'value' ? 3 : 4
+
+  const mergedDrivers: string[] = []
+  const optimalRemaining = [...optimalDrivers]
+
+  // First pass: keep current drivers that are still in the optimal set.
+  for (const currentDriver of currentDrivers) {
+    if (optimalSet.has(currentDriver)) {
+      mergedDrivers.push(currentDriver)
+      const idx = optimalRemaining.indexOf(currentDriver)
+      if (idx >= 0) optimalRemaining.splice(idx, 1)
+    }
+  }
+
+  // Second pass: for current drivers not in optimal, check if they're "close enough" to keep.
+  for (const currentDriver of currentDrivers) {
+    if (mergedDrivers.includes(currentDriver)) continue
+    if (mergedDrivers.length >= MAX_DRIVERS) break
+
+    const currentScore = computeDriverScore(currentDriver)
+    const bestReplacement = optimalRemaining[0]
+    const replacementScore = bestReplacement ? computeDriverScore(bestReplacement) : 0
+
+    // Keep the current driver if the replacement isn't much better.
+    if (bestReplacement && replacementScore - currentScore < replacementThreshold) {
+      mergedDrivers.push(currentDriver)
+    } else if (bestReplacement) {
+      mergedDrivers.push(bestReplacement)
+      optimalRemaining.shift()
+    } else {
+      mergedDrivers.push(currentDriver)
+    }
+  }
+
+  // Fill remaining slots from optimal if needed.
+  for (const driver of optimalRemaining) {
+    if (mergedDrivers.length >= MAX_DRIVERS) break
+    if (!mergedDrivers.includes(driver)) {
+      mergedDrivers.push(driver)
+    }
+  }
+
+  // Ensure we have exactly MAX_DRIVERS.
+  const finalDrivers = mergedDrivers.slice(0, MAX_DRIVERS)
+  while (finalDrivers.length < MAX_DRIVERS && optimalDrivers.length > finalDrivers.length) {
+    const next = optimalDrivers.find((d) => !finalDrivers.includes(d))
+    if (next) finalDrivers.push(next)
+    else break
+  }
+
+  // DRS target: pick the most consistent high-scorer (not just the priciest).
+  const driverScores = finalDrivers.map((abbr) => ({
+    abbr,
+    score: computeDriverScore(abbr),
+    avg: performance.driverAverages.get(abbr) ?? 0,
+  }))
+  driverScores.sort((a, b) => b.score - a.score)
+  const topDriver = driverScores[0]?.abbr ?? finalDrivers[0]
+  const secondaryDriver = driverScores[1]?.abbr ?? finalDrivers[1] ?? topDriver
 
   let activeChip: ChipType | null = null
   const transferCount =
-    computePendingTransfers(candidateDrivers, manager.lockedDrivers) +
+    computePendingTransfers(finalDrivers, manager.lockedDrivers) +
     computePendingTransfers(roster.constructors, manager.lockedConstructors)
 
   if (
@@ -687,7 +1176,7 @@ const applyAiStrategy = (
     manager.aiStyle === 'underdog' &&
     manager.chips.noNegative &&
     (CHAOS_TRACKS.has(roundData.country) ||
-      candidateDrivers.some((driver) => (performance.driverGainAverage.get(driver) ?? 0) > 2))
+      finalDrivers.some((driver) => (performance.driverGainAverage.get(driver) ?? 0) > 2))
   ) {
     activeChip = 'noNegative'
   } else if (
@@ -701,9 +1190,10 @@ const applyAiStrategy = (
   const nextManager = syncBudget(
     {
       ...manager,
-      drivers: candidateDrivers,
+      drivers: finalDrivers,
       constructors: roster.constructors,
-      drsBoostDriver: topDriver,
+      drsBoostDriver: activeChip === 'extraDrs' ? secondaryDriver : topDriver,
+      extraDrsDriver: activeChip === 'extraDrs' ? topDriver : secondaryDriver,
       activeChip,
     },
     driverMap,
@@ -726,10 +1216,12 @@ const adjustPrices = <TAsset extends DriverAsset | ConstructorAsset>(
       -PRICE_MAX_CHANGE,
       Math.min(PRICE_MAX_CHANGE, (average - expected) / 12),
     )
+    const newPrice = clampPrice(asset.price + delta)
 
     return {
       ...asset,
-      price: clampPrice(asset.price + delta),
+      price: newPrice,
+      lastPriceChange: roundToTenth(newPrice - asset.price),
     }
   })
 
@@ -739,9 +1231,10 @@ const scoreManager = (
   driversMap: Map<string, DriverAsset>,
   constructorsMap: Map<string, ConstructorAsset>,
   isSeasonOpener = false,
+  season?: number,
 ): ManagerRoundResult => {
   const driverScoreMap = buildDriverScoreMap(roundData)
-  const constructorScoreMap = buildConstructorScoreMap(roundData)
+  const constructorScoreMap = buildConstructorScoreMap(roundData, season)
   const transferSummary = createTransferSummary(
     manager,
     driversMap,
@@ -749,7 +1242,9 @@ const scoreManager = (
     isSeasonOpener,
   )
 
-  const driverScores = manager.drivers.map((driver) => {
+  const lineupDrivers = manager.drivers.filter(Boolean)
+  const lineupConstructors = manager.constructors.filter(Boolean)
+  const driverScores = lineupDrivers.map((driver) => {
     const score = driverScoreMap.get(driver)
     return score ?? {
       driver,
@@ -763,18 +1258,40 @@ const scoreManager = (
   })
 
   const highestDriver = [...driverScores].sort((left, right) => right.totalRaw - left.totalRaw)[0]
-  let drsDriver = manager.drivers.includes(manager.drsBoostDriver)
+  const secondHighestDriver = [...driverScores]
+    .sort((left, right) => right.totalRaw - left.totalRaw)[1]
+  let drsDriver = lineupDrivers.includes(manager.drsBoostDriver)
     ? manager.drsBoostDriver
     : highestDriver?.driver
+  let tripleDrsDriver = lineupDrivers.includes(manager.extraDrsDriver)
+    ? manager.extraDrsDriver
+    : secondHighestDriver?.driver ?? highestDriver?.driver
 
   if (manager.activeChip === 'autopilot' && highestDriver) {
     drsDriver = highestDriver.driver
   }
 
-  const drsMultiplier = manager.activeChip === 'extraDrs' ? 3 : 2
+  if (manager.activeChip === 'extraDrs') {
+    const resolvedTargets = resolveExtraDrsTargets(
+      lineupDrivers,
+      drsDriver,
+      tripleDrsDriver,
+    )
+    drsDriver = resolvedTargets.drsBoostDriver
+    tripleDrsDriver = resolvedTargets.extraDrsDriver
+  }
 
   const finalizedDriverScores = driverScores.map((score) => {
-    const multiplier = score.driver === drsDriver ? drsMultiplier : 1
+    let multiplier = 1
+    if (manager.activeChip === 'extraDrs') {
+      if (score.driver === tripleDrsDriver) {
+        multiplier = 3
+      } else if (score.driver === drsDriver) {
+        multiplier = 2
+      }
+    } else if (score.driver === drsDriver) {
+      multiplier = 2
+    }
     const totalFinal = score.totalRaw * multiplier
     return {
       ...score,
@@ -783,7 +1300,7 @@ const scoreManager = (
     }
   })
 
-  let constructorScores = manager.constructors.map((constructorName) => {
+  let constructorScores = lineupConstructors.map((constructorName) => {
     const score = constructorScoreMap.get(constructorName)
     return score ?? {
       constructor: constructorName,
@@ -837,6 +1354,24 @@ export function GameProvider({ children }: { children: ReactNode }) {
     setState(initializeStateForSeason(selectedEntry))
   }, [])
 
+  const exitToSeasonSelect = useCallback(() => {
+    setState(createEmptyState())
+  }, [])
+
+  const restartSeason = useCallback(() => {
+    if (!state.selectedSeason) {
+      setState(createEmptyState())
+      return
+    }
+
+    const selectedEntry = seasonCatalog.find((entry) => entry.season === state.selectedSeason)
+    if (!selectedEntry) {
+      return
+    }
+
+    setState(initializeStateForSeason(selectedEntry))
+  }, [state.selectedSeason])
+
   const resetSeason = useCallback(() => {
     if (!state.selectedSeason) {
       setState(createEmptyState())
@@ -851,6 +1386,21 @@ export function GameProvider({ children }: { children: ReactNode }) {
     setState(initializeStateForSeason(selectedEntry))
   }, [state.selectedSeason])
 
+  const saveGame = useCallback(() => {
+    setState((previous) => {
+      if (!previous.selectedSeason || !previous.seasonData) return previous
+      writeSaveFile(previous)
+      return previous
+    })
+  }, [])
+
+  const loadSavedGame = useCallback(() => {
+    const saved = readSaveFile()
+    if (saved && saved.selectedSeason && saved.seasonData) {
+      setState(saved)
+    }
+  }, [])
+
   const setCurrentView = useCallback((view: GameView) => {
     setState((previous) => ({ ...previous, currentView: view }))
   }, [])
@@ -858,7 +1408,19 @@ export function GameProvider({ children }: { children: ReactNode }) {
   const replaceDriver = useCallback((slotIndex: number, driver: string) => {
     setState((previous) => {
       const manager = previous.managers.find((entry) => entry.isHuman)
-      if (!manager || manager.drivers.includes(driver)) {
+      if (!manager || slotIndex < 0 || slotIndex >= MAX_DRIVERS) {
+        return previous
+      }
+
+      const currentSlotDriver = manager.drivers[slotIndex]
+      if (manager.drivers.includes(driver) && currentSlotDriver !== driver) {
+        return previous
+      }
+
+      const activeDrivers = getRoundActiveDrivers(
+        previous.seasonData?.rounds[previous.currentRound] ?? null,
+      )
+      if (activeDrivers.size > 0 && !activeDrivers.has(driver)) {
         return previous
       }
 
@@ -870,17 +1432,21 @@ export function GameProvider({ children }: { children: ReactNode }) {
           return entry
         }
 
-        const nextDrivers = [...entry.drivers]
+        const nextDrivers = Array.from({ length: MAX_DRIVERS }, (_, index) => entry.drivers[index] ?? '')
         nextDrivers[slotIndex] = driver
-        const drsBoostDriver = nextDrivers.includes(entry.drsBoostDriver)
-          ? entry.drsBoostDriver
-          : nextDrivers[0]
+        const completedDrivers = nextDrivers.filter(Boolean)
+        const { drsBoostDriver, extraDrsDriver } = resolveExtraDrsTargets(
+          completedDrivers,
+          entry.drsBoostDriver,
+          entry.extraDrsDriver,
+        )
 
         return syncBudget(
           {
             ...entry,
             drivers: nextDrivers,
             drsBoostDriver,
+            extraDrsDriver,
           },
           driversMap,
           constructorsMap,
@@ -897,7 +1463,15 @@ export function GameProvider({ children }: { children: ReactNode }) {
   const replaceConstructor = useCallback((slotIndex: number, constructorName: string) => {
     setState((previous) => {
       const manager = previous.managers.find((entry) => entry.isHuman)
-      if (!manager || manager.constructors.includes(constructorName)) {
+      if (!manager || slotIndex < 0 || slotIndex >= MAX_CONSTRUCTORS) {
+        return previous
+      }
+
+      const currentSlotConstructor = manager.constructors[slotIndex]
+      if (
+        manager.constructors.includes(constructorName) &&
+        currentSlotConstructor !== constructorName
+      ) {
         return previous
       }
 
@@ -909,7 +1483,10 @@ export function GameProvider({ children }: { children: ReactNode }) {
           return entry
         }
 
-        const nextConstructors = [...entry.constructors]
+        const nextConstructors = Array.from(
+          { length: MAX_CONSTRUCTORS },
+          (_, index) => entry.constructors[index] ?? '',
+        )
         nextConstructors[slotIndex] = constructorName
 
         return syncBudget(
@@ -929,12 +1506,69 @@ export function GameProvider({ children }: { children: ReactNode }) {
     })
   }, [])
 
+  const resetHumanLineup = useCallback(() => {
+    setState((previous) => {
+      const driversMap = getDriversMap(previous.drivers)
+      const constructorsMap = getConstructorsMap(previous.constructors)
+
+      return {
+        ...previous,
+        managers: previous.managers.map((manager) => {
+          if (!manager.isHuman) {
+            return manager
+          }
+
+          const restoredDrivers = manager.lockedDrivers ?? []
+          const restoredConstructors = manager.lockedConstructors ?? []
+          const restoredTargets = resolveExtraDrsTargets(
+            restoredDrivers,
+            manager.drsBoostDriver,
+            manager.extraDrsDriver,
+          )
+
+          return syncBudget(
+            {
+              ...manager,
+              drivers: restoredDrivers,
+              constructors: restoredConstructors,
+              drsBoostDriver: restoredTargets.drsBoostDriver,
+              extraDrsDriver: restoredTargets.extraDrsDriver,
+              activeChip: null,
+              backupDrivers: undefined,
+              backupConstructors: undefined,
+              backupBudget: undefined,
+            },
+            driversMap,
+            constructorsMap,
+          )
+        }),
+      }
+    })
+  }, [])
+
   const setDrsBoostDriver = useCallback((driver: string) => {
     setState((previous) => ({
       ...previous,
       managers: previous.managers.map((manager) =>
         manager.isHuman && manager.drivers.includes(driver)
-          ? { ...manager, drsBoostDriver: driver }
+          ? {
+              ...manager,
+              ...resolveExtraDrsTargets(manager.drivers, driver, manager.extraDrsDriver),
+            }
+          : manager,
+      ),
+    }))
+  }, [])
+
+  const setExtraDrsTargets = useCallback((tripleDriver: string, doubleDriver: string) => {
+    setState((previous) => ({
+      ...previous,
+      managers: previous.managers.map((manager) =>
+        manager.isHuman
+          ? {
+              ...manager,
+              ...resolveExtraDrsTargets(manager.drivers, doubleDriver, tripleDriver),
+            }
           : manager,
       ),
     }))
@@ -955,13 +1589,19 @@ export function GameProvider({ children }: { children: ReactNode }) {
           const toggledChip = manager.activeChip === chip ? null : chip
 
           if (manager.activeChip === 'limitless' && toggledChip !== 'limitless' && manager.backupDrivers && manager.backupConstructors) {
+            const restoredTargets = resolveExtraDrsTargets(
+              manager.backupDrivers,
+              manager.drsBoostDriver,
+              manager.extraDrsDriver,
+            )
             return syncBudget(
               {
                 ...manager,
                 activeChip: toggledChip,
                 drivers: manager.backupDrivers,
                 constructors: manager.backupConstructors,
-                drsBoostDriver: manager.backupDrivers[0],
+                drsBoostDriver: restoredTargets.drsBoostDriver,
+                extraDrsDriver: restoredTargets.extraDrsDriver,
                 backupDrivers: undefined,
                 backupConstructors: undefined,
                 backupBudget: undefined,
@@ -981,6 +1621,18 @@ export function GameProvider({ children }: { children: ReactNode }) {
             }
           }
 
+          if (toggledChip === 'extraDrs') {
+            return {
+              ...manager,
+              activeChip: toggledChip,
+              ...resolveExtraDrsTargets(
+                manager.drivers,
+                manager.drsBoostDriver,
+                manager.extraDrsDriver,
+              ),
+            }
+          }
+
           return {
             ...manager,
             activeChip: toggledChip,
@@ -992,8 +1644,15 @@ export function GameProvider({ children }: { children: ReactNode }) {
 
   const processCurrentRound = useCallback(() => {
     setState((previous) => {
-      if (!previous.seasonData || previous.isSeasonComplete) {
+      if (!previous.seasonData) {
         return previous
+      }
+
+      if (previous.isSeasonComplete) {
+        return {
+          ...previous,
+          currentView: 'seasonSummary',
+        }
       }
 
       const seasonData = previous.seasonData
@@ -1037,11 +1696,11 @@ export function GameProvider({ children }: { children: ReactNode }) {
       }
 
       const roundResults = preparedManagers.map((manager) =>
-        scoreManager(manager, roundData, driversMap, constructorsMap, isSeasonOpener),
+        scoreManager(manager, roundData, driversMap, constructorsMap, isSeasonOpener, previous.selectedSeason ?? undefined),
       )
 
       const driverRoundScores = buildDriverScoreMap(roundData)
-      const constructorRoundScores = buildConstructorScoreMap(roundData)
+      const constructorRoundScores = buildConstructorScoreMap(roundData, previous.selectedSeason ?? undefined)
 
       const nextDrivers = adjustPrices(
         previous.drivers.map((driver) => {
@@ -1105,15 +1764,19 @@ export function GameProvider({ children }: { children: ReactNode }) {
           usedChip === 'limitless' && manager.backupConstructors
             ? manager.backupConstructors
             : manager.constructors
+        const restoredTargets = resolveExtraDrsTargets(
+          restoredDrivers,
+          manager.drsBoostDriver,
+          manager.extraDrsDriver,
+        )
 
         return syncBudget(
           {
             ...manager,
             drivers: restoredDrivers,
             constructors: restoredConstructors,
-            drsBoostDriver: restoredDrivers.includes(manager.drsBoostDriver)
-              ? manager.drsBoostDriver
-              : restoredDrivers[0],
+            drsBoostDriver: restoredTargets.drsBoostDriver,
+            extraDrsDriver: restoredTargets.extraDrsDriver,
             chips: nextChipState,
             activeChip: null,
             backupDrivers: undefined,
@@ -1133,17 +1796,40 @@ export function GameProvider({ children }: { children: ReactNode }) {
       const nextRound = previous.currentRound + 1
       const isSeasonComplete = nextRound >= seasonData.rounds.length
 
-      return {
+      // Read auto-navigate preference (separate from game save data).
+      const autoNavigate = (() => {
+        try {
+          return localStorage.getItem('f1_fantasy_auto_navigate') !== 'false'
+        } catch {
+          return true
+        }
+      })()
+      const nextView = isSeasonComplete
+        ? previous.currentView
+        : autoNavigate
+          ? 'dashboard'
+          : previous.currentView
+
+      const nextState = {
         ...previous,
         drivers: nextDrivers,
         constructors: nextConstructors,
         managers: updatedManagers,
-        currentRound: isSeasonComplete ? previous.currentRound : nextRound,
+        currentRound: nextRound,
         isSeasonComplete,
         lastProcessedRound: previous.currentRound,
         roundResults: [...previous.roundResults, roundResults],
-        currentView: isSeasonComplete ? 'standings' : previous.currentView,
+        currentView: nextView,
       }
+
+      // Auto-save after processing a round.
+      try {
+        writeSaveFile(nextState)
+      } catch {
+        // localStorage may be unavailable — silently skip.
+      }
+
+      return nextState
     })
   }, [])
 
@@ -1202,29 +1888,42 @@ export function GameProvider({ children }: { children: ReactNode }) {
       currentRoundData,
       humanManager,
       standings,
+      hasSavedGame: hasSavedGame(),
       selectSeason,
+      exitToSeasonSelect,
+      restartSeason,
       resetSeason,
+      saveGame,
+      loadSavedGame,
       setCurrentView,
       replaceDriver,
       replaceConstructor,
+      resetHumanLineup,
       setDrsBoostDriver,
+      setExtraDrsTargets,
       setActiveChip,
       processCurrentRound,
       getTransferSummary,
     }),
     [
       currentRoundData,
+      exitToSeasonSelect,
       getTransferSummary,
       humanManager,
       processCurrentRound,
       replaceConstructor,
       replaceDriver,
+      resetHumanLineup,
+      restartSeason,
       resetSeason,
+      saveGame,
+      loadSavedGame,
       selectSeason,
       selectedSeasonEntry,
       setActiveChip,
       setCurrentView,
       setDrsBoostDriver,
+      setExtraDrsTargets,
       standings,
       state,
     ],

@@ -1,243 +1,143 @@
 # F1 Fantasy Local
 
-中文 | [English](#english)
+简体中文 | [English](#english)
 
-一个基于 FastF1 历史数据的本地 F1 Fantasy 模拟器。  
-你可以选择真实赛季（JSON 导入）或内置演示赛季，进行完整的“选人-转会-结算-积分榜”循环。
+🏎️ **专为 F1 粉丝与 Fantasy 玩家打造的本地模拟器**
+
+你是否觉得官方的 F1 Fantasy 等待周期太长，每周只能操作一次？
+你是否曾想过回溯经典的 F1 赛季，用当年的车手和赛车组建你的梦之队，测试你的策略？
+**F1 Fantasy Local** 提供原汁原味的官方 F1 Fantasy 体验，加上全真数据的模拟结算，正是为了解决这些痛点而生。
 
 ---
 
-## 中文
+### 1. 核心特色：原版 F1 Fantasy + 全真数据模拟
 
-### 1. 项目特性
+对于热爱的 F1 Fantasy 玩家来说，官方游戏存在游玩周期长、无法回溯和复盘等痛点。
+本项目完全还原了**官方 F1 Fantasy 的核心玩法**，并基于 FastF1 提供的**真实历史比赛数据**进行全真模拟结算。
 
-- 真实历史赛季支持：通过 FastF1 导出 2018-2025 赛季数据。
-- 本地可运行：无后端服务，React + TypeScript + Vite。
-- 完整玩法闭环：
-  - Dashboard：车库阵容、周末战报、关键指标。
-  - Transfer：双栏转会市场、预算进度、超额惩罚提示、芯片面板。
-  - Standings：积分榜、名次涨跌箭头、累计走势曲线。
-- 规则引擎内置：排位赛/冲刺赛/正赛积分、DRS、芯片、转会惩罚、动态身价。
-- AI 经理对手：`fanatic` / `value` / `underdog` 三种风格。
+- **随时随地开局**：无需等待现实比赛，以你自己的节奏推进赛季，一小时打完一个赛季不是梦！
+- **经典赛季回溯**：目前已内置 **2020-2025 赛季** 的全真比赛数据（后续将更新 2018-2019 两个赛季）。可以随时回到过去，组建你的无敌阵容。
+- **与 AI 经理同台竞技**：内置三种不同风格的 AI 对手，让单机体验不再孤单：
+  - 🤪 **狂热粉 (Fanatic)**：对某几位车手或车队极度偏爱，无论表现如何都会死忠持有，极具感性。
+  - 📊 **性价比导向 (Value)**：典型的“理智型”玩家，只看重近期的数据得分与身价涨跌，频繁进行低买高卖的财务操作。
+  - 🐎 **黑马挖掘机 (Underdog)**：喜欢在低价位捡漏，常常选出冷门组合以博取高额回报。
 
-### 2. 快速开始
+### 2. 核心玩法与详细规则
 
-#### 环境要求
+这里还原了极具深度且绝对真实的 F1 Fantasy 体验，比赛数据取材于 FastF1和Open F1：
 
-- Node.js 20+
-- npm 10+
+#### 2.1 阵容与资金
+- **初始阵容**：100M 初始预算，挑选 5 位车手 + 2 支车队。
+- **动态身价**：根据车手/车队在过去三站的真实表现（3-GP Rolling Form），与他们的期望得分对比进行动态涨跌，单次涨跌幅在 ±$1.5M 之间。
+
+#### 2.2 积分系统 (Scoring)
+- **排位赛 (Qualifying)**：根据排位赛最终名次给分（1-10名依次递减）。如果未能做出有效成绩或被取消资格(DSQ)会扣分。车队还将获得旗下两位车手晋级 Q2/Q3 的额外加分。
+- **冲刺赛 (Sprint)**：前 8 名获得积分。计算实际完赛位置与发车位的差值计算名次升降分，被超扣分，以及最快圈速加分。
+- **正赛 (Race)**：前 10 名获得官方标准积分。计算实际完赛位置与发车位的差值（每提升一名+1分，下降一名-1分），正赛最快圈速 +10分，退赛/取消资格(DNF/DSQ) -20分。超车和最佳车手由于目前缺乏数据暂不支持。
+- **进站换胎 (Pit Stops)**：提取当场比赛所有车队的进站通道耗时，最快进站车队 +15分，次快 +10分，第三快 +5分。由于数据原因，目前仅2024、2025赛季支持.
+
+#### 2.3 卡牌系统与常规加成 (Chips & Boosts)
+- **DRS 提升**：每周必须指定 1 位车手获得**双倍积分 (2x)**。
+- **特权卡牌**（每个赛季每种仅可使用一次）：
+  - **Extra DRS (3x)**：指定车手当站获得三倍积分。
+  - **Autopilot**：当站结算后，自动将 2x 效果转移给队内得分最高的车手。
+  - **No Negative**：如果当站任何成员积分为负数，则重置为 0 分。
+  - **Limitless**：周末内取消 $100M 预算限制且无限次转会，赛后恢复。
+  - **Wildcard**：周末内无限次免费转会（需在 $100M 预算内），且阵容修改是永久的。
+  - 考虑到游戏机制，取消Final Fix卡牌
+
+#### 2.4 转会规则
+- **免费转会**：每轮拥有 2 次免费转会，可改变车手/车队选择；未使用的可结转至下轮（最多累计 3 次）。
+- **超额扣分**：超出免费额度的每次转会，当周扣除 **-10分**。首轮建队阶段转会不限次数。
+
+---
+
+### 3. 技术细节与二次开发
+
+本项目是一个纯本地运行的前端应用（React + TypeScript + Vite），不需要复杂的后端服务。
 
 #### 安装与运行
-
+- Node.js 20+ / npm 10+
 ```bash
 npm install
 npm run dev
 ```
+打开浏览器访问本地地址即可游玩。
 
-构建生产包：
-
-```bash
-npm run build
-```
-
-代码检查：
-
-```bash
-npm run lint
-```
-
-本地预览构建结果：
-
-```bash
-npm run preview
-```
-
-### 3. 导入真实赛季数据（可选）
-
-如果只想快速体验，可直接使用内置 demo 赛季；  
-如果要玩真实历史赛季，请先导出 JSON：
-
-#### Python 依赖
-
-- Python 3.10+
-- `fastf1`
-- `pandas`
-
-安装依赖：
-
-```bash
-pip install fastf1 pandas
-```
-
-导出单赛季（示例 2024）：
-
-```bash
-python scripts/fetch_season_data.py --season 2024
-```
-
-导出全部赛季（2018-2025）：
-
-```bash
-python scripts/fetch_season_data.py --all
-```
-
-导出文件会写入：
-
-- `src/data/seasons/{year}.json`
-
-前端会自动扫描 `src/data/seasons/*.json` 并在赛季选择页展示。
-
-### 4. 玩法概览
-
-- 阵容：5 位车手 + 2 支车队。
-- 预算：初始 `100M`。
-- 每周常规加成：指定 1 位 DRS 车手（2x）。
-- 芯片系统：`Extra DRS`、`Autopilot`、`No Negative`、`Limitless`、`Wildcard`、`Final Fix`。
-- 转会规则：每轮有免费转会额度，超额会扣分（默认每次 `-10`）。
-- 动态身价：按近期表现滚动调整，受上下限与单轮变动限制。
-
-详细规则请查看：
-
-- [f1_fantasy_rules.md](./f1_fantasy_rules.md)
-
-### 5. 常见问题
-
-- `npm run dev` 报 `spawn EPERM`：通常是受限环境/沙箱导致的进程创建限制，换到本机正常终端运行即可。
-- 没有看到真实赛季：确认 `src/data/seasons/` 下已生成对应 JSON。
-- 首轮转会处理与后续不同：这是有意设计，首轮用于开局建队，不按常规转会惩罚结算。
-
-### 6. 目录说明
-
-```text
-src/
-  components/        UI 组件
-  context/           核心规则与状态管理（GameContext）
-  data/              内置数据、赛季目录、JSON 加载
-  views/             Dashboard / Transfer / Standings 页面
-scripts/
-  fetch_season_data.py   FastF1 赛季数据导出脚本
-```
+#### 赛季数据 (Season Data Structure)
+为了方便其他开发者适配新赛季或构建自己的赛事数据，本项目的赛季数据均以 JSON 格式存储在 `src/data/seasons/` 目录下。单个赛季数据包含 `season` (年份) 和 `rounds` (分站列表)。
+每个分站 (`RoundData`) 的结构大致如下：
+- `round`: 分站序号。
+- `raceName`, `country`, `date`: 基础赛事信息。
+- `isSprint`: 是否包含冲刺赛周末。
+- `qualifying`: 包含所有车手的排位赛名次、Q1/Q2/Q3 圈速及完赛状态。
+- `sprint` (可选): 包含车手的起步与完赛名次、最快圈速及完赛状态。
+- `race`: 包含车手的起步与完赛名次、正赛最快圈速、完赛状态，以及 `pitStops` (各车队的最快进站耗时排名)。
+通过遵循此 JSON 数据结构，各位开发者可以轻松植入其他自定义赛季的数据。
 
 ---
 
 ## English
 
-### 1. What This Project Is
+### 1. Core Features: Authentic F1 Fantasy + Realistic Simulation
 
-F1 Fantasy Local is an offline, browser-based fantasy simulator powered by historical FastF1 data.  
-You can run full cycles of lineup building, transfers, weekend processing, and standings progression.
+For hardcore F1 Fantasy players, the official game suffers from long wait times and an inability to replay past events. This project solves that by providing the **original F1 Fantasy experience** powered by **real historical data** via FastF1.
 
-### 2. Key Features
+- **Play at Your Own Pace**: No need to wait for real-life weekends. Breeze through an entire season in a day!
+- **Relive Classic Seasons**: Currently features data from the **2020 to 2025 seasons** (2018-2019 will be added later). Go back in time and build your ultimate dream team.
+- **Compete Against AI Managers**: Face off against three distinct styles of AI opponents:
+  - 🤪 **Fanatic**: Blindly loyal to certain drivers or teams, holding onto them regardless of performance.
+  - 📊 **Value**: A rational player focused strictly on recent stats and dynamic price changes, consistently buying low and selling high.
+  - 🐎 **Underdog**: Loves finding cheap, unconventional picks hoping for massive returns.
 
-- Real historical season support via FastF1 exports (2018-2025).
-- Fully local app: React + TypeScript + Vite, no backend required.
-- Full gameplay loop:
-  - Dashboard: garage lineup, weekend report, key KPIs.
-  - Transfer: split-view market, budget meter, penalties, chip panel.
-  - Standings: ranking shifts, cumulative trend chart.
-- Rules engine included:
-  - qualifying/sprint/race scoring
-  - DRS boost
-  - chip logic
-  - transfer penalties
-  - dynamic pricing
-- AI opponents with three styles: `fanatic`, `value`, `underdog`.
+### 2. Gameplay & Detailed Rules
 
-### 3. Quick Start
+This simulator recreates the authentic F1 Fantasy experience. All scoring is perfectly calculated using real FastF1 data:
 
-Requirements:
+#### 2.1 Garage & Budget
+- **Lineup**: Start with a `$100M` budget to draft 5 drivers + 2 constructors.
+- **Dynamic Pricing**: Asset prices adjust based on their real-world performance over the last 3 races (3-GP Rolling Form) compared to their expected points, shifting up to ±$1.5M per round.
 
-- Node.js 20+
-- npm 10+
+#### 2.2 Scoring System
+- **Qualifying**: Points are awarded based on final positions (1st to 10th). Penalty points for DNF/DSQ. Constructors get bonus points if their drivers advance to Q2/Q3.
+- **Sprint Race**: Points for the top 8. Includes position gained/lost (overtakes) against grid position, and fastest lap bonuses.
+- **Grand Prix Race**: Standard F1 points for the top 10. Position gained/lost bonuses (+1 pt for gaining, -1 pt for dropping), fastest lap (+10 pts), and DNF/DSQ penalties (-20 pts).
+- **Pit Stops**: Constructors are ranked by their fastest pit stop durations in the race. 1st gets +15 pts, 2nd gets +10 pts, and 3rd gets +5 pts.
 
-Install and run:
+#### 2.3 Chips & Weekly Boost
+- **DRS Boost**: One driver must be selected each race to score **2x points**.
+- **Chips** (One use per season each):
+  - **Extra DRS (3x)**: The selected driver scores 3x points.
+  - **Autopilot**: Automatically transfers your 2x DRS boost to your highest-scoring driver after the race.
+  - **No Negative**: Resets any negative-scoring driver/constructor to 0 points.
+  - **Limitless**: Removes the $100M budget limit and allows unlimited transfers for one weekend.
+  - **Wildcard**: Unlimited free transfers within the $100M budget. Roster changes are permanent.
+  - **Final Fix**: Make exactly 1 transfer between qualifying and the race.
 
+#### 2.4 Transfers
+- **Free Transfers**: 2 free transfers per round. Can carry over to the next round (max accumulated: 3).
+- **Penalties**: Any extra transfers beyond the free allowance cost **-10 points** each. Round 1 has unlimited transfers for setup.
+
+---
+
+### 3. Technical Details & Custom Seasons
+
+This is an offline, browser-based app (React + TypeScript + Vite) with no backend required.
+
+#### Quick Start
+- Node.js 20+ / npm 10+
 ```bash
 npm install
 npm run dev
 ```
+Open the provided local URL in your browser to play.
 
-Build:
-
-```bash
-npm run build
-```
-
-Lint:
-
-```bash
-npm run lint
-```
-
-Preview production build:
-
-```bash
-npm run preview
-```
-
-### 4. Import Real Season Data (Optional)
-
-The app ships with a built-in demo season so it runs out of the box.  
-To use real historical seasons, export JSON first.
-
-Python requirements:
-
-- Python 3.10+
-- `fastf1`
-- `pandas`
-
-Install:
-
-```bash
-pip install fastf1 pandas
-```
-
-Export one season (example: 2024):
-
-```bash
-python scripts/fetch_season_data.py --season 2024
-```
-
-Export all supported seasons:
-
-```bash
-python scripts/fetch_season_data.py --all
-```
-
-Output path:
-
-- `src/data/seasons/{year}.json`
-
-The frontend auto-discovers `src/data/seasons/*.json` in the season selector.
-
-### 5. Gameplay Summary
-
-- Lineup: 5 drivers + 2 constructors.
-- Budget: `100M` at start.
-- Weekly boost: one DRS driver (2x).
-- Chips: `Extra DRS`, `Autopilot`, `No Negative`, `Limitless`, `Wildcard`, `Final Fix`.
-- Transfers: free transfer allowance each round; extra transfers apply penalties (`-10` each by default).
-- Dynamic pricing: rolling performance-based adjustments with floor/cap/change limits.
-
-For full scoring and edge-case behavior, see:
-
-- [f1_fantasy_rules.md](./f1_fantasy_rules.md)
-
-### 6. Troubleshooting
-
-- `spawn EPERM` during `npm run dev`: usually caused by restricted/sandboxed environments; run from a normal local terminal.
-- Real seasons not showing up: verify JSON files exist under `src/data/seasons/`.
-- Round 1 transfer behavior differs intentionally: opening round has special handling for initial squad setup.
-
-### 7. Project Structure
-
-```text
-src/
-  components/        UI components
-  context/           core game rules and state management
-  data/              fixture data, catalog loader, season JSON wiring
-  views/             Dashboard / Transfer / Standings
-scripts/
-  fetch_season_data.py   FastF1 season exporter
-```
-
+#### Season Data Structure
+For developers looking to adapt or add new seasons, the data is stored in `src/data/seasons/` as JSON files. A season consists of `season` (year) and an array of `rounds`.
+Each `RoundData` contains:
+- `round`, `raceName`, `country`, `date`: Event metadata.
+- `isSprint`: Boolean indicating if it's a Sprint weekend.
+- `qualifying`: Array of driver results, Q1/Q2/Q3 lap times, and status.
+- `sprint` (optional): Grid/Finish positions, fastest lap driver, and status.
+- `race`: Grid/Finish positions, fastest lap driver, status, and `pitStops` (array of the fastest stop times per constructor).
+By replicating this JSON format, you can integrate any custom racing data into the simulator.

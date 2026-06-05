@@ -67,7 +67,7 @@ export interface SeasonData {
 
 // --- Game State Types ---
 
-export type ChipType = 'extraDrs' | 'autopilot' | 'noNegative' | 'limitless' | 'wildcard' | 'finalFix';
+export type ChipType = 'extraDrs' | 'autopilot' | 'noNegative' | 'limitless' | 'wildcard';
 
 export const CHIP_NAMES: Record<ChipType, string> = {
   extraDrs: 'Extra DRS (3x)',
@@ -75,7 +75,6 @@ export const CHIP_NAMES: Record<ChipType, string> = {
   noNegative: 'No Negative',
   limitless: 'Limitless',
   wildcard: 'Wildcard',
-  finalFix: 'Final Fix',
 };
 
 export interface ChipStatus {
@@ -84,7 +83,6 @@ export interface ChipStatus {
   noNegative: boolean;
   limitless: boolean;
   wildcard: boolean;
-  finalFix: boolean;
 }
 
 export const ALL_CHIPS_AVAILABLE: ChipStatus = {
@@ -93,7 +91,6 @@ export const ALL_CHIPS_AVAILABLE: ChipStatus = {
   noNegative: true,
   limitless: true,
   wildcard: true,
-  finalFix: true,
 };
 
 // --- Market Assets ---
@@ -105,6 +102,7 @@ export interface DriverAsset {
   price: number;           // in millions (e.g. 30.0)
   fantasyPoints: number;   // cumulative season total
   recentScores: number[];  // last 3 round scores for form calculation
+  lastPriceChange: number; // price change after last round (+/- in millions)
 }
 
 export interface ConstructorAsset {
@@ -112,6 +110,7 @@ export interface ConstructorAsset {
   price: number;
   fantasyPoints: number;
   recentScores: number[];
+  lastPriceChange: number;
 }
 
 // --- Manager / Team ---
@@ -126,6 +125,7 @@ export interface ManagerTeam {
   drivers: string[];          // 5 driver abbreviations
   constructors: string[];     // 2 constructor names
   drsBoostDriver: string;     // abbreviation of DRS boosted driver
+  extraDrsDriver: string;     // abbreviation of 3X DRS driver when Extra DRS is armed
   activeChip: ChipType | null;
   chips: ChipStatus;
   totalPoints: number;
@@ -142,6 +142,25 @@ export interface ManagerTeam {
 
 // --- Scoring Breakdown (for display) ---
 
+export interface ScoreBreakdownItem {
+  label: string;   // English display text
+  labelZh: string; // Chinese display text
+  points: number;
+}
+
+export interface DriverScoreBreakdown {
+  qualifying: ScoreBreakdownItem[];
+  sprint: ScoreBreakdownItem[];
+  race: ScoreBreakdownItem[];
+}
+
+export interface ConstructorScoreBreakdown {
+  qualifying: ScoreBreakdownItem[];
+  sprint: ScoreBreakdownItem[];
+  race: ScoreBreakdownItem[];
+  pitStop: ScoreBreakdownItem[];
+}
+
 export interface DriverRoundScore {
   driver: string;
   qualifyingPoints: number;
@@ -150,6 +169,7 @@ export interface DriverRoundScore {
   totalRaw: number;       // before DRS multiplier
   drsMultiplier: number;  // 1, 2, or 3
   totalFinal: number;     // after DRS multiplier
+  breakdown?: DriverScoreBreakdown; // optional detail for the last-round popup
 }
 
 export interface ConstructorRoundScore {
@@ -159,6 +179,7 @@ export interface ConstructorRoundScore {
   racePoints: number;
   pitStopPoints: number;
   total: number;
+  breakdown?: ConstructorScoreBreakdown;
 }
 
 export interface ManagerRoundResult {
@@ -173,7 +194,12 @@ export interface ManagerRoundResult {
 
 // --- UI State ---
 
-export type GameView = 'seasonSelect' | 'dashboard' | 'transfer' | 'standings';
+export type GameView =
+  | 'seasonSelect'
+  | 'dashboard'
+  | 'transfer'
+  | 'standings'
+  | 'seasonSummary';
 
 export interface GameState {
   selectedSeason: number | null;

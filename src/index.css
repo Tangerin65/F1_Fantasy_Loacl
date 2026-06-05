@@ -15,7 +15,7 @@
   --shadow-sm: 0 16px 34px rgba(0, 0, 0, 0.28);
   --shadow-lg: 0 26px 68px rgba(0, 0, 0, 0.36);
   --display: 'formula1-display-black', 'Orbitron', 'Segoe UI', sans-serif;
-  --body: 'Inter', 'Segoe UI', sans-serif;
+  --body: 'Segoe UI', 'Microsoft YaHei UI', 'Microsoft YaHei', sans-serif;
   color: var(--text);
   background:
     radial-gradient(circle at top left, rgba(225, 6, 0, 0.2), transparent 25%),

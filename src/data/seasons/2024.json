@@ -396,7 +396,48 @@
           }
         ],
         "fastestLapDriver": "VER",
-        "pitStops": []
+        "pitStops": [
+          {
+            "constructor": "Ferrari",
+            "fastestStop": 23.8
+          },
+          {
+            "constructor": "Mercedes",
+            "fastestStop": 24.0
+          },
+          {
+            "constructor": "Red Bull Racing",
+            "fastestStop": 24.2
+          },
+          {
+            "constructor": "McLaren",
+            "fastestStop": 24.2
+          },
+          {
+            "constructor": "Haas F1 Team",
+            "fastestStop": 24.3
+          },
+          {
+            "constructor": "RB",
+            "fastestStop": 24.3
+          },
+          {
+            "constructor": "Aston Martin",
+            "fastestStop": 24.4
+          },
+          {
+            "constructor": "Williams",
+            "fastestStop": 24.6
+          },
+          {
+            "constructor": "Alpine",
+            "fastestStop": 24.8
+          },
+          {
+            "constructor": "Kick Sauber",
+            "fastestStop": 25.0
+          }
+        ]
       }
     },
     {
@@ -794,7 +835,48 @@
           }
         ],
         "fastestLapDriver": "LEC",
-        "pitStops": []
+        "pitStops": [
+          {
+            "constructor": "Mercedes",
+            "fastestStop": 20.1
+          },
+          {
+            "constructor": "Red Bull Racing",
+            "fastestStop": 20.6
+          },
+          {
+            "constructor": "Haas F1 Team",
+            "fastestStop": 21.0
+          },
+          {
+            "constructor": "McLaren",
+            "fastestStop": 21.4
+          },
+          {
+            "constructor": "RB",
+            "fastestStop": 21.6
+          },
+          {
+            "constructor": "Williams",
+            "fastestStop": 21.7
+          },
+          {
+            "constructor": "Aston Martin",
+            "fastestStop": 22.1
+          },
+          {
+            "constructor": "Ferrari",
+            "fastestStop": 22.4
+          },
+          {
+            "constructor": "Alpine",
+            "fastestStop": 22.5
+          },
+          {
+            "constructor": "Kick Sauber",
+            "fastestStop": 22.7
+          }
+        ]
       }
     },
     {
@@ -1173,7 +1255,48 @@
           }
         ],
         "fastestLapDriver": "LEC",
-        "pitStops": []
+        "pitStops": [
+          {
+            "constructor": "Red Bull Racing",
+            "fastestStop": 17.2
+          },
+          {
+            "constructor": "Ferrari",
+            "fastestStop": 17.3
+          },
+          {
+            "constructor": "RB",
+            "fastestStop": 17.5
+          },
+          {
+            "constructor": "Mercedes",
+            "fastestStop": 17.5
+          },
+          {
+            "constructor": "McLaren",
+            "fastestStop": 17.5
+          },
+          {
+            "constructor": "Alpine",
+            "fastestStop": 17.6
+          },
+          {
+            "constructor": "Williams",
+            "fastestStop": 17.7
+          },
+          {
+            "constructor": "Aston Martin",
+            "fastestStop": 17.9
+          },
+          {
+            "constructor": "Haas F1 Team",
+            "fastestStop": 18.1
+          },
+          {
+            "constructor": "Kick Sauber",
+            "fastestStop": 18.9
+          }
+        ]
       }
     },
     {
@@ -1571,7 +1694,48 @@
           }
         ],
         "fastestLapDriver": "VER",
-        "pitStops": []
+        "pitStops": [
+          {
+            "constructor": "McLaren",
+            "fastestStop": 22.8
+          },
+          {
+            "constructor": "Red Bull Racing",
+            "fastestStop": 22.9
+          },
+          {
+            "constructor": "Aston Martin",
+            "fastestStop": 22.9
+          },
+          {
+            "constructor": "Mercedes",
+            "fastestStop": 22.9
+          },
+          {
+            "constructor": "Ferrari",
+            "fastestStop": 23.1
+          },
+          {
+            "constructor": "Alpine",
+            "fastestStop": 23.1
+          },
+          {
+            "constructor": "Williams",
+            "fastestStop": 23.2
+          },
+          {
+            "constructor": "RB",
+            "fastestStop": 23.3
+          },
+          {
+            "constructor": "Haas F1 Team",
+            "fastestStop": 23.6
+          },
+          {
+            "constructor": "Kick Sauber",
+            "fastestStop": 23.9
+          }
+        ]
       }
     },
     {
@@ -2153,7 +2317,48 @@
           }
         ],
         "fastestLapDriver": "ALO",
-        "pitStops": []
+        "pitStops": [
+          {
+            "constructor": "Red Bull Racing",
+            "fastestStop": 22.0
+          },
+          {
+            "constructor": "McLaren",
+            "fastestStop": 22.1
+          },
+          {
+            "constructor": "RB",
+            "fastestStop": 22.3
+          },
+          {
+            "constructor": "Ferrari",
+            "fastestStop": 22.3
+          },
+          {
+            "constructor": "Mercedes",
+            "fastestStop": 22.4
+          },
+          {
+            "constructor": "Aston Martin",
+            "fastestStop": 22.6
+          },
+          {
+            "constructor": "Williams",
+            "fastestStop": 22.6
+          },
+          {
+            "constructor": "Alpine",
+            "fastestStop": 22.8
+          },
+          {
+            "constructor": "Haas F1 Team",
+            "fastestStop": 22.9
+          },
+          {
+            "constructor": "Kick Sauber",
+            "fastestStop": 22.9
+          }
+        ]
       }
     },
     {
@@ -2735,7 +2940,48 @@
           }
         ],
         "fastestLapDriver": "PIA",
-        "pitStops": []
+        "pitStops": [
+          {
+            "constructor": "Red Bull Racing",
+            "fastestStop": 21.6
+          },
+          {
+            "constructor": "Ferrari",
+            "fastestStop": 21.8
+          },
+          {
+            "constructor": "McLaren",
+            "fastestStop": 22.0
+          },
+          {
+            "constructor": "Mercedes",
+            "fastestStop": 22.1
+          },
+          {
+            "constructor": "RB",
+            "fastestStop": 22.1
+          },
+          {
+            "constructor": "Aston Martin",
+            "fastestStop": 22.3
+          },
+          {
+            "constructor": "Haas F1 Team",
+            "fastestStop": 22.4
+          },
+          {
+            "constructor": "Alpine",
+            "fastestStop": 22.4
+          },
+          {
+            "constructor": "Williams",
+            "fastestStop": 22.5
+          },
+          {
+            "constructor": "Kick Sauber",
+            "fastestStop": 22.7
+          }
+        ]
       }
     },
     {
@@ -3133,7 +3379,48 @@
           }
         ],
         "fastestLapDriver": "RUS",
-        "pitStops": []
+        "pitStops": [
+          {
+            "constructor": "Mercedes",
+            "fastestStop": 29.5
+          },
+          {
+            "constructor": "RB",
+            "fastestStop": 29.6
+          },
+          {
+            "constructor": "Red Bull Racing",
+            "fastestStop": 29.6
+          },
+          {
+            "constructor": "Haas F1 Team",
+            "fastestStop": 29.7
+          },
+          {
+            "constructor": "McLaren",
+            "fastestStop": 29.7
+          },
+          {
+            "constructor": "Aston Martin",
+            "fastestStop": 29.9
+          },
+          {
+            "constructor": "Williams",
+            "fastestStop": 30.0
+          },
+          {
+            "constructor": "Alpine",
+            "fastestStop": 30.0
+          },
+          {
+            "constructor": "Ferrari",
+            "fastestStop": 30.1
+          },
+          {
+            "constructor": "Kick Sauber",
+            "fastestStop": 30.2
+          }
+        ]
       }
     },
     {
@@ -3531,7 +3818,44 @@
           }
         ],
         "fastestLapDriver": "HAM",
-        "pitStops": []
+        "pitStops": [
+          {
+            "constructor": "Red Bull Racing",
+            "fastestStop": 23.8
+          },
+          {
+            "constructor": "Aston Martin",
+            "fastestStop": 24.1
+          },
+          {
+            "constructor": "Mercedes",
+            "fastestStop": 24.2
+          },
+          {
+            "constructor": "Kick Sauber",
+            "fastestStop": 24.2
+          },
+          {
+            "constructor": "Williams",
+            "fastestStop": 24.3
+          },
+          {
+            "constructor": "Ferrari",
+            "fastestStop": 2327.0
+          },
+          {
+            "constructor": "McLaren",
+            "fastestStop": 2357.6
+          },
+          {
+            "constructor": "RB",
+            "fastestStop": 2377.5
+          },
+          {
+            "constructor": "Alpine",
+            "fastestStop": 2381.8
+          }
+        ]
       }
     },
     {
@@ -3929,7 +4253,48 @@
           }
         ],
         "fastestLapDriver": "HAM",
-        "pitStops": []
+        "pitStops": [
+          {
+            "constructor": "McLaren",
+            "fastestStop": 23.4
+          },
+          {
+            "constructor": "Mercedes",
+            "fastestStop": 23.7
+          },
+          {
+            "constructor": "RB",
+            "fastestStop": 23.8
+          },
+          {
+            "constructor": "Ferrari",
+            "fastestStop": 24.0
+          },
+          {
+            "constructor": "Haas F1 Team",
+            "fastestStop": 24.2
+          },
+          {
+            "constructor": "Red Bull Racing",
+            "fastestStop": 24.2
+          },
+          {
+            "constructor": "Aston Martin",
+            "fastestStop": 24.2
+          },
+          {
+            "constructor": "Alpine",
+            "fastestStop": 24.4
+          },
+          {
+            "constructor": "Williams",
+            "fastestStop": 24.7
+          },
+          {
+            "constructor": "Kick Sauber",
+            "fastestStop": 24.9
+          }
+        ]
       }
     },
     {
@@ -4327,7 +4692,48 @@
           }
         ],
         "fastestLapDriver": "NOR",
-        "pitStops": []
+        "pitStops": [
+          {
+            "constructor": "Red Bull Racing",
+            "fastestStop": 21.4
+          },
+          {
+            "constructor": "Alpine",
+            "fastestStop": 21.6
+          },
+          {
+            "constructor": "Mercedes",
+            "fastestStop": 21.6
+          },
+          {
+            "constructor": "Ferrari",
+            "fastestStop": 21.6
+          },
+          {
+            "constructor": "McLaren",
+            "fastestStop": 21.6
+          },
+          {
+            "constructor": "Williams",
+            "fastestStop": 21.8
+          },
+          {
+            "constructor": "Aston Martin",
+            "fastestStop": 21.8
+          },
+          {
+            "constructor": "RB",
+            "fastestStop": 22.0
+          },
+          {
+            "constructor": "Kick Sauber",
+            "fastestStop": 22.5
+          },
+          {
+            "constructor": "Haas F1 Team",
+            "fastestStop": 22.5
+          }
+        ]
       }
     },
     {
@@ -4909,7 +5315,48 @@
           }
         ],
         "fastestLapDriver": "ALO",
-        "pitStops": []
+        "pitStops": [
+          {
+            "constructor": "McLaren",
+            "fastestStop": 20.7
+          },
+          {
+            "constructor": "Ferrari",
+            "fastestStop": 20.9
+          },
+          {
+            "constructor": "RB",
+            "fastestStop": 21.0
+          },
+          {
+            "constructor": "Alpine",
+            "fastestStop": 21.2
+          },
+          {
+            "constructor": "Mercedes",
+            "fastestStop": 21.2
+          },
+          {
+            "constructor": "Red Bull Racing",
+            "fastestStop": 21.2
+          },
+          {
+            "constructor": "Aston Martin",
+            "fastestStop": 21.3
+          },
+          {
+            "constructor": "Haas F1 Team",
+            "fastestStop": 21.5
+          },
+          {
+            "constructor": "Kick Sauber",
+            "fastestStop": 21.5
+          },
+          {
+            "constructor": "Williams",
+            "fastestStop": 21.6
+          }
+        ]
       }
     },
     {
@@ -5307,7 +5754,48 @@
           }
         ],
         "fastestLapDriver": "SAI",
-        "pitStops": []
+        "pitStops": [
+          {
+            "constructor": "Alpine",
+            "fastestStop": 28.2
+          },
+          {
+            "constructor": "Red Bull Racing",
+            "fastestStop": 28.3
+          },
+          {
+            "constructor": "Ferrari",
+            "fastestStop": 28.4
+          },
+          {
+            "constructor": "McLaren",
+            "fastestStop": 28.6
+          },
+          {
+            "constructor": "RB",
+            "fastestStop": 28.8
+          },
+          {
+            "constructor": "Mercedes",
+            "fastestStop": 28.9
+          },
+          {
+            "constructor": "Aston Martin",
+            "fastestStop": 29.0
+          },
+          {
+            "constructor": "Kick Sauber",
+            "fastestStop": 29.1
+          },
+          {
+            "constructor": "Haas F1 Team",
+            "fastestStop": 29.4
+          },
+          {
+            "constructor": "Williams",
+            "fastestStop": 29.4
+          }
+        ]
       }
     },
     {
@@ -5705,7 +6193,48 @@
           }
         ],
         "fastestLapDriver": "RUS",
-        "pitStops": []
+        "pitStops": [
+          {
+            "constructor": "RB",
+            "fastestStop": 21.0
+          },
+          {
+            "constructor": "Red Bull Racing",
+            "fastestStop": 21.0
+          },
+          {
+            "constructor": "McLaren",
+            "fastestStop": 21.2
+          },
+          {
+            "constructor": "Williams",
+            "fastestStop": 21.3
+          },
+          {
+            "constructor": "Alpine",
+            "fastestStop": 21.3
+          },
+          {
+            "constructor": "Mercedes",
+            "fastestStop": 21.3
+          },
+          {
+            "constructor": "Ferrari",
+            "fastestStop": 21.4
+          },
+          {
+            "constructor": "Haas F1 Team",
+            "fastestStop": 21.8
+          },
+          {
+            "constructor": "Aston Martin",
+            "fastestStop": 21.8
+          },
+          {
+            "constructor": "Kick Sauber",
+            "fastestStop": 21.9
+          }
+        ]
       }
     },
     {
@@ -6103,7 +6632,48 @@
           }
         ],
         "fastestLapDriver": "PER",
-        "pitStops": []
+        "pitStops": [
+          {
+            "constructor": "RB",
+            "fastestStop": 22.3
+          },
+          {
+            "constructor": "Mercedes",
+            "fastestStop": 22.6
+          },
+          {
+            "constructor": "Red Bull Racing",
+            "fastestStop": 22.6
+          },
+          {
+            "constructor": "McLaren",
+            "fastestStop": 22.6
+          },
+          {
+            "constructor": "Alpine",
+            "fastestStop": 22.8
+          },
+          {
+            "constructor": "Kick Sauber",
+            "fastestStop": 22.9
+          },
+          {
+            "constructor": "Ferrari",
+            "fastestStop": 22.9
+          },
+          {
+            "constructor": "Aston Martin",
+            "fastestStop": 23.0
+          },
+          {
+            "constructor": "Williams",
+            "fastestStop": 23.1
+          },
+          {
+            "constructor": "Haas F1 Team",
+            "fastestStop": 23.2
+          }
+        ]
       }
     },
     {
@@ -6501,7 +7071,48 @@
           }
         ],
         "fastestLapDriver": "NOR",
-        "pitStops": []
+        "pitStops": [
+          {
+            "constructor": "Red Bull Racing",
+            "fastestStop": 20.7
+          },
+          {
+            "constructor": "RB",
+            "fastestStop": 20.8
+          },
+          {
+            "constructor": "Ferrari",
+            "fastestStop": 20.8
+          },
+          {
+            "constructor": "McLaren",
+            "fastestStop": 20.9
+          },
+          {
+            "constructor": "Williams",
+            "fastestStop": 21.0
+          },
+          {
+            "constructor": "Kick Sauber",
+            "fastestStop": 21.0
+          },
+          {
+            "constructor": "Mercedes",
+            "fastestStop": 21.0
+          },
+          {
+            "constructor": "Alpine",
+            "fastestStop": 21.0
+          },
+          {
+            "constructor": "Aston Martin",
+            "fastestStop": 21.3
+          },
+          {
+            "constructor": "Haas F1 Team",
+            "fastestStop": 21.4
+          }
+        ]
       }
     },
     {
@@ -6899,7 +7510,48 @@
           }
         ],
         "fastestLapDriver": "NOR",
-        "pitStops": []
+        "pitStops": [
+          {
+            "constructor": "Mercedes",
+            "fastestStop": 29.5
+          },
+          {
+            "constructor": "RB",
+            "fastestStop": 29.6
+          },
+          {
+            "constructor": "Red Bull Racing",
+            "fastestStop": 29.6
+          },
+          {
+            "constructor": "Haas F1 Team",
+            "fastestStop": 29.7
+          },
+          {
+            "constructor": "McLaren",
+            "fastestStop": 29.7
+          },
+          {
+            "constructor": "Aston Martin",
+            "fastestStop": 29.9
+          },
+          {
+            "constructor": "Williams",
+            "fastestStop": 30.0
+          },
+          {
+            "constructor": "Alpine",
+            "fastestStop": 30.0
+          },
+          {
+            "constructor": "Ferrari",
+            "fastestStop": 30.1
+          },
+          {
+            "constructor": "Kick Sauber",
+            "fastestStop": 30.2
+          }
+        ]
       }
     },
     {
@@ -7297,7 +7949,48 @@
           }
         ],
         "fastestLapDriver": "NOR",
-        "pitStops": []
+        "pitStops": [
+          {
+            "constructor": "McLaren",
+            "fastestStop": 19.7
+          },
+          {
+            "constructor": "Mercedes",
+            "fastestStop": 19.9
+          },
+          {
+            "constructor": "Aston Martin",
+            "fastestStop": 20.0
+          },
+          {
+            "constructor": "Kick Sauber",
+            "fastestStop": 20.0
+          },
+          {
+            "constructor": "Williams",
+            "fastestStop": 20.2
+          },
+          {
+            "constructor": "Alpine",
+            "fastestStop": 20.2
+          },
+          {
+            "constructor": "Red Bull Racing",
+            "fastestStop": 20.6
+          },
+          {
+            "constructor": "Ferrari",
+            "fastestStop": 20.6
+          },
+          {
+            "constructor": "RB",
+            "fastestStop": 20.9
+          },
+          {
+            "constructor": "Haas F1 Team",
+            "fastestStop": 21.2
+          }
+        ]
       }
     },
     {
@@ -7695,7 +8388,48 @@
           }
         ],
         "fastestLapDriver": "RIC",
-        "pitStops": []
+        "pitStops": [
+          {
+            "constructor": "Mercedes",
+            "fastestStop": 28.7
+          },
+          {
+            "constructor": "Red Bull Racing",
+            "fastestStop": 28.9
+          },
+          {
+            "constructor": "RB",
+            "fastestStop": 29.0
+          },
+          {
+            "constructor": "Ferrari",
+            "fastestStop": 29.0
+          },
+          {
+            "constructor": "McLaren",
+            "fastestStop": 29.0
+          },
+          {
+            "constructor": "Williams",
+            "fastestStop": 29.1
+          },
+          {
+            "constructor": "Aston Martin",
+            "fastestStop": 29.2
+          },
+          {
+            "constructor": "Kick Sauber",
+            "fastestStop": 29.3
+          },
+          {
+            "constructor": "Alpine",
+            "fastestStop": 29.6
+          },
+          {
+            "constructor": "Haas F1 Team",
+            "fastestStop": 29.7
+          }
+        ]
       }
     },
     {
@@ -8277,7 +9011,48 @@
           }
         ],
         "fastestLapDriver": "OCO",
-        "pitStops": []
+        "pitStops": [
+          {
+            "constructor": "Red Bull Racing",
+            "fastestStop": 21.6
+          },
+          {
+            "constructor": "Ferrari",
+            "fastestStop": 21.8
+          },
+          {
+            "constructor": "McLaren",
+            "fastestStop": 22.0
+          },
+          {
+            "constructor": "Mercedes",
+            "fastestStop": 22.1
+          },
+          {
+            "constructor": "RB",
+            "fastestStop": 22.1
+          },
+          {
+            "constructor": "Aston Martin",
+            "fastestStop": 22.3
+          },
+          {
+            "constructor": "Haas F1 Team",
+            "fastestStop": 22.4
+          },
+          {
+            "constructor": "Alpine",
+            "fastestStop": 22.4
+          },
+          {
+            "constructor": "Williams",
+            "fastestStop": 22.5
+          },
+          {
+            "constructor": "Kick Sauber",
+            "fastestStop": 22.7
+          }
+        ]
       }
     },
     {
@@ -8675,7 +9450,48 @@
           }
         ],
         "fastestLapDriver": "LEC",
-        "pitStops": []
+        "pitStops": [
+          {
+            "constructor": "McLaren",
+            "fastestStop": 21.82
+          },
+          {
+            "constructor": "Red Bull Racing",
+            "fastestStop": 21.92
+          },
+          {
+            "constructor": "Ferrari",
+            "fastestStop": 22.25
+          },
+          {
+            "constructor": "Mercedes",
+            "fastestStop": 22.46
+          },
+          {
+            "constructor": "Kick Sauber",
+            "fastestStop": 22.5
+          },
+          {
+            "constructor": "Aston Martin",
+            "fastestStop": 22.59
+          },
+          {
+            "constructor": "RB",
+            "fastestStop": 22.59
+          },
+          {
+            "constructor": "Haas F1 Team",
+            "fastestStop": 23.08
+          },
+          {
+            "constructor": "Alpine",
+            "fastestStop": 23.2
+          },
+          {
+            "constructor": "Williams",
+            "fastestStop": 23.89
+          }
+        ]
       }
     },
     {
@@ -9257,7 +10073,48 @@
           }
         ],
         "fastestLapDriver": "VER",
-        "pitStops": []
+        "pitStops": [
+          {
+            "constructor": "Ferrari",
+            "fastestStop": 24.57
+          },
+          {
+            "constructor": "McLaren",
+            "fastestStop": 24.7
+          },
+          {
+            "constructor": "Aston Martin",
+            "fastestStop": 25.11
+          },
+          {
+            "constructor": "Mercedes",
+            "fastestStop": 25.2
+          },
+          {
+            "constructor": "Kick Sauber",
+            "fastestStop": 25.2
+          },
+          {
+            "constructor": "Williams",
+            "fastestStop": 25.24
+          },
+          {
+            "constructor": "Haas F1 Team",
+            "fastestStop": 25.37
+          },
+          {
+            "constructor": "RB",
+            "fastestStop": 25.4
+          },
+          {
+            "constructor": "Red Bull Racing",
+            "fastestStop": 26.6
+          },
+          {
+            "constructor": "Alpine",
+            "fastestStop": 1407.5
+          }
+        ]
       }
     },
     {
@@ -9655,7 +10512,48 @@
           }
         ],
         "fastestLapDriver": "NOR",
-        "pitStops": []
+        "pitStops": [
+          {
+            "constructor": "Red Bull Racing",
+            "fastestStop": 21.6
+          },
+          {
+            "constructor": "Ferrari",
+            "fastestStop": 21.8
+          },
+          {
+            "constructor": "McLaren",
+            "fastestStop": 22.0
+          },
+          {
+            "constructor": "Mercedes",
+            "fastestStop": 22.1
+          },
+          {
+            "constructor": "RB",
+            "fastestStop": 22.1
+          },
+          {
+            "constructor": "Aston Martin",
+            "fastestStop": 22.3
+          },
+          {
+            "constructor": "Haas F1 Team",
+            "fastestStop": 22.4
+          },
+          {
+            "constructor": "Alpine",
+            "fastestStop": 22.4
+          },
+          {
+            "constructor": "Williams",
+            "fastestStop": 22.5
+          },
+          {
+            "constructor": "Kick Sauber",
+            "fastestStop": 22.7
+          }
+        ]
       }
     },
     {
@@ -10237,7 +11135,48 @@
           }
         ],
         "fastestLapDriver": "NOR",
-        "pitStops": []
+        "pitStops": [
+          {
+            "constructor": "Haas F1 Team",
+            "fastestStop": 22.6
+          },
+          {
+            "constructor": "Mercedes",
+            "fastestStop": 22.7
+          },
+          {
+            "constructor": "Ferrari",
+            "fastestStop": 22.7
+          },
+          {
+            "constructor": "Red Bull Racing",
+            "fastestStop": 22.7
+          },
+          {
+            "constructor": "Alpine",
+            "fastestStop": 22.7
+          },
+          {
+            "constructor": "RB",
+            "fastestStop": 22.7
+          },
+          {
+            "constructor": "Williams",
+            "fastestStop": 22.7
+          },
+          {
+            "constructor": "McLaren",
+            "fastestStop": 22.8
+          },
+          {
+            "constructor": "Kick Sauber",
+            "fastestStop": 23.2
+          },
+          {
+            "constructor": "Aston Martin",
+            "fastestStop": 28.59
+          }
+        ]
       }
     },
     {
@@ -10635,7 +11574,48 @@
           }
         ],
         "fastestLapDriver": "MAG",
-        "pitStops": []
+        "pitStops": [
+          {
+            "constructor": "McLaren",
+            "fastestStop": 21.28
+          },
+          {
+            "constructor": "Ferrari",
+            "fastestStop": 21.28
+          },
+          {
+            "constructor": "Haas F1 Team",
+            "fastestStop": 21.53
+          },
+          {
+            "constructor": "Mercedes",
+            "fastestStop": 21.66
+          },
+          {
+            "constructor": "RB",
+            "fastestStop": 21.87
+          },
+          {
+            "constructor": "Aston Martin",
+            "fastestStop": 22.05
+          },
+          {
+            "constructor": "Alpine",
+            "fastestStop": 22.06
+          },
+          {
+            "constructor": "Williams",
+            "fastestStop": 22.07
+          },
+          {
+            "constructor": "Kick Sauber",
+            "fastestStop": 23.02
+          },
+          {
+            "constructor": "Red Bull Racing",
+            "fastestStop": 32.65
+          }
+        ]
       }
     }
   ]
