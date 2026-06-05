@@ -1,0 +1,57 @@
+name: Build & Release
+
+on:
+  push:
+    tags:
+      - 'v*'
+
+jobs:
+  build-and-release:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build
+        run: npm run build
+
+      - name: Package dist as zip
+        run: zip -r f1-fantasy-local.zip dist/
+
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          files: f1-fantasy-local.zip
+          generate_release_notes: true
+          body: |
+            ## 🏎️ F1 Fantasy Local
+
+            ### 如何运行
+            1. 下载 `f1-fantasy-local.zip` 并解压。
+            2. 确保已安装 Node.js 20+。
+            3. 在终端中执行：
+            ```
+            npx serve dist
+            ```
+            4. 打开浏览器访问 `http://localhost:3000`。
+
+            ### How to Run
+            1. Download and unzip `f1-fantasy-local.zip`.
+            2. Make sure Node.js 20+ is installed.
+            3. Run in your terminal:
+            ```
+            npx serve dist
+            ```
+            4. Open your browser at `http://localhost:3000`.
