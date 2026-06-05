@@ -25,6 +25,9 @@ import sys
 import time
 import urllib.error
 import urllib.request
+import requests
+import certifi
+from datetime import datetime, timezone
 from pathlib import Path
 from urllib.parse import urlencode
 
@@ -51,6 +54,8 @@ OPENF1_RETRY_COUNT = 5
 OPENF1_RETRY_DELAY_SECONDS = 5
 OPENF1_TIMEOUT_SECONDS = 30
 
+OPENF1_DEBUG_URLS = True
+
 
 # ---------------------------------------------------------------------------
 # Helpers
@@ -76,45 +81,97 @@ def is_rate_limit_error(exc):
     )
 
 
+def build_openf1_url(endpoint, params=None):
+    """
+    Build OpenF1 URL.
+
+    Example:
+        build_openf1_url("pit", {"session_key": 123})
+        -> https://api.openf1.org/v1/pit?session_key=123
+    """
+    endpoint = endpoint.strip().lstrip("/")
+
+    if params:
+        query = urlencode(params)
+        return f"{OPENF1_BASE_URL}/{endpoint}?{query}"
+
+    return f"{OPENF1_BASE_URL}/{endpoint}"
+
+
 def get_json_from_url(url):
     """
     Load JSON data from URL with retries.
 
-    OpenF1 sometimes closes HTTPS connections early, causing:
+    This version uses requests instead of urllib because urllib may fail with:
         SSL: UNEXPECTED_EOF_WHILE_READING
 
-    This function retries before giving up.
+    Behavior:
+    - 404 does not retry.
+    - 400 / 401 / 403 do not retry.
+    - 408 / 429 / 5xx / SSL / timeout errors retry.
     """
-    last_error = None
-
     headers = {
         "User-Agent": "f1-fantasy-data-fetcher/1.0",
         "Accept": "application/json",
         "Connection": "close",
     }
 
-    ssl_context = ssl.create_default_context()
+    if OPENF1_DEBUG_URLS and OPENF1_BASE_URL in url:
+        print(f"  OpenF1 URL: {url}")
+
+    last_error = None
 
     for attempt in range(1, OPENF1_RETRY_COUNT + 1):
         try:
-            request = urllib.request.Request(
+            response = requests.get(
                 url,
                 headers=headers,
-                method="GET",
+                timeout=OPENF1_TIMEOUT_SECONDS,
+                verify=certifi.where(),
             )
 
-            with urllib.request.urlopen(
-                request,
-                timeout=OPENF1_TIMEOUT_SECONDS,
-                context=ssl_context,
-            ) as response:
-                raw = response.read().decode("utf-8")
-                return json.loads(raw)
+            status_code = response.status_code
+
+            if status_code == 404:
+                print("  ⚠  OpenF1 returned 404 Not Found. No retry.")
+                print(f"     URL: {url}")
+                return []
+
+            if status_code in (400, 401, 403):
+                print(f"  ⚠  OpenF1 returned HTTP {status_code}. No retry.")
+                print(f"     URL: {url}")
+                return []
+
+            if status_code in (408, 429, 500, 502, 503, 504):
+                if attempt < OPENF1_RETRY_COUNT:
+                    wait_seconds = OPENF1_RETRY_DELAY_SECONDS * attempt
+                    print(
+                        f"  ⚠  OpenF1 request failed "
+                        f"({attempt}/{OPENF1_RETRY_COUNT}): HTTP {status_code}"
+                    )
+                    print(f"     Retrying in {wait_seconds} seconds...")
+                    time.sleep(wait_seconds)
+                    continue
+
+                print(
+                    f"  ⚠  OpenF1 request failed after "
+                    f"{OPENF1_RETRY_COUNT} attempts: HTTP {status_code}"
+                )
+                return []
+
+            response.raise_for_status()
+
+            if not response.text.strip():
+                return []
+
+            return response.json()
 
         except (
-            ssl.SSLError,
-            urllib.error.URLError,
-            TimeoutError,
+            requests.exceptions.SSLError,
+            requests.exceptions.ConnectionError,
+            requests.exceptions.Timeout,
+            requests.exceptions.ChunkedEncodingError,
+            requests.exceptions.RequestException,
             json.JSONDecodeError,
         ) as exc:
             last_error = exc
@@ -132,8 +189,70 @@ def get_json_from_url(url):
                     f"  ⚠  OpenF1 request failed after "
                     f"{OPENF1_RETRY_COUNT} attempts: {exc}"
                 )
+                return []
 
-    raise last_error
+    if last_error:
+        print(f"  ⚠  OpenF1 request gave up: {last_error}")
+
+    return []
+
+
+def get_openf1_json(endpoint, params=None):
+    url = build_openf1_url(endpoint, params)
+    return get_json_from_url(url)
+
+
+def parse_datetime_safe(value):
+    if value is None:
+        return None
+
+    try:
+        if pd.isna(value):
+            return None
+    except (TypeError, ValueError):
+        pass
+
+    if isinstance(value, pd.Timestamp):
+        return value.to_pydatetime()
+
+    if isinstance(value, datetime):
+        return value
+
+    if isinstance(value, str):
+        text = value.strip()
+
+        if not text:
+            return None
+
+        try:
+            if text.endswith("Z"):
+                text = text[:-1] + "+00:00"
+
+            return datetime.fromisoformat(text)
+        except ValueError:
+            return None
+
+    return None
+
+
+def datetime_to_utc_naive(dt):
+    if dt is None:
+        return None
+
+    if dt.tzinfo is not None:
+        return dt.astimezone(timezone.utc).replace(tzinfo=None)
+
+    return dt.replace(tzinfo=None)
+
+
+def date_distance_seconds(a, b):
+    a = datetime_to_utc_naive(a)
+    b = datetime_to_utc_naive(b)
+
+    if a is None or b is None:
+        return None
+
+    return abs((a - b).total_seconds())
 
 
 def timedelta_to_formatted_string(td):
@@ -189,6 +308,15 @@ def safe_float(val):
         return float(v)
     except (TypeError, ValueError):
         return None
+
+
+def normalize_driver_number(value):
+    number = safe_int(value)
+
+    if number is None:
+        return None
+
+    return number
 
 
 def clean_for_json(obj):
@@ -287,6 +415,25 @@ def has_result_rows(session_data):
     return len(results) > 0
 
 
+def has_fastest_lap_driver(race_data):
+    if not isinstance(race_data, dict):
+        return False
+
+    return bool(race_data.get("fastestLapDriver"))
+
+
+def has_pit_stops(race_data):
+    if not isinstance(race_data, dict):
+        return False
+
+    pit_stops = race_data.get("pitStops")
+
+    if not isinstance(pit_stops, list):
+        return False
+
+    return len(pit_stops) > 0
+
+
 def qualifying_complete(round_entry):
     if not round_entry:
         return False
@@ -295,10 +442,25 @@ def qualifying_complete(round_entry):
 
 
 def race_complete(round_entry):
+    """
+    Race is complete only when these are present:
+    - race.results
+    - race.fastestLapDriver
+    - race.pitStops
+
+    This prevents a round from being skipped when results exist
+    but pit stop data is still missing.
+    """
     if not round_entry:
         return False
 
-    return has_result_rows(round_entry.get("race"))
+    race_data = round_entry.get("race")
+
+    return (
+        has_result_rows(race_data)
+        and has_fastest_lap_driver(race_data)
+        and has_pit_stops(race_data)
+    )
 
 
 def sprint_complete(round_entry, event):
@@ -351,41 +513,105 @@ def load_session_safe(year, round_number, session_name):
 # OpenF1 helpers
 # ---------------------------------------------------------------------------
 
-def get_openf1_race_session_key(year, country_name):
-    if not year or not country_name:
+def select_best_openf1_race_session(sessions, event_date=None, race_name=None):
+    if not sessions:
         return None
 
-    session_params = urlencode({
-        "year": year,
-        "country_name": country_name,
-        "session_name": "Race",
-    })
+    target_date = parse_datetime_safe(event_date)
 
-    sessions_url = f"{OPENF1_BASE_URL}/sessions?{session_params}"
-    sessions = get_json_from_url(sessions_url)
+    if target_date is None:
+        return sessions[0]
+
+    best_session = None
+    best_distance = None
+
+    for session in sessions:
+        date_start = parse_datetime_safe(session.get("date_start"))
+        distance = date_distance_seconds(date_start, target_date)
+
+        if distance is None:
+            continue
+
+        if best_distance is None or distance < best_distance:
+            best_distance = distance
+            best_session = session
+
+    if best_session is not None:
+        return best_session
+
+    return sessions[0]
+
+
+def get_openf1_race_session_key(year, country_name, event_date=None, race_name=None):
+    if not year:
+        return None
+
+    query_params = {
+        "year": year,
+        "session_name": "Race",
+    }
+
+    if country_name:
+        query_params["country_name"] = country_name
+
+    sessions = get_openf1_json("sessions", query_params)
+
+    if not sessions and country_name:
+        print(
+            f"  ⚠  OpenF1: No Race session found by country_name="
+            f"{country_name}. Retrying by year only..."
+        )
+
+        sessions = get_openf1_json("sessions", {
+            "year": year,
+            "session_name": "Race",
+        })
 
     if not sessions:
         print(f"  ⚠  OpenF1: No Race session found for {year} {country_name}")
         return None
 
-    session_key = sessions[0].get("session_key")
+    selected = select_best_openf1_race_session(
+        sessions=sessions,
+        event_date=event_date,
+        race_name=race_name,
+    )
+
+    if not selected:
+        print(f"  ⚠  OpenF1: Could not select Race session for {year} {country_name}")
+        return None
+
+    session_key = selected.get("session_key")
 
     if session_key is None:
         print(f"  ⚠  OpenF1: Missing session_key for {year} {country_name}")
         return None
 
+    meeting_name = selected.get("meeting_name")
+    location = selected.get("location")
+    date_start = selected.get("date_start")
+
+    print(
+        f"  ✓ OpenF1 Race session selected: "
+        f"session_key={session_key}, "
+        f"meeting={meeting_name}, "
+        f"location={location}, "
+        f"date_start={date_start}"
+    )
+
     return session_key
 
 
 def get_openf1_driver_maps(session_key):
-    drivers_url = f"{OPENF1_BASE_URL}/drivers?session_key={session_key}"
-    drivers = get_json_from_url(drivers_url)
+    drivers = get_openf1_json("drivers", {
+        "session_key": session_key,
+    })
 
     number_to_team = {}
     number_to_abbreviation = {}
 
     for driver in drivers:
-        driver_number = driver.get("driver_number")
+        driver_number = normalize_driver_number(driver.get("driver_number"))
 
         if driver_number is None:
             continue
@@ -466,7 +692,12 @@ def extract_fastest_lap_driver_from_fastf1(session):
         return None
 
 
-def extract_fastest_lap_driver_from_openf1(year, country_name):
+def extract_fastest_lap_driver_from_openf1(
+    year,
+    country_name,
+    event_date=None,
+    race_name=None,
+):
     """
     Fallback fastest-lap extractor using OpenF1.
 
@@ -475,19 +706,25 @@ def extract_fastest_lap_driver_from_openf1(year, country_name):
 
     If no data is found, returns None.
     """
-    if not year or not country_name:
+    if not year:
         return None
 
     try:
-        session_key = get_openf1_race_session_key(year, country_name)
+        session_key = get_openf1_race_session_key(
+            year=year,
+            country_name=country_name,
+            event_date=event_date,
+            race_name=race_name,
+        )
 
         if session_key is None:
             return None
 
         _, number_to_abbreviation = get_openf1_driver_maps(session_key)
 
-        laps_url = f"{OPENF1_BASE_URL}/laps?session_key={session_key}"
-        laps = get_json_from_url(laps_url)
+        laps = get_openf1_json("laps", {
+            "session_key": session_key,
+        })
 
         if not laps:
             print(f"  ⚠  OpenF1: No lap rows found for {year} {country_name}")
@@ -497,7 +734,7 @@ def extract_fastest_lap_driver_from_openf1(year, country_name):
         fastest_lap_duration = None
 
         for row in laps:
-            driver_number = row.get("driver_number")
+            driver_number = normalize_driver_number(row.get("driver_number"))
             lap_duration = safe_float(row.get("lap_duration"))
 
             if driver_number is None:
@@ -529,7 +766,13 @@ def extract_fastest_lap_driver_from_openf1(year, country_name):
         return None
 
 
-def extract_fastest_lap_driver_with_fallback(session, year, country_name):
+def extract_fastest_lap_driver_with_fallback(
+    session,
+    year,
+    country_name,
+    event_date=None,
+    race_name=None,
+):
     """
     Fastest lap strategy:
     1. Try FastF1.
@@ -549,6 +792,8 @@ def extract_fastest_lap_driver_with_fallback(session, year, country_name):
     fastest_lap_driver = extract_fastest_lap_driver_from_openf1(
         year=year,
         country_name=country_name,
+        event_date=event_date,
+        race_name=race_name,
     )
 
     if fastest_lap_driver:
@@ -662,9 +907,17 @@ def extract_pit_stops_from_fastf1(session):
         return []
 
 
-def extract_pit_stops_from_openf1(year, country_name):
+def extract_pit_stops_from_openf1(
+    year,
+    country_name,
+    event_date=None,
+    race_name=None,
+):
     """
     OpenF1 fallback for pit stops.
+
+    Correct OpenF1 endpoint:
+        /v1/pit
 
     Return frontend-required structure only:
 
@@ -673,19 +926,25 @@ def extract_pit_stops_from_openf1(year, country_name):
           { "constructor": "Ferrari", "fastestStop": 18.21 }
         ]
     """
-    if not year or not country_name:
+    if not year:
         return []
 
     try:
-        session_key = get_openf1_race_session_key(year, country_name)
+        session_key = get_openf1_race_session_key(
+            year=year,
+            country_name=country_name,
+            event_date=event_date,
+            race_name=race_name,
+        )
 
         if session_key is None:
             return []
 
         number_to_team, _ = get_openf1_driver_maps(session_key)
 
-        pit_url = f"{OPENF1_BASE_URL}/pit?session_key={session_key}"
-        pit_rows = get_json_from_url(pit_url)
+        pit_rows = get_openf1_json("pit", {
+            "session_key": session_key,
+        })
 
         if not pit_rows:
             print(f"  ⚠  OpenF1: No pit rows found for {year} {country_name}")
@@ -694,7 +953,7 @@ def extract_pit_stops_from_openf1(year, country_name):
         constructor_fastest = {}
 
         for row in pit_rows:
-            driver_number = row.get("driver_number")
+            driver_number = normalize_driver_number(row.get("driver_number"))
             pit_duration = safe_float(row.get("pit_duration"))
 
             if driver_number is None:
@@ -738,7 +997,13 @@ def extract_pit_stops_from_openf1(year, country_name):
         return []
 
 
-def extract_pit_stops_with_fallback(session, year, country_name):
+def extract_pit_stops_with_fallback(
+    session,
+    year,
+    country_name,
+    event_date=None,
+    race_name=None,
+):
     """
     Pit stop strategy:
     1. Try FastF1.
@@ -758,6 +1023,8 @@ def extract_pit_stops_with_fallback(session, year, country_name):
     pit_stops = extract_pit_stops_from_openf1(
         year=year,
         country_name=country_name,
+        event_date=event_date,
+        race_name=race_name,
     )
 
     if pit_stops:
@@ -772,7 +1039,13 @@ def extract_pit_stops_with_fallback(session, year, country_name):
 # Extractors: race and sprint
 # ---------------------------------------------------------------------------
 
-def extract_race(session, year=None, country_name=None):
+def extract_race(
+    session,
+    year=None,
+    country_name=None,
+    event_date=None,
+    race_name=None,
+):
     """
     Extract race results, fastest lap, and pit stops.
 
@@ -790,12 +1063,16 @@ def extract_race(session, year=None, country_name=None):
         session=session,
         year=year,
         country_name=country_name,
+        event_date=event_date,
+        race_name=race_name,
     )
 
     pit_stops = extract_pit_stops_with_fallback(
         session=session,
         year=year,
         country_name=country_name,
+        event_date=event_date,
+        race_name=race_name,
     )
 
     if session is None:
@@ -955,12 +1232,22 @@ def fetch_season(year, start_round=None, end_round=None, only_missing=True):
         if only_missing and race_complete(round_entry):
             print("    ✓ Race already exists, skipped")
         else:
-            print("    Loading Race...")
+            existing_race = round_entry.get("race", {})
+
+            if has_result_rows(existing_race) and not has_pit_stops(existing_race):
+                print("    Loading Race because pitStops are missing...")
+            elif has_result_rows(existing_race) and not has_fastest_lap_driver(existing_race):
+                print("    Loading Race because fastestLapDriver is missing...")
+            else:
+                print("    Loading Race...")
+
             race_session = load_session_safe(year, round_number, "Race")
             round_entry["race"] = extract_race(
                 session=race_session,
                 year=year,
                 country_name=country,
+                event_date=event_date,
+                race_name=race_name,
             )
 
         rounds_map[round_number] = round_entry
