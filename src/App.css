@@ -817,12 +817,38 @@
 }
 
 .market-row--team,
-.roster-row--team {
-  border-color: transparent;
-  background-clip: border-box;
+.roster-row--team,
+.asset-card {
+  position: relative;
   overflow: hidden;
+  isolation: isolate;
 }
 
+.market-row--team::before,
+.roster-row--team::before,
+.asset-card::before {
+  content: '';
+  position: absolute;
+  inset: -1px;
+  border-radius: inherit;
+  background: var(--team-surface, transparent);
+  pointer-events: none;
+  z-index: -1;
+}
+
+.market-row--team,
+.roster-row--team {
+  border-color: transparent;
+}
+
+.market-row--team > *,
+.roster-row--team > *,
+.asset-card > * {
+  position: relative;
+  z-index: 1;
+}
+
+.market-row--team .secondary-button,
 .roster-row--team .secondary-button,
 .market-row--team .action-button {
   border-color: rgba(255, 255, 255, 0.22);

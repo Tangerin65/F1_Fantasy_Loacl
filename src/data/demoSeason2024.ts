@@ -136,6 +136,7 @@ const buildRound = (input: {
       input.raceStatus,
     ),
     pitStops: makePitStops(input.pitStops),
+    driverOfTheDay: null,
   },
 })
 

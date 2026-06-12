@@ -124,10 +124,6 @@ const readSaveFile = (): GameState | null => {
   }
 }
 
-const deleteSaveFile = (): void => {
-  localStorage.removeItem(SAVE_KEY)
-}
-
 const createEmptyState = (): GameState => ({
   selectedSeason: null,
   seasonData: null,
@@ -1147,7 +1143,6 @@ const applyAiStrategy = (
   // when the gain doesn't justify the transfer cost.
   const optimalDrivers = [...roster.drivers]
   const optimalSet = new Set(optimalDrivers)
-  const currentSet = new Set(currentDrivers)
 
   // Keep current drivers that are already in the optimal set.
   // For drivers not in the optimal set, only swap them out if the replacement

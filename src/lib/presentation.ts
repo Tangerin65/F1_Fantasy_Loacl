@@ -33,12 +33,6 @@ const isRbFamily = (lower: string): boolean =>
   lower.includes('tororosso') ||
   lower.includes('toro rosso')
 
-const rbFamilyName = (season: number): string => {
-  if (season >= 2024) return 'RB F1 Team'
-  if (season >= 2020) return 'AlphaTauri'
-  return 'Toro Rosso'
-}
-
 // -----------------------------------------------------------
 // Team name normalization — maps inconsistent names across
 // seasons to a single canonical key for display.
@@ -285,10 +279,12 @@ export const getTeamColors = (team?: string, season?: number): TeamPalette => {
 
 export const getTeamSurfaceStyle = (team?: string, season?: number): CSSProperties => {
   const palette = getTeamColors(team, season)
+  const surface = palette.gradient ?? `linear-gradient(135deg, ${palette.base}, ${palette.edge})`
   return {
-    background: palette.gradient ?? `linear-gradient(135deg, ${palette.base}, ${palette.edge})`,
-    color: palette.text ?? '#f8fafc',
-  }
+    '--team-surface': surface,
+    '--team-text': palette.text ?? '#f8fafc',
+    color: 'var(--team-text)',
+  } as CSSProperties
 }
 
 // -----------------------------------------------------------

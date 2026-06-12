@@ -18,7 +18,11 @@ type SelectedAsset =
   | { kind: 'constructor'; id: string }
   | null
 
-type ExpandedStage = 'qualifying' | 'sprint' | 'race' | 'pitStop' | null
+type DriverExpandedStage = 'qualifying' | 'sprint' | 'race'
+type ExpandedStage = DriverExpandedStage | 'pitStop' | null
+
+const isDriverExpandedStage = (stage: ExpandedStage): stage is DriverExpandedStage =>
+  stage === 'qualifying' || stage === 'sprint' || stage === 'race'
 
 const renderBreakdownList = (items: ScoreBreakdownItem[]) => (
   <ul className="breakdown-list">
@@ -466,7 +470,7 @@ export function Dashboard() {
                     <strong>{driverDetail.totalFinal.toFixed(0)}</strong>
                   </article>
                 </div>
-                {expandedStage && driverDetail.breakdown ? (
+                {isDriverExpandedStage(expandedStage) && driverDetail.breakdown ? (
                   <div className="breakdown-detail">
                     <h4>
                       {expandedStage === 'qualifying' ? copyText('Qualifying detail', '排位赛细则') :
