@@ -234,6 +234,17 @@ export function Dashboard() {
                 <strong>{lastRoundData.race.pitStops[0] ? normalizeTeamName(lastRoundData.race.pitStops[0].constructor, season) : 'N/A'}</strong>
               </article>
               <article className="report-card">
+                <span>{copyText('Driver of the Day', '最佳车手')}</span>
+                <strong>
+                  {(() => {
+                    const dotd = lastRoundData.race.driverOfTheDay
+                    if (!dotd) return copyText('Pending', '待补全')
+                    const driver = lastRoundData.race.results.find(r => r.driver === dotd)
+                    return driver?.fullName ?? dotd
+                  })()}
+                </strong>
+              </article>
+              <article className="report-card">
                 <span>{copyText('DRS return', 'DRS 收益')}</span>
                 <strong>
                   {lastRoundResult.driverScores

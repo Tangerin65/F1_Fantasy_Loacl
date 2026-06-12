@@ -399,45 +399,46 @@
         "pitStops": [
           {
             "constructor": "Ferrari",
-            "fastestStop": 23.8
+            "fastestStop": 23.87
           },
           {
             "constructor": "Mercedes",
-            "fastestStop": 24.0
-          },
-          {
-            "constructor": "Red Bull Racing",
-            "fastestStop": 24.2
+            "fastestStop": 24.09
           },
           {
             "constructor": "McLaren",
             "fastestStop": 24.2
           },
           {
-            "constructor": "Haas F1 Team",
-            "fastestStop": 24.3
+            "constructor": "Red Bull Racing",
+            "fastestStop": 24.21
           },
           {
-            "constructor": "RB",
-            "fastestStop": 24.3
+            "constructor": "RB F1 Team",
+            "fastestStop": 24.32
+          },
+          {
+            "constructor": "Haas F1 Team",
+            "fastestStop": 24.39
           },
           {
             "constructor": "Aston Martin",
-            "fastestStop": 24.4
+            "fastestStop": 24.42
           },
           {
             "constructor": "Williams",
-            "fastestStop": 24.6
+            "fastestStop": 24.61
           },
           {
             "constructor": "Alpine",
-            "fastestStop": 24.8
+            "fastestStop": 24.88
           },
           {
-            "constructor": "Kick Sauber",
-            "fastestStop": 25.0
+            "constructor": "Sauber",
+            "fastestStop": 25.09
           }
-        ]
+        ],
+        "driverOfTheDay": null
       }
     },
     {
@@ -838,45 +839,46 @@
         "pitStops": [
           {
             "constructor": "Mercedes",
-            "fastestStop": 20.1
+            "fastestStop": 20.17
           },
           {
             "constructor": "Red Bull Racing",
-            "fastestStop": 20.6
+            "fastestStop": 20.61
           },
           {
             "constructor": "Haas F1 Team",
-            "fastestStop": 21.0
+            "fastestStop": 21.04
           },
           {
             "constructor": "McLaren",
-            "fastestStop": 21.4
+            "fastestStop": 21.43
           },
           {
-            "constructor": "RB",
-            "fastestStop": 21.6
+            "constructor": "RB F1 Team",
+            "fastestStop": 21.69
           },
           {
             "constructor": "Williams",
-            "fastestStop": 21.7
+            "fastestStop": 21.72
           },
           {
             "constructor": "Aston Martin",
-            "fastestStop": 22.1
+            "fastestStop": 22.13
           },
           {
             "constructor": "Ferrari",
-            "fastestStop": 22.4
+            "fastestStop": 22.46
           },
           {
             "constructor": "Alpine",
             "fastestStop": 22.5
           },
           {
-            "constructor": "Kick Sauber",
-            "fastestStop": 22.7
+            "constructor": "Sauber",
+            "fastestStop": 22.8
           }
-        ]
+        ],
+        "driverOfTheDay": null
       }
     },
     {
@@ -1258,31 +1260,31 @@
         "pitStops": [
           {
             "constructor": "Red Bull Racing",
-            "fastestStop": 17.2
+            "fastestStop": 17.22
           },
           {
             "constructor": "Ferrari",
-            "fastestStop": 17.3
+            "fastestStop": 17.31
           },
           {
-            "constructor": "RB",
-            "fastestStop": 17.5
-          },
-          {
-            "constructor": "Mercedes",
-            "fastestStop": 17.5
+            "constructor": "RB F1 Team",
+            "fastestStop": 17.54
           },
           {
             "constructor": "McLaren",
-            "fastestStop": 17.5
+            "fastestStop": 17.57
           },
           {
-            "constructor": "Alpine",
+            "constructor": "Mercedes",
             "fastestStop": 17.6
           },
           {
+            "constructor": "Alpine",
+            "fastestStop": 17.68
+          },
+          {
             "constructor": "Williams",
-            "fastestStop": 17.7
+            "fastestStop": 17.75
           },
           {
             "constructor": "Aston Martin",
@@ -1290,13 +1292,14 @@
           },
           {
             "constructor": "Haas F1 Team",
-            "fastestStop": 18.1
+            "fastestStop": 18.14
           },
           {
-            "constructor": "Kick Sauber",
-            "fastestStop": 18.9
+            "constructor": "Sauber",
+            "fastestStop": 18.94
           }
-        ]
+        ],
+        "driverOfTheDay": null
       }
     },
     {
@@ -1697,45 +1700,46 @@
         "pitStops": [
           {
             "constructor": "McLaren",
-            "fastestStop": 22.8
-          },
-          {
-            "constructor": "Red Bull Racing",
-            "fastestStop": 22.9
+            "fastestStop": 22.85
           },
           {
             "constructor": "Aston Martin",
-            "fastestStop": 22.9
+            "fastestStop": 22.91
+          },
+          {
+            "constructor": "Red Bull Racing",
+            "fastestStop": 22.96
           },
           {
             "constructor": "Mercedes",
-            "fastestStop": 22.9
-          },
-          {
-            "constructor": "Ferrari",
-            "fastestStop": 23.1
+            "fastestStop": 22.99
           },
           {
             "constructor": "Alpine",
             "fastestStop": 23.1
           },
           {
-            "constructor": "Williams",
-            "fastestStop": 23.2
+            "constructor": "Ferrari",
+            "fastestStop": 23.14
           },
           {
-            "constructor": "RB",
-            "fastestStop": 23.3
+            "constructor": "Williams",
+            "fastestStop": 23.29
+          },
+          {
+            "constructor": "RB F1 Team",
+            "fastestStop": 23.36
           },
           {
             "constructor": "Haas F1 Team",
-            "fastestStop": 23.6
+            "fastestStop": 23.62
           },
           {
-            "constructor": "Kick Sauber",
-            "fastestStop": 23.9
+            "constructor": "Sauber",
+            "fastestStop": 23.91
           }
-        ]
+        ],
+        "driverOfTheDay": null
       }
     },
     {
@@ -2320,45 +2324,46 @@
         "pitStops": [
           {
             "constructor": "Red Bull Racing",
-            "fastestStop": 22.0
+            "fastestStop": 22.03
           },
           {
             "constructor": "McLaren",
-            "fastestStop": 22.1
-          },
-          {
-            "constructor": "RB",
-            "fastestStop": 22.3
+            "fastestStop": 22.16
           },
           {
             "constructor": "Ferrari",
-            "fastestStop": 22.3
+            "fastestStop": 22.36
+          },
+          {
+            "constructor": "RB F1 Team",
+            "fastestStop": 22.39
           },
           {
             "constructor": "Mercedes",
-            "fastestStop": 22.4
-          },
-          {
-            "constructor": "Aston Martin",
-            "fastestStop": 22.6
+            "fastestStop": 22.41
           },
           {
             "constructor": "Williams",
-            "fastestStop": 22.6
+            "fastestStop": 22.68
+          },
+          {
+            "constructor": "Aston Martin",
+            "fastestStop": 22.69
           },
           {
             "constructor": "Alpine",
-            "fastestStop": 22.8
+            "fastestStop": 22.84
+          },
+          {
+            "constructor": "Sauber",
+            "fastestStop": 22.95
           },
           {
             "constructor": "Haas F1 Team",
-            "fastestStop": 22.9
-          },
-          {
-            "constructor": "Kick Sauber",
-            "fastestStop": 22.9
+            "fastestStop": 22.97
           }
-        ]
+        ],
+        "driverOfTheDay": null
       }
     },
     {
@@ -2943,45 +2948,46 @@
         "pitStops": [
           {
             "constructor": "Red Bull Racing",
-            "fastestStop": 21.6
+            "fastestStop": 21.7
           },
           {
             "constructor": "Ferrari",
-            "fastestStop": 21.8
+            "fastestStop": 21.82
           },
           {
             "constructor": "McLaren",
-            "fastestStop": 22.0
+            "fastestStop": 22.04
           },
           {
             "constructor": "Mercedes",
-            "fastestStop": 22.1
+            "fastestStop": 22.11
           },
           {
-            "constructor": "RB",
-            "fastestStop": 22.1
+            "constructor": "RB F1 Team",
+            "fastestStop": 22.15
           },
           {
             "constructor": "Aston Martin",
-            "fastestStop": 22.3
-          },
-          {
-            "constructor": "Haas F1 Team",
-            "fastestStop": 22.4
+            "fastestStop": 22.37
           },
           {
             "constructor": "Alpine",
-            "fastestStop": 22.4
+            "fastestStop": 22.47
+          },
+          {
+            "constructor": "Haas F1 Team",
+            "fastestStop": 22.49
           },
           {
             "constructor": "Williams",
-            "fastestStop": 22.5
+            "fastestStop": 22.57
           },
           {
-            "constructor": "Kick Sauber",
-            "fastestStop": 22.7
+            "constructor": "Sauber",
+            "fastestStop": 22.77
           }
-        ]
+        ],
+        "driverOfTheDay": null
       }
     },
     {
@@ -3382,45 +3388,46 @@
         "pitStops": [
           {
             "constructor": "Mercedes",
-            "fastestStop": 29.5
+            "fastestStop": 29.55
           },
           {
-            "constructor": "RB",
-            "fastestStop": 29.6
+            "constructor": "RB F1 Team",
+            "fastestStop": 29.63
           },
           {
             "constructor": "Red Bull Racing",
-            "fastestStop": 29.6
+            "fastestStop": 29.67
           },
           {
             "constructor": "Haas F1 Team",
-            "fastestStop": 29.7
+            "fastestStop": 29.75
           },
           {
             "constructor": "McLaren",
-            "fastestStop": 29.7
+            "fastestStop": 29.77
           },
           {
             "constructor": "Aston Martin",
-            "fastestStop": 29.9
+            "fastestStop": 29.93
           },
           {
             "constructor": "Williams",
-            "fastestStop": 30.0
+            "fastestStop": 30.05
           },
           {
             "constructor": "Alpine",
-            "fastestStop": 30.0
+            "fastestStop": 30.08
           },
           {
             "constructor": "Ferrari",
-            "fastestStop": 30.1
+            "fastestStop": 30.15
           },
           {
-            "constructor": "Kick Sauber",
-            "fastestStop": 30.2
+            "constructor": "Sauber",
+            "fastestStop": 30.24
           }
-        ]
+        ],
+        "driverOfTheDay": null
       }
     },
     {
@@ -3821,41 +3828,26 @@
         "pitStops": [
           {
             "constructor": "Red Bull Racing",
-            "fastestStop": 23.8
+            "fastestStop": 23.81
           },
           {
             "constructor": "Aston Martin",
-            "fastestStop": 24.1
+            "fastestStop": 24.13
           },
           {
             "constructor": "Mercedes",
-            "fastestStop": 24.2
+            "fastestStop": 24.23
           },
           {
-            "constructor": "Kick Sauber",
-            "fastestStop": 24.2
+            "constructor": "Sauber",
+            "fastestStop": 24.24
           },
           {
             "constructor": "Williams",
-            "fastestStop": 24.3
-          },
-          {
-            "constructor": "Ferrari",
-            "fastestStop": 2327.0
-          },
-          {
-            "constructor": "McLaren",
-            "fastestStop": 2357.6
-          },
-          {
-            "constructor": "RB",
-            "fastestStop": 2377.5
-          },
-          {
-            "constructor": "Alpine",
-            "fastestStop": 2381.8
+            "fastestStop": 24.38
           }
-        ]
+        ],
+        "driverOfTheDay": null
       }
     },
     {
@@ -4256,45 +4248,46 @@
         "pitStops": [
           {
             "constructor": "McLaren",
-            "fastestStop": 23.4
+            "fastestStop": 23.42
           },
           {
             "constructor": "Mercedes",
-            "fastestStop": 23.7
+            "fastestStop": 23.76
           },
           {
-            "constructor": "RB",
-            "fastestStop": 23.8
+            "constructor": "RB F1 Team",
+            "fastestStop": 23.86
           },
           {
             "constructor": "Ferrari",
-            "fastestStop": 24.0
+            "fastestStop": 24.03
           },
           {
             "constructor": "Haas F1 Team",
-            "fastestStop": 24.2
+            "fastestStop": 24.23
           },
           {
             "constructor": "Red Bull Racing",
-            "fastestStop": 24.2
+            "fastestStop": 24.25
           },
           {
             "constructor": "Aston Martin",
-            "fastestStop": 24.2
+            "fastestStop": 24.28
           },
           {
             "constructor": "Alpine",
-            "fastestStop": 24.4
+            "fastestStop": 24.41
           },
           {
             "constructor": "Williams",
-            "fastestStop": 24.7
+            "fastestStop": 24.75
           },
           {
-            "constructor": "Kick Sauber",
-            "fastestStop": 24.9
+            "constructor": "Sauber",
+            "fastestStop": 24.93
           }
-        ]
+        ],
+        "driverOfTheDay": null
       }
     },
     {
@@ -4695,45 +4688,46 @@
         "pitStops": [
           {
             "constructor": "Red Bull Racing",
-            "fastestStop": 21.4
-          },
-          {
-            "constructor": "Alpine",
-            "fastestStop": 21.6
+            "fastestStop": 21.46
           },
           {
             "constructor": "Mercedes",
             "fastestStop": 21.6
           },
           {
-            "constructor": "Ferrari",
-            "fastestStop": 21.6
-          },
-          {
             "constructor": "McLaren",
-            "fastestStop": 21.6
+            "fastestStop": 21.62
           },
           {
-            "constructor": "Williams",
-            "fastestStop": 21.8
+            "constructor": "Ferrari",
+            "fastestStop": 21.62
+          },
+          {
+            "constructor": "Alpine",
+            "fastestStop": 21.69
           },
           {
             "constructor": "Aston Martin",
-            "fastestStop": 21.8
+            "fastestStop": 21.88
           },
           {
-            "constructor": "RB",
-            "fastestStop": 22.0
+            "constructor": "Williams",
+            "fastestStop": 21.89
           },
           {
-            "constructor": "Kick Sauber",
-            "fastestStop": 22.5
+            "constructor": "RB F1 Team",
+            "fastestStop": 22.06
           },
           {
             "constructor": "Haas F1 Team",
-            "fastestStop": 22.5
+            "fastestStop": 22.52
+          },
+          {
+            "constructor": "Sauber",
+            "fastestStop": 22.52
           }
-        ]
+        ],
+        "driverOfTheDay": null
       }
     },
     {
@@ -5318,27 +5312,27 @@
         "pitStops": [
           {
             "constructor": "McLaren",
-            "fastestStop": 20.7
+            "fastestStop": 20.77
           },
           {
             "constructor": "Ferrari",
             "fastestStop": 20.9
           },
           {
-            "constructor": "RB",
-            "fastestStop": 21.0
-          },
-          {
-            "constructor": "Alpine",
-            "fastestStop": 21.2
+            "constructor": "RB F1 Team",
+            "fastestStop": 21.09
           },
           {
             "constructor": "Mercedes",
-            "fastestStop": 21.2
+            "fastestStop": 21.23
+          },
+          {
+            "constructor": "Alpine",
+            "fastestStop": 21.23
           },
           {
             "constructor": "Red Bull Racing",
-            "fastestStop": 21.2
+            "fastestStop": 21.29
           },
           {
             "constructor": "Aston Martin",
@@ -5346,17 +5340,18 @@
           },
           {
             "constructor": "Haas F1 Team",
-            "fastestStop": 21.5
+            "fastestStop": 21.52
           },
           {
-            "constructor": "Kick Sauber",
-            "fastestStop": 21.5
+            "constructor": "Sauber",
+            "fastestStop": 21.59
           },
           {
             "constructor": "Williams",
-            "fastestStop": 21.6
+            "fastestStop": 21.69
           }
-        ]
+        ],
+        "driverOfTheDay": null
       }
     },
     {
@@ -5757,45 +5752,46 @@
         "pitStops": [
           {
             "constructor": "Alpine",
-            "fastestStop": 28.2
+            "fastestStop": 28.28
           },
           {
             "constructor": "Red Bull Racing",
-            "fastestStop": 28.3
+            "fastestStop": 28.36
           },
           {
             "constructor": "Ferrari",
-            "fastestStop": 28.4
+            "fastestStop": 28.48
           },
           {
             "constructor": "McLaren",
-            "fastestStop": 28.6
+            "fastestStop": 28.66
           },
           {
-            "constructor": "RB",
-            "fastestStop": 28.8
+            "constructor": "RB F1 Team",
+            "fastestStop": 28.88
           },
           {
             "constructor": "Mercedes",
-            "fastestStop": 28.9
+            "fastestStop": 28.93
           },
           {
             "constructor": "Aston Martin",
-            "fastestStop": 29.0
+            "fastestStop": 29.02
           },
           {
-            "constructor": "Kick Sauber",
-            "fastestStop": 29.1
-          },
-          {
-            "constructor": "Haas F1 Team",
-            "fastestStop": 29.4
+            "constructor": "Sauber",
+            "fastestStop": 29.12
           },
           {
             "constructor": "Williams",
-            "fastestStop": 29.4
+            "fastestStop": 29.41
+          },
+          {
+            "constructor": "Haas F1 Team",
+            "fastestStop": 29.41
           }
-        ]
+        ],
+        "driverOfTheDay": null
       }
     },
     {
@@ -6195,46 +6191,47 @@
         "fastestLapDriver": "RUS",
         "pitStops": [
           {
-            "constructor": "RB",
-            "fastestStop": 21.0
+            "constructor": "Red Bull Racing",
+            "fastestStop": 21.06
           },
           {
-            "constructor": "Red Bull Racing",
-            "fastestStop": 21.0
+            "constructor": "RB F1 Team",
+            "fastestStop": 21.08
           },
           {
             "constructor": "McLaren",
-            "fastestStop": 21.2
-          },
-          {
-            "constructor": "Williams",
-            "fastestStop": 21.3
-          },
-          {
-            "constructor": "Alpine",
-            "fastestStop": 21.3
+            "fastestStop": 21.25
           },
           {
             "constructor": "Mercedes",
-            "fastestStop": 21.3
+            "fastestStop": 21.31
           },
           {
-            "constructor": "Ferrari",
+            "constructor": "Alpine",
+            "fastestStop": 21.33
+          },
+          {
+            "constructor": "Williams",
             "fastestStop": 21.4
           },
           {
-            "constructor": "Haas F1 Team",
-            "fastestStop": 21.8
+            "constructor": "Ferrari",
+            "fastestStop": 21.44
           },
           {
             "constructor": "Aston Martin",
             "fastestStop": 21.8
           },
           {
-            "constructor": "Kick Sauber",
-            "fastestStop": 21.9
+            "constructor": "Haas F1 Team",
+            "fastestStop": 21.87
+          },
+          {
+            "constructor": "Sauber",
+            "fastestStop": 21.98
           }
-        ]
+        ],
+        "driverOfTheDay": null
       }
     },
     {
@@ -6634,46 +6631,47 @@
         "fastestLapDriver": "PER",
         "pitStops": [
           {
-            "constructor": "RB",
-            "fastestStop": 22.3
-          },
-          {
-            "constructor": "Mercedes",
-            "fastestStop": 22.6
-          },
-          {
-            "constructor": "Red Bull Racing",
-            "fastestStop": 22.6
+            "constructor": "RB F1 Team",
+            "fastestStop": 22.33
           },
           {
             "constructor": "McLaren",
-            "fastestStop": 22.6
+            "fastestStop": 22.61
+          },
+          {
+            "constructor": "Red Bull Racing",
+            "fastestStop": 22.63
+          },
+          {
+            "constructor": "Mercedes",
+            "fastestStop": 22.69
           },
           {
             "constructor": "Alpine",
-            "fastestStop": 22.8
-          },
-          {
-            "constructor": "Kick Sauber",
-            "fastestStop": 22.9
+            "fastestStop": 22.84
           },
           {
             "constructor": "Ferrari",
-            "fastestStop": 22.9
+            "fastestStop": 22.94
+          },
+          {
+            "constructor": "Sauber",
+            "fastestStop": 22.95
           },
           {
             "constructor": "Aston Martin",
-            "fastestStop": 23.0
+            "fastestStop": 23.01
           },
           {
             "constructor": "Williams",
-            "fastestStop": 23.1
+            "fastestStop": 23.15
           },
           {
             "constructor": "Haas F1 Team",
-            "fastestStop": 23.2
+            "fastestStop": 23.27
           }
-        ]
+        ],
+        "driverOfTheDay": null
       }
     },
     {
@@ -7074,45 +7072,46 @@
         "pitStops": [
           {
             "constructor": "Red Bull Racing",
-            "fastestStop": 20.7
-          },
-          {
-            "constructor": "RB",
-            "fastestStop": 20.8
+            "fastestStop": 20.79
           },
           {
             "constructor": "Ferrari",
-            "fastestStop": 20.8
+            "fastestStop": 20.84
+          },
+          {
+            "constructor": "RB F1 Team",
+            "fastestStop": 20.88
           },
           {
             "constructor": "McLaren",
-            "fastestStop": 20.9
-          },
-          {
-            "constructor": "Williams",
-            "fastestStop": 21.0
-          },
-          {
-            "constructor": "Kick Sauber",
-            "fastestStop": 21.0
-          },
-          {
-            "constructor": "Mercedes",
-            "fastestStop": 21.0
+            "fastestStop": 20.97
           },
           {
             "constructor": "Alpine",
-            "fastestStop": 21.0
+            "fastestStop": 21.02
+          },
+          {
+            "constructor": "Williams",
+            "fastestStop": 21.02
+          },
+          {
+            "constructor": "Mercedes",
+            "fastestStop": 21.03
+          },
+          {
+            "constructor": "Sauber",
+            "fastestStop": 21.09
           },
           {
             "constructor": "Aston Martin",
-            "fastestStop": 21.3
+            "fastestStop": 21.35
           },
           {
             "constructor": "Haas F1 Team",
             "fastestStop": 21.4
           }
-        ]
+        ],
+        "driverOfTheDay": null
       }
     },
     {
@@ -7512,46 +7511,47 @@
         "fastestLapDriver": "NOR",
         "pitStops": [
           {
-            "constructor": "Mercedes",
-            "fastestStop": 29.5
-          },
-          {
-            "constructor": "RB",
-            "fastestStop": 29.6
+            "constructor": "McLaren",
+            "fastestStop": 23.79
           },
           {
             "constructor": "Red Bull Racing",
-            "fastestStop": 29.6
-          },
-          {
-            "constructor": "Haas F1 Team",
-            "fastestStop": 29.7
-          },
-          {
-            "constructor": "McLaren",
-            "fastestStop": 29.7
-          },
-          {
-            "constructor": "Aston Martin",
-            "fastestStop": 29.9
-          },
-          {
-            "constructor": "Williams",
-            "fastestStop": 30.0
+            "fastestStop": 24.03
           },
           {
             "constructor": "Alpine",
-            "fastestStop": 30.0
+            "fastestStop": 24.15
+          },
+          {
+            "constructor": "Mercedes",
+            "fastestStop": 24.16
+          },
+          {
+            "constructor": "Aston Martin",
+            "fastestStop": 24.21
           },
           {
             "constructor": "Ferrari",
-            "fastestStop": 30.1
+            "fastestStop": 24.31
           },
           {
-            "constructor": "Kick Sauber",
-            "fastestStop": 30.2
+            "constructor": "Sauber",
+            "fastestStop": 24.41
+          },
+          {
+            "constructor": "Williams",
+            "fastestStop": 24.8
+          },
+          {
+            "constructor": "Haas F1 Team",
+            "fastestStop": 25.67
+          },
+          {
+            "constructor": "RB F1 Team",
+            "fastestStop": 30.32
           }
-        ]
+        ],
+        "driverOfTheDay": null
       }
     },
     {
@@ -7952,45 +7952,46 @@
         "pitStops": [
           {
             "constructor": "McLaren",
-            "fastestStop": 19.7
+            "fastestStop": 19.71
           },
           {
             "constructor": "Mercedes",
-            "fastestStop": 19.9
+            "fastestStop": 19.95
+          },
+          {
+            "constructor": "Sauber",
+            "fastestStop": 20.05
           },
           {
             "constructor": "Aston Martin",
-            "fastestStop": 20.0
-          },
-          {
-            "constructor": "Kick Sauber",
-            "fastestStop": 20.0
-          },
-          {
-            "constructor": "Williams",
-            "fastestStop": 20.2
+            "fastestStop": 20.07
           },
           {
             "constructor": "Alpine",
-            "fastestStop": 20.2
+            "fastestStop": 20.26
+          },
+          {
+            "constructor": "Williams",
+            "fastestStop": 20.29
           },
           {
             "constructor": "Red Bull Racing",
-            "fastestStop": 20.6
+            "fastestStop": 20.63
           },
           {
             "constructor": "Ferrari",
-            "fastestStop": 20.6
+            "fastestStop": 20.67
           },
           {
-            "constructor": "RB",
-            "fastestStop": 20.9
+            "constructor": "RB F1 Team",
+            "fastestStop": 20.92
           },
           {
             "constructor": "Haas F1 Team",
-            "fastestStop": 21.2
+            "fastestStop": 21.28
           }
-        ]
+        ],
+        "driverOfTheDay": null
       }
     },
     {
@@ -8391,35 +8392,35 @@
         "pitStops": [
           {
             "constructor": "Mercedes",
-            "fastestStop": 28.7
+            "fastestStop": 28.74
           },
           {
             "constructor": "Red Bull Racing",
-            "fastestStop": 28.9
-          },
-          {
-            "constructor": "RB",
-            "fastestStop": 29.0
+            "fastestStop": 28.99
           },
           {
             "constructor": "Ferrari",
-            "fastestStop": 29.0
+            "fastestStop": 29.04
+          },
+          {
+            "constructor": "RB F1 Team",
+            "fastestStop": 29.07
           },
           {
             "constructor": "McLaren",
-            "fastestStop": 29.0
+            "fastestStop": 29.09
           },
           {
             "constructor": "Williams",
-            "fastestStop": 29.1
+            "fastestStop": 29.13
           },
           {
             "constructor": "Aston Martin",
-            "fastestStop": 29.2
+            "fastestStop": 29.25
           },
           {
-            "constructor": "Kick Sauber",
-            "fastestStop": 29.3
+            "constructor": "Sauber",
+            "fastestStop": 29.36
           },
           {
             "constructor": "Alpine",
@@ -8427,9 +8428,10 @@
           },
           {
             "constructor": "Haas F1 Team",
-            "fastestStop": 29.7
+            "fastestStop": 29.71
           }
-        ]
+        ],
+        "driverOfTheDay": null
       }
     },
     {
@@ -9014,45 +9016,46 @@
         "pitStops": [
           {
             "constructor": "Red Bull Racing",
-            "fastestStop": 21.6
-          },
-          {
-            "constructor": "Ferrari",
-            "fastestStop": 21.8
+            "fastestStop": 23.58
           },
           {
             "constructor": "McLaren",
-            "fastestStop": 22.0
+            "fastestStop": 23.73
           },
           {
-            "constructor": "Mercedes",
-            "fastestStop": 22.1
+            "constructor": "Ferrari",
+            "fastestStop": 23.82
           },
           {
-            "constructor": "RB",
-            "fastestStop": 22.1
-          },
-          {
-            "constructor": "Aston Martin",
-            "fastestStop": 22.3
+            "constructor": "RB F1 Team",
+            "fastestStop": 23.84
           },
           {
             "constructor": "Haas F1 Team",
-            "fastestStop": 22.4
-          },
-          {
-            "constructor": "Alpine",
-            "fastestStop": 22.4
+            "fastestStop": 23.97
           },
           {
             "constructor": "Williams",
-            "fastestStop": 22.5
+            "fastestStop": 23.97
           },
           {
-            "constructor": "Kick Sauber",
-            "fastestStop": 22.7
+            "constructor": "Alpine",
+            "fastestStop": 24.16
+          },
+          {
+            "constructor": "Aston Martin",
+            "fastestStop": 24.25
+          },
+          {
+            "constructor": "Sauber",
+            "fastestStop": 24.43
+          },
+          {
+            "constructor": "Mercedes",
+            "fastestStop": 29.33
           }
-        ]
+        ],
+        "driverOfTheDay": null
       }
     },
     {
@@ -9468,15 +9471,15 @@
             "fastestStop": 22.46
           },
           {
-            "constructor": "Kick Sauber",
+            "constructor": "Sauber",
             "fastestStop": 22.5
           },
           {
-            "constructor": "Aston Martin",
+            "constructor": "RB F1 Team",
             "fastestStop": 22.59
           },
           {
-            "constructor": "RB",
+            "constructor": "Aston Martin",
             "fastestStop": 22.59
           },
           {
@@ -9491,7 +9494,8 @@
             "constructor": "Williams",
             "fastestStop": 23.89
           }
-        ]
+        ],
+        "driverOfTheDay": null
       }
     },
     {
@@ -10080,7 +10084,7 @@
           },
           {
             "constructor": "McLaren",
-            "fastestStop": 24.7
+            "fastestStop": 24.76
           },
           {
             "constructor": "Aston Martin",
@@ -10091,30 +10095,27 @@
             "fastestStop": 25.2
           },
           {
-            "constructor": "Kick Sauber",
-            "fastestStop": 25.2
-          },
-          {
             "constructor": "Williams",
             "fastestStop": 25.24
+          },
+          {
+            "constructor": "Sauber",
+            "fastestStop": 25.25
           },
           {
             "constructor": "Haas F1 Team",
             "fastestStop": 25.37
           },
           {
-            "constructor": "RB",
-            "fastestStop": 25.4
+            "constructor": "RB F1 Team",
+            "fastestStop": 25.43
           },
           {
             "constructor": "Red Bull Racing",
-            "fastestStop": 26.6
-          },
-          {
-            "constructor": "Alpine",
-            "fastestStop": 1407.5
+            "fastestStop": 26.69
           }
-        ]
+        ],
+        "driverOfTheDay": null
       }
     },
     {
@@ -10514,46 +10515,47 @@
         "fastestLapDriver": "NOR",
         "pitStops": [
           {
-            "constructor": "Red Bull Racing",
-            "fastestStop": 21.6
+            "constructor": "Alpine",
+            "fastestStop": 15.79
           },
           {
-            "constructor": "Ferrari",
-            "fastestStop": 21.8
+            "constructor": "RB F1 Team",
+            "fastestStop": 20.64
           },
           {
             "constructor": "McLaren",
-            "fastestStop": 22.0
+            "fastestStop": 20.67
+          },
+          {
+            "constructor": "Red Bull Racing",
+            "fastestStop": 20.7
+          },
+          {
+            "constructor": "Ferrari",
+            "fastestStop": 20.88
           },
           {
             "constructor": "Mercedes",
-            "fastestStop": 22.1
-          },
-          {
-            "constructor": "RB",
-            "fastestStop": 22.1
-          },
-          {
-            "constructor": "Aston Martin",
-            "fastestStop": 22.3
-          },
-          {
-            "constructor": "Haas F1 Team",
-            "fastestStop": 22.4
-          },
-          {
-            "constructor": "Alpine",
-            "fastestStop": 22.4
+            "fastestStop": 20.98
           },
           {
             "constructor": "Williams",
-            "fastestStop": 22.5
+            "fastestStop": 21.17
           },
           {
-            "constructor": "Kick Sauber",
-            "fastestStop": 22.7
+            "constructor": "Aston Martin",
+            "fastestStop": 21.41
+          },
+          {
+            "constructor": "Haas F1 Team",
+            "fastestStop": 21.51
+          },
+          {
+            "constructor": "Sauber",
+            "fastestStop": 21.62
           }
-        ]
+        ],
+        "driverOfTheDay": null
       }
     },
     {
@@ -11138,14 +11140,6 @@
         "pitStops": [
           {
             "constructor": "Haas F1 Team",
-            "fastestStop": 22.6
-          },
-          {
-            "constructor": "Mercedes",
-            "fastestStop": 22.7
-          },
-          {
-            "constructor": "Ferrari",
             "fastestStop": 22.7
           },
           {
@@ -11153,30 +11147,39 @@
             "fastestStop": 22.7
           },
           {
-            "constructor": "Alpine",
-            "fastestStop": 22.7
-          },
-          {
-            "constructor": "RB",
+            "constructor": "Mercedes",
             "fastestStop": 22.7
           },
           {
             "constructor": "Williams",
-            "fastestStop": 22.7
+            "fastestStop": 22.71
+          },
+          {
+            "constructor": "RB F1 Team",
+            "fastestStop": 22.71
+          },
+          {
+            "constructor": "Alpine",
+            "fastestStop": 22.72
+          },
+          {
+            "constructor": "Ferrari",
+            "fastestStop": 22.78
           },
           {
             "constructor": "McLaren",
-            "fastestStop": 22.8
+            "fastestStop": 22.87
           },
           {
-            "constructor": "Kick Sauber",
-            "fastestStop": 23.2
+            "constructor": "Sauber",
+            "fastestStop": 23.23
           },
           {
             "constructor": "Aston Martin",
             "fastestStop": 28.59
           }
-        ]
+        ],
+        "driverOfTheDay": null
       }
     },
     {
@@ -11592,7 +11595,7 @@
             "fastestStop": 21.66
           },
           {
-            "constructor": "RB",
+            "constructor": "RB F1 Team",
             "fastestStop": 21.87
           },
           {
@@ -11608,14 +11611,15 @@
             "fastestStop": 22.07
           },
           {
-            "constructor": "Kick Sauber",
+            "constructor": "Sauber",
             "fastestStop": 23.02
           },
           {
             "constructor": "Red Bull Racing",
             "fastestStop": 32.65
           }
-        ]
+        ],
+        "driverOfTheDay": null
       }
     }
   ]

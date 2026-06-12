@@ -57,6 +57,7 @@ export interface RoundData {
     results: RaceResult[];
     fastestLapDriver: string;
     pitStops: PitStopData[];
+    driverOfTheDay: string | null;
   };
 }
 

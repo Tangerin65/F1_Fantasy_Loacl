@@ -396,7 +396,49 @@
           }
         ],
         "fastestLapDriver": "LEC",
-        "pitStops": []
+        "pitStops": [
+          {
+            "constructor": "Red Bull Racing",
+            "fastestStop": 24.17
+          },
+          {
+            "constructor": "RB F1 Team",
+            "fastestStop": 24.19
+          },
+          {
+            "constructor": "Alpine",
+            "fastestStop": 24.23
+          },
+          {
+            "constructor": "Ferrari",
+            "fastestStop": 24.29
+          },
+          {
+            "constructor": "Williams",
+            "fastestStop": 24.46
+          },
+          {
+            "constructor": "McLaren",
+            "fastestStop": 24.57
+          },
+          {
+            "constructor": "Aston Martin",
+            "fastestStop": 25.04
+          },
+          {
+            "constructor": "Sauber",
+            "fastestStop": 25.16
+          },
+          {
+            "constructor": "Mercedes",
+            "fastestStop": 25.2
+          },
+          {
+            "constructor": "Haas F1 Team",
+            "fastestStop": 25.21
+          }
+        ],
+        "driverOfTheDay": null
       }
     },
     {
@@ -794,7 +836,49 @@
           }
         ],
         "fastestLapDriver": "LEC",
-        "pitStops": []
+        "pitStops": [
+          {
+            "constructor": "Sauber",
+            "fastestStop": 15.1
+          },
+          {
+            "constructor": "McLaren",
+            "fastestStop": 20.38
+          },
+          {
+            "constructor": "Red Bull Racing",
+            "fastestStop": 20.48
+          },
+          {
+            "constructor": "Williams",
+            "fastestStop": 20.68
+          },
+          {
+            "constructor": "Ferrari",
+            "fastestStop": 21.04
+          },
+          {
+            "constructor": "Alpine",
+            "fastestStop": 21.14
+          },
+          {
+            "constructor": "Mercedes",
+            "fastestStop": 21.41
+          },
+          {
+            "constructor": "Aston Martin",
+            "fastestStop": 21.43
+          },
+          {
+            "constructor": "Haas F1 Team",
+            "fastestStop": 22.37
+          },
+          {
+            "constructor": "RB F1 Team",
+            "fastestStop": 22.82
+          }
+        ],
+        "driverOfTheDay": null
       }
     },
     {
@@ -806,112 +890,102 @@
       "qualifying": {
         "results": [
           {
-            "driver": "NOR",
-            "fullName": "Lando Norris",
-            "team": "McLaren",
-            "position": null,
-            "q1": null,
-            "q2": null,
-            "q3": null,
-            "status": ""
-          },
-          {
             "driver": "LEC",
             "fullName": "Charles Leclerc",
             "team": "Ferrari",
-            "position": null,
-            "q1": null,
-            "q2": null,
-            "q3": null,
-            "status": ""
-          },
-          {
-            "driver": "PER",
-            "fullName": "Sergio Perez",
-            "team": "Red Bull Racing",
-            "position": null,
-            "q1": null,
-            "q2": null,
-            "q3": null,
-            "status": ""
-          },
-          {
-            "driver": "ALO",
-            "fullName": "Fernando Alonso",
-            "team": "Alpine",
-            "position": null,
-            "q1": null,
-            "q2": null,
-            "q3": null,
-            "status": ""
-          },
-          {
-            "driver": "SAI",
-            "fullName": "Carlos Sainz",
-            "team": "Ferrari",
-            "position": null,
-            "q1": null,
-            "q2": null,
-            "q3": null,
-            "status": ""
-          },
-          {
-            "driver": "RIC",
-            "fullName": "Daniel Ricciardo",
-            "team": "McLaren",
-            "position": null,
-            "q1": null,
-            "q2": null,
-            "q3": null,
+            "position": 1,
+            "q1": "1:18.881",
+            "q2": "1:18.606",
+            "q3": "1:17.868",
             "status": ""
           },
           {
             "driver": "VER",
             "fullName": "Max Verstappen",
             "team": "Red Bull Racing",
-            "position": null,
-            "q1": null,
-            "q2": null,
-            "q3": null,
+            "position": 2,
+            "q1": "1:18.580",
+            "q2": "1:18.611",
+            "q3": "1:18.154",
+            "status": ""
+          },
+          {
+            "driver": "PER",
+            "fullName": "Sergio Perez",
+            "team": "Red Bull Racing",
+            "position": 3,
+            "q1": "1:18.834",
+            "q2": "1:18.340",
+            "q3": "1:18.240",
+            "status": ""
+          },
+          {
+            "driver": "NOR",
+            "fullName": "Lando Norris",
+            "team": "McLaren",
+            "position": 4,
+            "q1": "1:19.280",
+            "q2": "1:19.066",
+            "q3": "1:18.703",
             "status": ""
           },
           {
             "driver": "HAM",
             "fullName": "Lewis Hamilton",
             "team": "Mercedes",
-            "position": null,
-            "q1": null,
-            "q2": null,
-            "q3": null,
-            "status": ""
-          },
-          {
-            "driver": "BOT",
-            "fullName": "Valtteri Bottas",
-            "team": "Alfa Romeo",
-            "position": null,
-            "q1": null,
-            "q2": null,
-            "q3": null,
-            "status": ""
-          },
-          {
-            "driver": "TSU",
-            "fullName": "Yuki Tsunoda",
-            "team": "AlphaTauri",
-            "position": null,
-            "q1": null,
-            "q2": null,
-            "q3": null,
+            "position": 5,
+            "q1": "1:19.401",
+            "q2": "1:19.106",
+            "q3": "1:18.825",
             "status": ""
           },
           {
             "driver": "RUS",
             "fullName": "George Russell",
             "team": "Mercedes",
-            "position": null,
-            "q1": null,
-            "q2": null,
+            "position": 6,
+            "q1": "1:19.405",
+            "q2": "1:19.076",
+            "q3": "1:18.933",
+            "status": ""
+          },
+          {
+            "driver": "RIC",
+            "fullName": "Daniel Ricciardo",
+            "team": "McLaren",
+            "position": 7,
+            "q1": "1:19.665",
+            "q2": "1:19.130",
+            "q3": "1:19.032",
+            "status": ""
+          },
+          {
+            "driver": "OCO",
+            "fullName": "Esteban Ocon",
+            "team": "Alpine",
+            "position": 8,
+            "q1": "1:19.605",
+            "q2": "1:19.136",
+            "q3": "1:19.061",
+            "status": ""
+          },
+          {
+            "driver": "SAI",
+            "fullName": "Carlos Sainz",
+            "team": "Ferrari",
+            "position": 9,
+            "q1": "1:18.983",
+            "q2": "1:18.469",
+            "q3": "1:19.408",
+            "status": ""
+          },
+          {
+            "driver": "ALO",
+            "fullName": "Fernando Alonso",
+            "team": "Alpine",
+            "position": 10,
+            "q1": "1:19.192",
+            "q2": "1:18.815",
             "q3": null,
             "status": ""
           },
@@ -919,29 +993,29 @@
             "driver": "GAS",
             "fullName": "Pierre Gasly",
             "team": "AlphaTauri",
-            "position": null,
-            "q1": null,
-            "q2": null,
+            "position": 11,
+            "q1": "1:19.580",
+            "q2": "1:19.226",
             "q3": null,
             "status": ""
           },
           {
-            "driver": "OCO",
-            "fullName": "Esteban Ocon",
-            "team": "Alpine",
-            "position": null,
-            "q1": null,
-            "q2": null,
+            "driver": "BOT",
+            "fullName": "Valtteri Bottas",
+            "team": "Alfa Romeo",
+            "position": 12,
+            "q1": "1:19.251",
+            "q2": "1:19.410",
             "q3": null,
             "status": ""
           },
           {
-            "driver": "MSC",
-            "fullName": "Mick Schumacher",
-            "team": "Haas F1 Team",
-            "position": null,
-            "q1": null,
-            "q2": null,
+            "driver": "TSU",
+            "fullName": "Yuki Tsunoda",
+            "team": "AlphaTauri",
+            "position": 13,
+            "q1": "1:19.742",
+            "q2": "1:19.424",
             "q3": null,
             "status": ""
           },
@@ -949,9 +1023,19 @@
             "driver": "ZHO",
             "fullName": "Guanyu Zhou",
             "team": "Alfa Romeo",
-            "position": null,
-            "q1": null,
-            "q2": null,
+            "position": 14,
+            "q1": "1:19.910",
+            "q2": "1:20.155",
+            "q3": null,
+            "status": ""
+          },
+          {
+            "driver": "MSC",
+            "fullName": "Mick Schumacher",
+            "team": "Haas F1 Team",
+            "position": 15,
+            "q1": "1:20.104",
+            "q2": "1:20.465",
             "q3": null,
             "status": ""
           },
@@ -959,8 +1043,8 @@
             "driver": "ALB",
             "fullName": "Alexander Albon",
             "team": "Williams",
-            "position": null,
-            "q1": null,
+            "position": 16,
+            "q1": "1:20.135",
             "q2": null,
             "q3": null,
             "status": ""
@@ -969,28 +1053,8 @@
             "driver": "MAG",
             "fullName": "Kevin Magnussen",
             "team": "Haas F1 Team",
-            "position": null,
-            "q1": null,
-            "q2": null,
-            "q3": null,
-            "status": ""
-          },
-          {
-            "driver": "LAT",
-            "fullName": "Nicholas Latifi",
-            "team": "Williams",
-            "position": null,
-            "q1": null,
-            "q2": null,
-            "q3": null,
-            "status": ""
-          },
-          {
-            "driver": "STR",
-            "fullName": "Lance Stroll",
-            "team": "Aston Martin",
-            "position": null,
-            "q1": null,
+            "position": 17,
+            "q1": "1:20.254",
             "q2": null,
             "q3": null,
             "status": ""
@@ -999,7 +1063,27 @@
             "driver": "VET",
             "fullName": "Sebastian Vettel",
             "team": "Aston Martin",
-            "position": null,
+            "position": 18,
+            "q1": "1:21.149",
+            "q2": null,
+            "q3": null,
+            "status": ""
+          },
+          {
+            "driver": "LAT",
+            "fullName": "Nicholas Latifi",
+            "team": "Williams",
+            "position": 19,
+            "q1": "1:21.372",
+            "q2": null,
+            "q3": null,
+            "status": ""
+          },
+          {
+            "driver": "STR",
+            "fullName": "Lance Stroll",
+            "team": "Aston Martin",
+            "position": 20,
             "q1": null,
             "q2": null,
             "q3": null,
@@ -1014,185 +1098,227 @@
             "driver": "LEC",
             "fullName": "Charles Leclerc",
             "team": "Ferrari",
-            "grid": null,
+            "grid": 1,
             "position": 1,
-            "status": "",
-            "points": null
+            "status": "Finished",
+            "points": 26.0
           },
           {
             "driver": "PER",
             "fullName": "Sergio Perez",
             "team": "Red Bull Racing",
-            "grid": null,
+            "grid": 3,
             "position": 2,
-            "status": "",
-            "points": null
+            "status": "Finished",
+            "points": 18.0
           },
           {
             "driver": "RUS",
             "fullName": "George Russell",
             "team": "Mercedes",
-            "grid": null,
+            "grid": 6,
             "position": 3,
-            "status": "",
-            "points": null
+            "status": "Finished",
+            "points": 15.0
           },
           {
             "driver": "HAM",
             "fullName": "Lewis Hamilton",
             "team": "Mercedes",
-            "grid": null,
+            "grid": 5,
             "position": 4,
-            "status": "",
-            "points": null
+            "status": "Finished",
+            "points": 12.0
           },
           {
             "driver": "NOR",
             "fullName": "Lando Norris",
             "team": "McLaren",
-            "grid": null,
+            "grid": 4,
             "position": 5,
-            "status": "",
-            "points": null
+            "status": "Finished",
+            "points": 10.0
           },
           {
             "driver": "RIC",
             "fullName": "Daniel Ricciardo",
             "team": "McLaren",
-            "grid": null,
+            "grid": 7,
             "position": 6,
-            "status": "",
-            "points": null
+            "status": "Finished",
+            "points": 8.0
           },
           {
             "driver": "OCO",
             "fullName": "Esteban Ocon",
             "team": "Alpine",
-            "grid": null,
+            "grid": 8,
             "position": 7,
-            "status": "",
-            "points": null
+            "status": "Finished",
+            "points": 6.0
           },
           {
             "driver": "BOT",
             "fullName": "Valtteri Bottas",
             "team": "Alfa Romeo",
-            "grid": null,
+            "grid": 12,
             "position": 8,
-            "status": "",
-            "points": null
+            "status": "Finished",
+            "points": 4.0
           },
           {
             "driver": "GAS",
             "fullName": "Pierre Gasly",
             "team": "AlphaTauri",
-            "grid": null,
+            "grid": 11,
             "position": 9,
-            "status": "",
-            "points": null
+            "status": "Finished",
+            "points": 2.0
           },
           {
             "driver": "ALB",
             "fullName": "Alexander Albon",
             "team": "Williams",
-            "grid": null,
+            "grid": 20,
             "position": 10,
-            "status": "",
-            "points": null
+            "status": "Finished",
+            "points": 1.0
           },
           {
             "driver": "ZHO",
             "fullName": "Guanyu Zhou",
             "team": "Alfa Romeo",
-            "grid": null,
+            "grid": 14,
             "position": 11,
-            "status": "",
-            "points": null
+            "status": "Finished",
+            "points": 0.0
           },
           {
             "driver": "STR",
             "fullName": "Lance Stroll",
             "team": "Aston Martin",
-            "grid": null,
+            "grid": 19,
             "position": 12,
-            "status": "",
-            "points": null
+            "status": "Finished",
+            "points": 0.0
           },
           {
             "driver": "MSC",
             "fullName": "Mick Schumacher",
             "team": "Haas F1 Team",
-            "grid": null,
+            "grid": 15,
             "position": 13,
-            "status": "",
-            "points": null
+            "status": "+1 Lap",
+            "points": 0.0
           },
           {
             "driver": "MAG",
             "fullName": "Kevin Magnussen",
             "team": "Haas F1 Team",
-            "grid": null,
+            "grid": 16,
             "position": 14,
-            "status": "",
-            "points": null
+            "status": "+1 Lap",
+            "points": 0.0
           },
           {
             "driver": "TSU",
             "fullName": "Yuki Tsunoda",
             "team": "AlphaTauri",
-            "grid": null,
+            "grid": 13,
             "position": 15,
-            "status": "",
-            "points": null
+            "status": "+1 Lap",
+            "points": 0.0
           },
           {
             "driver": "LAT",
             "fullName": "Nicholas Latifi",
             "team": "Williams",
-            "grid": null,
+            "grid": 18,
             "position": 16,
-            "status": "",
-            "points": null
+            "status": "+1 Lap",
+            "points": 0.0
           },
           {
             "driver": "ALO",
             "fullName": "Fernando Alonso",
             "team": "Alpine",
-            "grid": null,
+            "grid": 10,
             "position": 17,
-            "status": "",
-            "points": null
+            "status": "+1 Lap",
+            "points": 0.0
           },
           {
             "driver": "VER",
             "fullName": "Max Verstappen",
             "team": "Red Bull Racing",
-            "grid": null,
+            "grid": 2,
             "position": 18,
-            "status": "",
-            "points": null
+            "status": "Fuel leak",
+            "points": 0.0
           },
           {
             "driver": "VET",
             "fullName": "Sebastian Vettel",
             "team": "Aston Martin",
-            "grid": null,
+            "grid": 17,
             "position": 19,
-            "status": "",
-            "points": null
+            "status": "Accident",
+            "points": 0.0
           },
           {
             "driver": "SAI",
             "fullName": "Carlos Sainz",
             "team": "Ferrari",
-            "grid": null,
+            "grid": 9,
             "position": 20,
-            "status": "",
-            "points": null
+            "status": "Spun off",
+            "points": 0.0
           }
         ],
         "fastestLapDriver": "LEC",
-        "pitStops": []
+        "pitStops": [
+          {
+            "constructor": "Red Bull Racing",
+            "fastestStop": 17.43
+          },
+          {
+            "constructor": "McLaren",
+            "fastestStop": 17.56
+          },
+          {
+            "constructor": "Mercedes",
+            "fastestStop": 17.88
+          },
+          {
+            "constructor": "Williams",
+            "fastestStop": 17.94
+          },
+          {
+            "constructor": "Ferrari",
+            "fastestStop": 17.97
+          },
+          {
+            "constructor": "Aston Martin",
+            "fastestStop": 18.24
+          },
+          {
+            "constructor": "Sauber",
+            "fastestStop": 18.38
+          },
+          {
+            "constructor": "Alpine",
+            "fastestStop": 18.39
+          },
+          {
+            "constructor": "RB F1 Team",
+            "fastestStop": 18.44
+          },
+          {
+            "constructor": "Haas F1 Team",
+            "fastestStop": 19.04
+          }
+        ],
+        "driverOfTheDay": null
       }
     },
     {
@@ -1207,48 +1333,158 @@
             "driver": "VER",
             "fullName": "Max Verstappen",
             "team": "Red Bull Racing",
-            "position": null,
-            "q1": null,
-            "q2": null,
-            "q3": null,
+            "position": 1,
+            "q1": "1:19.295",
+            "q2": "1:18.793",
+            "q3": "1:27.999",
             "status": ""
           },
           {
-            "driver": "RIC",
-            "fullName": "Daniel Ricciardo",
-            "team": "McLaren",
-            "position": null,
-            "q1": null,
-            "q2": null,
-            "q3": null,
+            "driver": "LEC",
+            "fullName": "Charles Leclerc",
+            "team": "Ferrari",
+            "position": 2,
+            "q1": "1:18.796",
+            "q2": "1:19.584",
+            "q3": "1:28.778",
             "status": ""
           },
           {
             "driver": "NOR",
             "fullName": "Lando Norris",
             "team": "McLaren",
-            "position": null,
-            "q1": null,
-            "q2": null,
-            "q3": null,
+            "position": 3,
+            "q1": "1:20.168",
+            "q2": "1:19.294",
+            "q3": "1:29.131",
+            "status": ""
+          },
+          {
+            "driver": "MAG",
+            "fullName": "Kevin Magnussen",
+            "team": "Haas F1 Team",
+            "position": 4,
+            "q1": "1:20.147",
+            "q2": "1:19.902",
+            "q3": "1:29.164",
+            "status": ""
+          },
+          {
+            "driver": "ALO",
+            "fullName": "Fernando Alonso",
+            "team": "Alpine",
+            "position": 5,
+            "q1": "1:20.198",
+            "q2": "1:19.595",
+            "q3": "1:29.202",
+            "status": ""
+          },
+          {
+            "driver": "RIC",
+            "fullName": "Daniel Ricciardo",
+            "team": "McLaren",
+            "position": 6,
+            "q1": "1:19.980",
+            "q2": "1:20.031",
+            "q3": "1:29.742",
+            "status": ""
+          },
+          {
+            "driver": "PER",
+            "fullName": "Sergio Perez",
+            "team": "Red Bull Racing",
+            "position": 7,
+            "q1": "1:19.773",
+            "q2": "1:19.296",
+            "q3": "1:29.808",
+            "status": ""
+          },
+          {
+            "driver": "BOT",
+            "fullName": "Valtteri Bottas",
+            "team": "Alfa Romeo",
+            "position": 8,
+            "q1": "1:20.419",
+            "q2": "1:20.192",
+            "q3": "1:30.439",
             "status": ""
           },
           {
             "driver": "VET",
             "fullName": "Sebastian Vettel",
             "team": "Aston Martin",
-            "position": null,
-            "q1": null,
-            "q2": null,
+            "position": 9,
+            "q1": "1:20.364",
+            "q2": "1:19.957",
+            "q3": "1:31.062",
+            "status": ""
+          },
+          {
+            "driver": "SAI",
+            "fullName": "Carlos Sainz",
+            "team": "Ferrari",
+            "position": 10,
+            "q1": "1:19.305",
+            "q2": "1:18.990",
             "q3": null,
             "status": ""
           },
           {
-            "driver": "LAT",
-            "fullName": "Nicholas Latifi",
-            "team": "Williams",
-            "position": null,
-            "q1": null,
+            "driver": "RUS",
+            "fullName": "George Russell",
+            "team": "Mercedes",
+            "position": 11,
+            "q1": "1:20.383",
+            "q2": "1:20.757",
+            "q3": null,
+            "status": ""
+          },
+          {
+            "driver": "MSC",
+            "fullName": "Mick Schumacher",
+            "team": "Haas F1 Team",
+            "position": 12,
+            "q1": "1:20.422",
+            "q2": "1:20.916",
+            "q3": null,
+            "status": ""
+          },
+          {
+            "driver": "HAM",
+            "fullName": "Lewis Hamilton",
+            "team": "Mercedes",
+            "position": 13,
+            "q1": "1:20.470",
+            "q2": "1:21.138",
+            "q3": null,
+            "status": ""
+          },
+          {
+            "driver": "ZHO",
+            "fullName": "Guanyu Zhou",
+            "team": "Alfa Romeo",
+            "position": 14,
+            "q1": "1:19.730",
+            "q2": "1:21.434",
+            "q3": null,
+            "status": ""
+          },
+          {
+            "driver": "STR",
+            "fullName": "Lance Stroll",
+            "team": "Aston Martin",
+            "position": 15,
+            "q1": "1:20.342",
+            "q2": "1:28.119",
+            "q3": null,
+            "status": ""
+          },
+          {
+            "driver": "TSU",
+            "fullName": "Yuki Tsunoda",
+            "team": "AlphaTauri",
+            "position": 16,
+            "q1": "1:20.474",
             "q2": null,
             "q3": null,
             "status": ""
@@ -1257,88 +1493,18 @@
             "driver": "GAS",
             "fullName": "Pierre Gasly",
             "team": "AlphaTauri",
-            "position": null,
-            "q1": null,
+            "position": 17,
+            "q1": "1:20.732",
             "q2": null,
             "q3": null,
             "status": ""
           },
           {
-            "driver": "PER",
-            "fullName": "Sergio Perez",
-            "team": "Red Bull Racing",
-            "position": null,
-            "q1": null,
-            "q2": null,
-            "q3": null,
-            "status": ""
-          },
-          {
-            "driver": "ALO",
-            "fullName": "Fernando Alonso",
-            "team": "Alpine",
-            "position": null,
-            "q1": null,
-            "q2": null,
-            "q3": null,
-            "status": ""
-          },
-          {
-            "driver": "LEC",
-            "fullName": "Charles Leclerc",
-            "team": "Ferrari",
-            "position": null,
-            "q1": null,
-            "q2": null,
-            "q3": null,
-            "status": ""
-          },
-          {
-            "driver": "STR",
-            "fullName": "Lance Stroll",
-            "team": "Aston Martin",
-            "position": null,
-            "q1": null,
-            "q2": null,
-            "q3": null,
-            "status": ""
-          },
-          {
-            "driver": "MAG",
-            "fullName": "Kevin Magnussen",
-            "team": "Haas F1 Team",
-            "position": null,
-            "q1": null,
-            "q2": null,
-            "q3": null,
-            "status": ""
-          },
-          {
-            "driver": "TSU",
-            "fullName": "Yuki Tsunoda",
-            "team": "AlphaTauri",
-            "position": null,
-            "q1": null,
-            "q2": null,
-            "q3": null,
-            "status": ""
-          },
-          {
-            "driver": "ALB",
-            "fullName": "Alexander Albon",
+            "driver": "LAT",
+            "fullName": "Nicholas Latifi",
             "team": "Williams",
-            "position": null,
-            "q1": null,
-            "q2": null,
-            "q3": null,
-            "status": ""
-          },
-          {
-            "driver": "ZHO",
-            "fullName": "Guanyu Zhou",
-            "team": "Alfa Romeo",
-            "position": null,
-            "q1": null,
+            "position": 18,
+            "q1": "1:21.971",
             "q2": null,
             "q3": null,
             "status": ""
@@ -1347,57 +1513,17 @@
             "driver": "OCO",
             "fullName": "Esteban Ocon",
             "team": "Alpine",
-            "position": null,
-            "q1": null,
+            "position": 19,
+            "q1": "1:22.338",
             "q2": null,
             "q3": null,
             "status": ""
           },
           {
-            "driver": "HAM",
-            "fullName": "Lewis Hamilton",
-            "team": "Mercedes",
-            "position": null,
-            "q1": null,
-            "q2": null,
-            "q3": null,
-            "status": ""
-          },
-          {
-            "driver": "MSC",
-            "fullName": "Mick Schumacher",
-            "team": "Haas F1 Team",
-            "position": null,
-            "q1": null,
-            "q2": null,
-            "q3": null,
-            "status": ""
-          },
-          {
-            "driver": "SAI",
-            "fullName": "Carlos Sainz",
-            "team": "Ferrari",
-            "position": null,
-            "q1": null,
-            "q2": null,
-            "q3": null,
-            "status": ""
-          },
-          {
-            "driver": "RUS",
-            "fullName": "George Russell",
-            "team": "Mercedes",
-            "position": null,
-            "q1": null,
-            "q2": null,
-            "q3": null,
-            "status": ""
-          },
-          {
-            "driver": "BOT",
-            "fullName": "Valtteri Bottas",
-            "team": "Alfa Romeo",
-            "position": null,
+            "driver": "ALB",
+            "fullName": "Alexander Albon",
+            "team": "Williams",
+            "position": 20,
             "q1": null,
             "q2": null,
             "q3": null,
@@ -1774,7 +1900,49 @@
           }
         ],
         "fastestLapDriver": "VER",
-        "pitStops": []
+        "pitStops": [
+          {
+            "constructor": "Red Bull Racing",
+            "fastestStop": 29.63
+          },
+          {
+            "constructor": "Ferrari",
+            "fastestStop": 30.04
+          },
+          {
+            "constructor": "McLaren",
+            "fastestStop": 30.07
+          },
+          {
+            "constructor": "RB F1 Team",
+            "fastestStop": 30.37
+          },
+          {
+            "constructor": "Aston Martin",
+            "fastestStop": 30.48
+          },
+          {
+            "constructor": "Williams",
+            "fastestStop": 30.79
+          },
+          {
+            "constructor": "Haas F1 Team",
+            "fastestStop": 30.98
+          },
+          {
+            "constructor": "Mercedes",
+            "fastestStop": 31.08
+          },
+          {
+            "constructor": "Alpine",
+            "fastestStop": 31.41
+          },
+          {
+            "constructor": "Sauber",
+            "fastestStop": 32.2
+          }
+        ],
+        "driverOfTheDay": null
       }
     },
     {
@@ -1994,185 +2162,227 @@
             "driver": "VER",
             "fullName": "Max Verstappen",
             "team": "Red Bull Racing",
-            "grid": null,
+            "grid": 3,
             "position": 1,
-            "status": "",
-            "points": null
+            "status": "Finished",
+            "points": 26.0
           },
           {
             "driver": "LEC",
             "fullName": "Charles Leclerc",
             "team": "Ferrari",
-            "grid": null,
+            "grid": 1,
             "position": 2,
-            "status": "",
-            "points": null
+            "status": "Finished",
+            "points": 18.0
           },
           {
             "driver": "SAI",
             "fullName": "Carlos Sainz",
             "team": "Ferrari",
-            "grid": null,
+            "grid": 2,
             "position": 3,
-            "status": "",
-            "points": null
+            "status": "Finished",
+            "points": 15.0
           },
           {
             "driver": "PER",
             "fullName": "Sergio Perez",
             "team": "Red Bull Racing",
-            "grid": null,
+            "grid": 4,
             "position": 4,
-            "status": "",
-            "points": null
+            "status": "Finished",
+            "points": 12.0
           },
           {
             "driver": "RUS",
             "fullName": "George Russell",
             "team": "Mercedes",
-            "grid": null,
+            "grid": 12,
             "position": 5,
-            "status": "",
-            "points": null
+            "status": "Finished",
+            "points": 10.0
           },
           {
             "driver": "HAM",
             "fullName": "Lewis Hamilton",
             "team": "Mercedes",
-            "grid": null,
+            "grid": 6,
             "position": 6,
-            "status": "",
-            "points": null
+            "status": "Finished",
+            "points": 8.0
           },
           {
             "driver": "BOT",
             "fullName": "Valtteri Bottas",
             "team": "Alfa Romeo",
-            "grid": null,
+            "grid": 5,
             "position": 7,
-            "status": "",
-            "points": null
-          },
-          {
-            "driver": "ALO",
-            "fullName": "Fernando Alonso",
-            "team": "Alpine",
-            "grid": null,
-            "position": 8,
-            "status": "",
-            "points": null
+            "status": "Finished",
+            "points": 6.0
           },
           {
             "driver": "OCO",
             "fullName": "Esteban Ocon",
             "team": "Alpine",
-            "grid": null,
-            "position": 9,
-            "status": "",
-            "points": null
+            "grid": 20,
+            "position": 8,
+            "status": "Finished",
+            "points": 4.0
           },
           {
             "driver": "ALB",
             "fullName": "Alexander Albon",
             "team": "Williams",
-            "grid": null,
-            "position": 10,
-            "status": "",
-            "points": null
-          },
-          {
-            "driver": "RIC",
-            "fullName": "Daniel Ricciardo",
-            "team": "McLaren",
-            "grid": null,
-            "position": 11,
-            "status": "",
-            "points": null
+            "grid": 18,
+            "position": 9,
+            "status": "Finished",
+            "points": 2.0
           },
           {
             "driver": "STR",
             "fullName": "Lance Stroll",
             "team": "Aston Martin",
-            "grid": null,
-            "position": 12,
-            "status": "",
-            "points": null
+            "grid": 0,
+            "position": 10,
+            "status": "Finished",
+            "points": 1.0
+          },
+          {
+            "driver": "ALO",
+            "fullName": "Fernando Alonso",
+            "team": "Alpine",
+            "grid": 11,
+            "position": 11,
+            "status": "Finished",
+            "points": 0.0
           },
           {
             "driver": "TSU",
             "fullName": "Yuki Tsunoda",
             "team": "AlphaTauri",
-            "grid": null,
+            "grid": 9,
+            "position": 12,
+            "status": "Finished",
+            "points": 0.0
+          },
+          {
+            "driver": "RIC",
+            "fullName": "Daniel Ricciardo",
+            "team": "McLaren",
+            "grid": 14,
             "position": 13,
-            "status": "",
-            "points": null
+            "status": "Finished",
+            "points": 0.0
           },
           {
             "driver": "LAT",
             "fullName": "Nicholas Latifi",
             "team": "Williams",
-            "grid": null,
+            "grid": 19,
             "position": 14,
-            "status": "",
-            "points": null
-          },
-          {
-            "driver": "MAG",
-            "fullName": "Kevin Magnussen",
-            "team": "Haas F1 Team",
-            "grid": null,
-            "position": 15,
-            "status": "",
-            "points": null
+            "status": "Finished",
+            "points": 0.0
           },
           {
             "driver": "MSC",
             "fullName": "Mick Schumacher",
             "team": "Haas F1 Team",
-            "grid": null,
+            "grid": 15,
+            "position": 15,
+            "status": "Finished",
+            "points": 0.0
+          },
+          {
+            "driver": "MAG",
+            "fullName": "Kevin Magnussen",
+            "team": "Haas F1 Team",
+            "grid": 16,
             "position": 16,
-            "status": "",
-            "points": null
+            "status": "Front wing",
+            "points": 0.0
           },
           {
             "driver": "VET",
             "fullName": "Sebastian Vettel",
             "team": "Aston Martin",
-            "grid": null,
+            "grid": 0,
             "position": 17,
-            "status": "",
-            "points": null
+            "status": "Collision",
+            "points": 0.0
           },
           {
             "driver": "GAS",
             "fullName": "Pierre Gasly",
             "team": "AlphaTauri",
-            "grid": null,
+            "grid": 7,
             "position": 18,
-            "status": "",
-            "points": null
+            "status": "Suspension",
+            "points": 0.0
           },
           {
             "driver": "NOR",
             "fullName": "Lando Norris",
             "team": "McLaren",
-            "grid": null,
+            "grid": 8,
             "position": 19,
-            "status": "",
-            "points": null
+            "status": "Collision",
+            "points": 0.0
           },
           {
             "driver": "ZHO",
             "fullName": "Guanyu Zhou",
             "team": "Alfa Romeo",
-            "grid": null,
+            "grid": 17,
             "position": 20,
-            "status": "",
-            "points": null
+            "status": "Water leak",
+            "points": 0.0
           }
         ],
         "fastestLapDriver": "VER",
-        "pitStops": []
+        "pitStops": [
+          {
+            "constructor": "Red Bull Racing",
+            "fastestStop": 18.43
+          },
+          {
+            "constructor": "Mercedes",
+            "fastestStop": 18.82
+          },
+          {
+            "constructor": "RB F1 Team",
+            "fastestStop": 18.87
+          },
+          {
+            "constructor": "Alpine",
+            "fastestStop": 19.02
+          },
+          {
+            "constructor": "Aston Martin",
+            "fastestStop": 19.07
+          },
+          {
+            "constructor": "Williams",
+            "fastestStop": 19.18
+          },
+          {
+            "constructor": "McLaren",
+            "fastestStop": 19.28
+          },
+          {
+            "constructor": "Sauber",
+            "fastestStop": 19.61
+          },
+          {
+            "constructor": "Ferrari",
+            "fastestStop": 19.7
+          },
+          {
+            "constructor": "Haas F1 Team",
+            "fastestStop": 19.76
+          }
+        ],
+        "driverOfTheDay": null
       }
     },
     {
@@ -2392,185 +2602,227 @@
             "driver": "VER",
             "fullName": "Max Verstappen",
             "team": "Red Bull Racing",
-            "grid": null,
+            "grid": 2,
             "position": 1,
-            "status": "",
-            "points": null
+            "status": "Finished",
+            "points": 25.0
           },
           {
             "driver": "PER",
             "fullName": "Sergio Perez",
             "team": "Red Bull Racing",
-            "grid": null,
+            "grid": 5,
             "position": 2,
-            "status": "",
-            "points": null
+            "status": "Finished",
+            "points": 19.0
           },
           {
             "driver": "RUS",
             "fullName": "George Russell",
             "team": "Mercedes",
-            "grid": null,
+            "grid": 4,
             "position": 3,
-            "status": "",
-            "points": null
+            "status": "Finished",
+            "points": 15.0
           },
           {
             "driver": "SAI",
             "fullName": "Carlos Sainz",
             "team": "Ferrari",
-            "grid": null,
+            "grid": 3,
             "position": 4,
-            "status": "",
-            "points": null
+            "status": "Finished",
+            "points": 12.0
           },
           {
             "driver": "HAM",
             "fullName": "Lewis Hamilton",
             "team": "Mercedes",
-            "grid": null,
+            "grid": 6,
             "position": 5,
-            "status": "",
-            "points": null
+            "status": "Finished",
+            "points": 10.0
           },
           {
             "driver": "BOT",
             "fullName": "Valtteri Bottas",
             "team": "Alfa Romeo",
-            "grid": null,
+            "grid": 7,
             "position": 6,
-            "status": "",
-            "points": null
+            "status": "Finished",
+            "points": 8.0
           },
           {
             "driver": "OCO",
             "fullName": "Esteban Ocon",
             "team": "Alpine",
-            "grid": null,
+            "grid": 12,
             "position": 7,
-            "status": "",
-            "points": null
+            "status": "Finished",
+            "points": 6.0
           },
           {
             "driver": "NOR",
             "fullName": "Lando Norris",
             "team": "McLaren",
-            "grid": null,
+            "grid": 11,
             "position": 8,
-            "status": "",
-            "points": null
+            "status": "Finished",
+            "points": 4.0
           },
           {
             "driver": "ALO",
             "fullName": "Fernando Alonso",
             "team": "Alpine",
-            "grid": null,
+            "grid": 20,
             "position": 9,
-            "status": "",
-            "points": null
+            "status": "+1 Lap",
+            "points": 2.0
           },
           {
             "driver": "TSU",
             "fullName": "Yuki Tsunoda",
             "team": "AlphaTauri",
-            "grid": null,
+            "grid": 13,
             "position": 10,
-            "status": "",
-            "points": null
+            "status": "+1 Lap",
+            "points": 1.0
           },
           {
             "driver": "VET",
             "fullName": "Sebastian Vettel",
             "team": "Aston Martin",
-            "grid": null,
+            "grid": 16,
             "position": 11,
-            "status": "",
-            "points": null
+            "status": "+1 Lap",
+            "points": 0.0
           },
           {
             "driver": "RIC",
             "fullName": "Daniel Ricciardo",
             "team": "McLaren",
-            "grid": null,
+            "grid": 9,
             "position": 12,
-            "status": "",
-            "points": null
+            "status": "+1 Lap",
+            "points": 0.0
           },
           {
             "driver": "GAS",
             "fullName": "Pierre Gasly",
             "team": "AlphaTauri",
-            "grid": null,
+            "grid": 14,
             "position": 13,
-            "status": "",
-            "points": null
+            "status": "+1 Lap",
+            "points": 0.0
           },
           {
             "driver": "MSC",
             "fullName": "Mick Schumacher",
             "team": "Haas F1 Team",
-            "grid": null,
+            "grid": 10,
             "position": 14,
-            "status": "",
-            "points": null
+            "status": "+1 Lap",
+            "points": 0.0
           },
           {
             "driver": "STR",
             "fullName": "Lance Stroll",
             "team": "Aston Martin",
-            "grid": null,
+            "grid": 17,
             "position": 15,
-            "status": "",
-            "points": null
+            "status": "+1 Lap",
+            "points": 0.0
           },
           {
             "driver": "LAT",
             "fullName": "Nicholas Latifi",
             "team": "Williams",
-            "grid": null,
+            "grid": 19,
             "position": 16,
-            "status": "",
-            "points": null
+            "status": "+2 Laps",
+            "points": 0.0
           },
           {
             "driver": "MAG",
             "fullName": "Kevin Magnussen",
             "team": "Haas F1 Team",
-            "grid": null,
+            "grid": 8,
             "position": 17,
-            "status": "",
-            "points": null
+            "status": "+2 Laps",
+            "points": 0.0
           },
           {
             "driver": "ALB",
             "fullName": "Alexander Albon",
             "team": "Williams",
-            "grid": null,
+            "grid": 18,
             "position": 18,
-            "status": "",
-            "points": null
+            "status": "+2 Laps",
+            "points": 0.0
           },
           {
             "driver": "ZHO",
             "fullName": "Guanyu Zhou",
             "team": "Alfa Romeo",
-            "grid": null,
+            "grid": 15,
             "position": 19,
-            "status": "",
-            "points": null
+            "status": "Power loss",
+            "points": 0.0
           },
           {
             "driver": "LEC",
             "fullName": "Charles Leclerc",
             "team": "Ferrari",
-            "grid": null,
+            "grid": 1,
             "position": 20,
-            "status": "",
-            "points": null
+            "status": "Turbo",
+            "points": 0.0
           }
         ],
         "fastestLapDriver": "PER",
-        "pitStops": []
+        "pitStops": [
+          {
+            "constructor": "Red Bull Racing",
+            "fastestStop": 21.62
+          },
+          {
+            "constructor": "Ferrari",
+            "fastestStop": 21.79
+          },
+          {
+            "constructor": "RB F1 Team",
+            "fastestStop": 21.84
+          },
+          {
+            "constructor": "Alpine",
+            "fastestStop": 21.91
+          },
+          {
+            "constructor": "McLaren",
+            "fastestStop": 21.92
+          },
+          {
+            "constructor": "Mercedes",
+            "fastestStop": 22.04
+          },
+          {
+            "constructor": "Williams",
+            "fastestStop": 22.31
+          },
+          {
+            "constructor": "Aston Martin",
+            "fastestStop": 22.46
+          },
+          {
+            "constructor": "Sauber",
+            "fastestStop": 22.54
+          },
+          {
+            "constructor": "Haas F1 Team",
+            "fastestStop": 23.13
+          }
+        ],
+        "driverOfTheDay": null
       }
     },
     {
@@ -2582,41 +2834,161 @@
       "qualifying": {
         "results": [
           {
-            "driver": "PER",
-            "fullName": "Sergio Perez",
-            "team": "Red Bull Racing",
-            "position": null,
-            "q1": null,
-            "q2": null,
-            "q3": null,
-            "status": ""
-          },
-          {
             "driver": "LEC",
             "fullName": "Charles Leclerc",
             "team": "Ferrari",
-            "position": null,
-            "q1": null,
-            "q2": null,
-            "q3": null,
+            "position": 1,
+            "q1": "1:12.569",
+            "q2": "1:11.864",
+            "q3": "1:11.376",
             "status": ""
           },
           {
             "driver": "SAI",
             "fullName": "Carlos Sainz",
             "team": "Ferrari",
-            "position": null,
-            "q1": null,
-            "q2": null,
-            "q3": null,
+            "position": 2,
+            "q1": "1:12.616",
+            "q2": "1:12.074",
+            "q3": "1:11.601",
+            "status": ""
+          },
+          {
+            "driver": "PER",
+            "fullName": "Sergio Perez",
+            "team": "Red Bull Racing",
+            "position": 3,
+            "q1": "1:13.004",
+            "q2": "1:11.954",
+            "q3": "1:11.629",
             "status": ""
           },
           {
             "driver": "VER",
             "fullName": "Max Verstappen",
             "team": "Red Bull Racing",
-            "position": null,
-            "q1": null,
+            "position": 4,
+            "q1": "1:12.993",
+            "q2": "1:12.117",
+            "q3": "1:11.666",
+            "status": ""
+          },
+          {
+            "driver": "NOR",
+            "fullName": "Lando Norris",
+            "team": "McLaren",
+            "position": 5,
+            "q1": "1:12.927",
+            "q2": "1:12.266",
+            "q3": "1:11.849",
+            "status": ""
+          },
+          {
+            "driver": "RUS",
+            "fullName": "George Russell",
+            "team": "Mercedes",
+            "position": 6,
+            "q1": "1:12.787",
+            "q2": "1:12.617",
+            "q3": "1:12.112",
+            "status": ""
+          },
+          {
+            "driver": "ALO",
+            "fullName": "Fernando Alonso",
+            "team": "Alpine",
+            "position": 7,
+            "q1": "1:13.394",
+            "q2": "1:12.688",
+            "q3": "1:12.247",
+            "status": ""
+          },
+          {
+            "driver": "HAM",
+            "fullName": "Lewis Hamilton",
+            "team": "Mercedes",
+            "position": 8,
+            "q1": "1:13.444",
+            "q2": "1:12.595",
+            "q3": "1:12.560",
+            "status": ""
+          },
+          {
+            "driver": "VET",
+            "fullName": "Sebastian Vettel",
+            "team": "Aston Martin",
+            "position": 9,
+            "q1": "1:13.313",
+            "q2": "1:12.613",
+            "q3": "1:12.732",
+            "status": ""
+          },
+          {
+            "driver": "OCO",
+            "fullName": "Esteban Ocon",
+            "team": "Alpine",
+            "position": 10,
+            "q1": "1:12.848",
+            "q2": "1:12.528",
+            "q3": "1:13.047",
+            "status": ""
+          },
+          {
+            "driver": "TSU",
+            "fullName": "Yuki Tsunoda",
+            "team": "AlphaTauri",
+            "position": 11,
+            "q1": "1:13.110",
+            "q2": "1:12.797",
+            "q3": null,
+            "status": ""
+          },
+          {
+            "driver": "BOT",
+            "fullName": "Valtteri Bottas",
+            "team": "Alfa Romeo",
+            "position": 12,
+            "q1": "1:13.541",
+            "q2": "1:12.909",
+            "q3": null,
+            "status": ""
+          },
+          {
+            "driver": "MAG",
+            "fullName": "Kevin Magnussen",
+            "team": "Haas F1 Team",
+            "position": 13,
+            "q1": "1:13.069",
+            "q2": "1:12.921",
+            "q3": null,
+            "status": ""
+          },
+          {
+            "driver": "RIC",
+            "fullName": "Daniel Ricciardo",
+            "team": "McLaren",
+            "position": 14,
+            "q1": "1:13.338",
+            "q2": "1:12.964",
+            "q3": null,
+            "status": ""
+          },
+          {
+            "driver": "MSC",
+            "fullName": "Mick Schumacher",
+            "team": "Haas F1 Team",
+            "position": 15,
+            "q1": "1:13.469",
+            "q2": "1:13.081",
+            "q3": null,
+            "status": ""
+          },
+          {
+            "driver": "ALB",
+            "fullName": "Alexander Albon",
+            "team": "Williams",
+            "position": 16,
+            "q1": "1:13.611",
             "q2": null,
             "q3": null,
             "status": ""
@@ -2625,128 +2997,8 @@
             "driver": "GAS",
             "fullName": "Pierre Gasly",
             "team": "AlphaTauri",
-            "position": null,
-            "q1": null,
-            "q2": null,
-            "q3": null,
-            "status": ""
-          },
-          {
-            "driver": "NOR",
-            "fullName": "Lando Norris",
-            "team": "McLaren",
-            "position": null,
-            "q1": null,
-            "q2": null,
-            "q3": null,
-            "status": ""
-          },
-          {
-            "driver": "HAM",
-            "fullName": "Lewis Hamilton",
-            "team": "Mercedes",
-            "position": null,
-            "q1": null,
-            "q2": null,
-            "q3": null,
-            "status": ""
-          },
-          {
-            "driver": "MAG",
-            "fullName": "Kevin Magnussen",
-            "team": "Haas F1 Team",
-            "position": null,
-            "q1": null,
-            "q2": null,
-            "q3": null,
-            "status": ""
-          },
-          {
-            "driver": "RUS",
-            "fullName": "George Russell",
-            "team": "Mercedes",
-            "position": null,
-            "q1": null,
-            "q2": null,
-            "q3": null,
-            "status": ""
-          },
-          {
-            "driver": "ALO",
-            "fullName": "Fernando Alonso",
-            "team": "Alpine",
-            "position": null,
-            "q1": null,
-            "q2": null,
-            "q3": null,
-            "status": ""
-          },
-          {
-            "driver": "TSU",
-            "fullName": "Yuki Tsunoda",
-            "team": "AlphaTauri",
-            "position": null,
-            "q1": null,
-            "q2": null,
-            "q3": null,
-            "status": ""
-          },
-          {
-            "driver": "MSC",
-            "fullName": "Mick Schumacher",
-            "team": "Haas F1 Team",
-            "position": null,
-            "q1": null,
-            "q2": null,
-            "q3": null,
-            "status": ""
-          },
-          {
-            "driver": "VET",
-            "fullName": "Sebastian Vettel",
-            "team": "Aston Martin",
-            "position": null,
-            "q1": null,
-            "q2": null,
-            "q3": null,
-            "status": ""
-          },
-          {
-            "driver": "BOT",
-            "fullName": "Valtteri Bottas",
-            "team": "Alfa Romeo",
-            "position": null,
-            "q1": null,
-            "q2": null,
-            "q3": null,
-            "status": ""
-          },
-          {
-            "driver": "ALB",
-            "fullName": "Alexander Albon",
-            "team": "Williams",
-            "position": null,
-            "q1": null,
-            "q2": null,
-            "q3": null,
-            "status": ""
-          },
-          {
-            "driver": "RIC",
-            "fullName": "Daniel Ricciardo",
-            "team": "McLaren",
-            "position": null,
-            "q1": null,
-            "q2": null,
-            "q3": null,
-            "status": ""
-          },
-          {
-            "driver": "OCO",
-            "fullName": "Esteban Ocon",
-            "team": "Alpine",
-            "position": null,
-            "q1": null,
+            "position": 17,
+            "q1": "1:13.660",
             "q2": null,
             "q3": null,
             "status": ""
@@ -2755,18 +3007,8 @@
             "driver": "STR",
             "fullName": "Lance Stroll",
             "team": "Aston Martin",
-            "position": null,
-            "q1": null,
-            "q2": null,
-            "q3": null,
-            "status": ""
-          },
-          {
-            "driver": "ZHO",
-            "fullName": "Guanyu Zhou",
-            "team": "Alfa Romeo",
-            "position": null,
-            "q1": null,
+            "position": 18,
+            "q1": "1:13.678",
             "q2": null,
             "q3": null,
             "status": ""
@@ -2775,8 +3017,18 @@
             "driver": "LAT",
             "fullName": "Nicholas Latifi",
             "team": "Williams",
-            "position": null,
-            "q1": null,
+            "position": 19,
+            "q1": "1:14.403",
+            "q2": null,
+            "q3": null,
+            "status": ""
+          },
+          {
+            "driver": "ZHO",
+            "fullName": "Guanyu Zhou",
+            "team": "Alfa Romeo",
+            "position": 20,
+            "q1": "1:15.606",
             "q2": null,
             "q3": null,
             "status": ""
@@ -2968,7 +3220,49 @@
           }
         ],
         "fastestLapDriver": "NOR",
-        "pitStops": []
+        "pitStops": [
+          {
+            "constructor": "Red Bull Racing",
+            "fastestStop": 24.41
+          },
+          {
+            "constructor": "Mercedes",
+            "fastestStop": 24.51
+          },
+          {
+            "constructor": "Alpine",
+            "fastestStop": 24.53
+          },
+          {
+            "constructor": "McLaren",
+            "fastestStop": 24.61
+          },
+          {
+            "constructor": "Ferrari",
+            "fastestStop": 24.67
+          },
+          {
+            "constructor": "Aston Martin",
+            "fastestStop": 24.96
+          },
+          {
+            "constructor": "RB F1 Team",
+            "fastestStop": 25.07
+          },
+          {
+            "constructor": "Sauber",
+            "fastestStop": 25.59
+          },
+          {
+            "constructor": "Williams",
+            "fastestStop": 26.91
+          },
+          {
+            "constructor": "Haas F1 Team",
+            "fastestStop": 27.64
+          }
+        ],
+        "driverOfTheDay": null
       }
     },
     {
@@ -3185,188 +3479,230 @@
       "race": {
         "results": [
           {
-            "driver": "LEC",
-            "fullName": "Charles Leclerc",
-            "team": "Ferrari",
-            "grid": null,
-            "position": null,
-            "status": "",
-            "points": null
+            "driver": "VER",
+            "fullName": "Max Verstappen",
+            "team": "Red Bull Racing",
+            "grid": 3,
+            "position": 1,
+            "status": "Finished",
+            "points": 25.0
           },
           {
             "driver": "PER",
             "fullName": "Sergio Perez",
             "team": "Red Bull Racing",
-            "grid": null,
-            "position": null,
-            "status": "",
-            "points": null
-          },
-          {
-            "driver": "VER",
-            "fullName": "Max Verstappen",
-            "team": "Red Bull Racing",
-            "grid": null,
-            "position": null,
-            "status": "",
-            "points": null
-          },
-          {
-            "driver": "SAI",
-            "fullName": "Carlos Sainz",
-            "team": "Ferrari",
-            "grid": null,
-            "position": null,
-            "status": "",
-            "points": null
+            "grid": 2,
+            "position": 2,
+            "status": "Finished",
+            "points": 19.0
           },
           {
             "driver": "RUS",
             "fullName": "George Russell",
             "team": "Mercedes",
-            "grid": null,
-            "position": null,
-            "status": "",
-            "points": null
-          },
-          {
-            "driver": "GAS",
-            "fullName": "Pierre Gasly",
-            "team": "AlphaTauri",
-            "grid": null,
-            "position": null,
-            "status": "",
-            "points": null
+            "grid": 5,
+            "position": 3,
+            "status": "Finished",
+            "points": 15.0
           },
           {
             "driver": "HAM",
             "fullName": "Lewis Hamilton",
             "team": "Mercedes",
-            "grid": null,
-            "position": null,
-            "status": "",
-            "points": null
+            "grid": 7,
+            "position": 4,
+            "status": "Finished",
+            "points": 12.0
           },
           {
-            "driver": "TSU",
-            "fullName": "Yuki Tsunoda",
+            "driver": "GAS",
+            "fullName": "Pierre Gasly",
             "team": "AlphaTauri",
-            "grid": null,
-            "position": null,
-            "status": "",
-            "points": null
+            "grid": 6,
+            "position": 5,
+            "status": "Finished",
+            "points": 10.0
           },
           {
             "driver": "VET",
             "fullName": "Sebastian Vettel",
             "team": "Aston Martin",
-            "grid": null,
-            "position": null,
-            "status": "",
-            "points": null
+            "grid": 9,
+            "position": 6,
+            "status": "Finished",
+            "points": 8.0
           },
           {
             "driver": "ALO",
             "fullName": "Fernando Alonso",
             "team": "Alpine",
-            "grid": null,
-            "position": null,
-            "status": "",
-            "points": null
-          },
-          {
-            "driver": "NOR",
-            "fullName": "Lando Norris",
-            "team": "McLaren",
-            "grid": null,
-            "position": null,
-            "status": "",
-            "points": null
+            "grid": 10,
+            "position": 7,
+            "status": "Finished",
+            "points": 6.0
           },
           {
             "driver": "RIC",
             "fullName": "Daniel Ricciardo",
             "team": "McLaren",
-            "grid": null,
-            "position": null,
-            "status": "",
-            "points": null
+            "grid": 12,
+            "position": 8,
+            "status": "Finished",
+            "points": 4.0
+          },
+          {
+            "driver": "NOR",
+            "fullName": "Lando Norris",
+            "team": "McLaren",
+            "grid": 11,
+            "position": 9,
+            "status": "Finished",
+            "points": 2.0
           },
           {
             "driver": "OCO",
             "fullName": "Esteban Ocon",
             "team": "Alpine",
-            "grid": null,
-            "position": null,
-            "status": "",
-            "points": null
-          },
-          {
-            "driver": "ZHO",
-            "fullName": "Guanyu Zhou",
-            "team": "Alfa Romeo",
-            "grid": null,
-            "position": null,
-            "status": "",
-            "points": null
+            "grid": 13,
+            "position": 10,
+            "status": "Finished",
+            "points": 1.0
           },
           {
             "driver": "BOT",
             "fullName": "Valtteri Bottas",
             "team": "Alfa Romeo",
-            "grid": null,
-            "position": null,
-            "status": "",
-            "points": null
-          },
-          {
-            "driver": "MAG",
-            "fullName": "Kevin Magnussen",
-            "team": "Haas F1 Team",
-            "grid": null,
-            "position": null,
-            "status": "",
-            "points": null
+            "grid": 15,
+            "position": 11,
+            "status": "+1 Lap",
+            "points": 0.0
           },
           {
             "driver": "ALB",
             "fullName": "Alexander Albon",
             "team": "Williams",
-            "grid": null,
-            "position": null,
-            "status": "",
-            "points": null
+            "grid": 17,
+            "position": 12,
+            "status": "+1 Lap",
+            "points": 0.0
           },
           {
-            "driver": "LAT",
-            "fullName": "Nicholas Latifi",
-            "team": "Williams",
-            "grid": null,
-            "position": null,
-            "status": "",
-            "points": null
-          },
-          {
-            "driver": "STR",
-            "fullName": "Lance Stroll",
-            "team": "Aston Martin",
-            "grid": null,
-            "position": null,
-            "status": "",
-            "points": null
+            "driver": "TSU",
+            "fullName": "Yuki Tsunoda",
+            "team": "AlphaTauri",
+            "grid": 8,
+            "position": 13,
+            "status": "+1 Lap",
+            "points": 0.0
           },
           {
             "driver": "MSC",
             "fullName": "Mick Schumacher",
             "team": "Haas F1 Team",
-            "grid": null,
-            "position": null,
-            "status": "",
-            "points": null
+            "grid": 20,
+            "position": 14,
+            "status": "+1 Lap",
+            "points": 0.0
+          },
+          {
+            "driver": "LAT",
+            "fullName": "Nicholas Latifi",
+            "team": "Williams",
+            "grid": 18,
+            "position": 15,
+            "status": "+1 Lap",
+            "points": 0.0
+          },
+          {
+            "driver": "STR",
+            "fullName": "Lance Stroll",
+            "team": "Aston Martin",
+            "grid": 19,
+            "position": 16,
+            "status": "Vibrations",
+            "points": 0.0
+          },
+          {
+            "driver": "MAG",
+            "fullName": "Kevin Magnussen",
+            "team": "Haas F1 Team",
+            "grid": 16,
+            "position": 17,
+            "status": "Power Unit",
+            "points": 0.0
+          },
+          {
+            "driver": "ZHO",
+            "fullName": "Guanyu Zhou",
+            "team": "Alfa Romeo",
+            "grid": 14,
+            "position": 18,
+            "status": "Hydraulics",
+            "points": 0.0
+          },
+          {
+            "driver": "LEC",
+            "fullName": "Charles Leclerc",
+            "team": "Ferrari",
+            "grid": 1,
+            "position": 19,
+            "status": "Power Unit",
+            "points": 0.0
+          },
+          {
+            "driver": "SAI",
+            "fullName": "Carlos Sainz",
+            "team": "Ferrari",
+            "grid": 4,
+            "position": 20,
+            "status": "Hydraulics",
+            "points": 0.0
           }
         ],
-        "fastestLapDriver": null,
-        "pitStops": []
+        "fastestLapDriver": "PER",
+        "pitStops": [
+          {
+            "constructor": "Aston Martin",
+            "fastestStop": 20.25
+          },
+          {
+            "constructor": "Mercedes",
+            "fastestStop": 20.53
+          },
+          {
+            "constructor": "Alpine",
+            "fastestStop": 20.57
+          },
+          {
+            "constructor": "Red Bull Racing",
+            "fastestStop": 20.72
+          },
+          {
+            "constructor": "Sauber",
+            "fastestStop": 20.98
+          },
+          {
+            "constructor": "McLaren",
+            "fastestStop": 21.44
+          },
+          {
+            "constructor": "Williams",
+            "fastestStop": 21.54
+          },
+          {
+            "constructor": "Haas F1 Team",
+            "fastestStop": 21.55
+          },
+          {
+            "constructor": "RB F1 Team",
+            "fastestStop": 22.7
+          },
+          {
+            "constructor": "Ferrari",
+            "fastestStop": 23.21
+          }
+        ],
+        "driverOfTheDay": null
       }
     },
     {
@@ -3586,185 +3922,227 @@
             "driver": "VER",
             "fullName": "Max Verstappen",
             "team": "Red Bull Racing",
-            "grid": null,
-            "position": null,
-            "status": "",
-            "points": null
-          },
-          {
-            "driver": "ALO",
-            "fullName": "Fernando Alonso",
-            "team": "Alpine",
-            "grid": null,
-            "position": null,
-            "status": "",
-            "points": null
+            "grid": 1,
+            "position": 1,
+            "status": "Finished",
+            "points": 25.0
           },
           {
             "driver": "SAI",
             "fullName": "Carlos Sainz",
             "team": "Ferrari",
-            "grid": null,
-            "position": null,
-            "status": "",
-            "points": null
+            "grid": 3,
+            "position": 2,
+            "status": "Finished",
+            "points": 19.0
           },
           {
             "driver": "HAM",
             "fullName": "Lewis Hamilton",
             "team": "Mercedes",
-            "grid": null,
-            "position": null,
-            "status": "",
-            "points": null
-          },
-          {
-            "driver": "MAG",
-            "fullName": "Kevin Magnussen",
-            "team": "Haas F1 Team",
-            "grid": null,
-            "position": null,
-            "status": "",
-            "points": null
-          },
-          {
-            "driver": "MSC",
-            "fullName": "Mick Schumacher",
-            "team": "Haas F1 Team",
-            "grid": null,
-            "position": null,
-            "status": "",
-            "points": null
-          },
-          {
-            "driver": "OCO",
-            "fullName": "Esteban Ocon",
-            "team": "Alpine",
-            "grid": null,
-            "position": null,
-            "status": "",
-            "points": null
+            "grid": 4,
+            "position": 3,
+            "status": "Finished",
+            "points": 15.0
           },
           {
             "driver": "RUS",
             "fullName": "George Russell",
             "team": "Mercedes",
-            "grid": null,
-            "position": null,
-            "status": "",
-            "points": null
-          },
-          {
-            "driver": "RIC",
-            "fullName": "Daniel Ricciardo",
-            "team": "McLaren",
-            "grid": null,
-            "position": null,
-            "status": "",
-            "points": null
-          },
-          {
-            "driver": "ZHO",
-            "fullName": "Guanyu Zhou",
-            "team": "Alfa Romeo",
-            "grid": null,
-            "position": null,
-            "status": "",
-            "points": null
-          },
-          {
-            "driver": "BOT",
-            "fullName": "Valtteri Bottas",
-            "team": "Alfa Romeo",
-            "grid": null,
-            "position": null,
-            "status": "",
-            "points": null
-          },
-          {
-            "driver": "ALB",
-            "fullName": "Alexander Albon",
-            "team": "Williams",
-            "grid": null,
-            "position": null,
-            "status": "",
-            "points": null
-          },
-          {
-            "driver": "PER",
-            "fullName": "Sergio Perez",
-            "team": "Red Bull Racing",
-            "grid": null,
-            "position": null,
-            "status": "",
-            "points": null
-          },
-          {
-            "driver": "NOR",
-            "fullName": "Lando Norris",
-            "team": "McLaren",
-            "grid": null,
-            "position": null,
-            "status": "",
-            "points": null
-          },
-          {
-            "driver": "GAS",
-            "fullName": "Pierre Gasly",
-            "team": "AlphaTauri",
-            "grid": null,
-            "position": null,
-            "status": "",
-            "points": null
-          },
-          {
-            "driver": "VET",
-            "fullName": "Sebastian Vettel",
-            "team": "Aston Martin",
-            "grid": null,
-            "position": null,
-            "status": "",
-            "points": null
-          },
-          {
-            "driver": "STR",
-            "fullName": "Lance Stroll",
-            "team": "Aston Martin",
-            "grid": null,
-            "position": null,
-            "status": "",
-            "points": null
-          },
-          {
-            "driver": "LAT",
-            "fullName": "Nicholas Latifi",
-            "team": "Williams",
-            "grid": null,
-            "position": null,
-            "status": "",
-            "points": null
+            "grid": 8,
+            "position": 4,
+            "status": "Finished",
+            "points": 12.0
           },
           {
             "driver": "LEC",
             "fullName": "Charles Leclerc",
             "team": "Ferrari",
-            "grid": null,
-            "position": null,
-            "status": "",
-            "points": null
+            "grid": 19,
+            "position": 5,
+            "status": "Finished",
+            "points": 10.0
+          },
+          {
+            "driver": "OCO",
+            "fullName": "Esteban Ocon",
+            "team": "Alpine",
+            "grid": 7,
+            "position": 6,
+            "status": "Finished",
+            "points": 8.0
+          },
+          {
+            "driver": "BOT",
+            "fullName": "Valtteri Bottas",
+            "team": "Alfa Romeo",
+            "grid": 11,
+            "position": 7,
+            "status": "Finished",
+            "points": 6.0
+          },
+          {
+            "driver": "ZHO",
+            "fullName": "Guanyu Zhou",
+            "team": "Alfa Romeo",
+            "grid": 10,
+            "position": 8,
+            "status": "Finished",
+            "points": 4.0
+          },
+          {
+            "driver": "ALO",
+            "fullName": "Fernando Alonso",
+            "team": "Alpine",
+            "grid": 2,
+            "position": 9,
+            "status": "Finished",
+            "points": 2.0
+          },
+          {
+            "driver": "STR",
+            "fullName": "Lance Stroll",
+            "team": "Aston Martin",
+            "grid": 17,
+            "position": 10,
+            "status": "Finished",
+            "points": 1.0
+          },
+          {
+            "driver": "RIC",
+            "fullName": "Daniel Ricciardo",
+            "team": "McLaren",
+            "grid": 9,
+            "position": 11,
+            "status": "Finished",
+            "points": 0.0
+          },
+          {
+            "driver": "VET",
+            "fullName": "Sebastian Vettel",
+            "team": "Aston Martin",
+            "grid": 16,
+            "position": 12,
+            "status": "Finished",
+            "points": 0.0
+          },
+          {
+            "driver": "ALB",
+            "fullName": "Alexander Albon",
+            "team": "Williams",
+            "grid": 12,
+            "position": 13,
+            "status": "Finished",
+            "points": 0.0
+          },
+          {
+            "driver": "GAS",
+            "fullName": "Pierre Gasly",
+            "team": "AlphaTauri",
+            "grid": 15,
+            "position": 14,
+            "status": "Finished",
+            "points": 0.0
+          },
+          {
+            "driver": "NOR",
+            "fullName": "Lando Norris",
+            "team": "McLaren",
+            "grid": 14,
+            "position": 15,
+            "status": "Finished",
+            "points": 0.0
+          },
+          {
+            "driver": "LAT",
+            "fullName": "Nicholas Latifi",
+            "team": "Williams",
+            "grid": 18,
+            "position": 16,
+            "status": "Finished",
+            "points": 0.0
+          },
+          {
+            "driver": "MAG",
+            "fullName": "Kevin Magnussen",
+            "team": "Haas F1 Team",
+            "grid": 5,
+            "position": 17,
+            "status": "Finished",
+            "points": 0.0
           },
           {
             "driver": "TSU",
             "fullName": "Yuki Tsunoda",
             "team": "AlphaTauri",
-            "grid": null,
-            "position": null,
-            "status": "",
-            "points": null
+            "grid": 20,
+            "position": 18,
+            "status": "Accident",
+            "points": 0.0
+          },
+          {
+            "driver": "MSC",
+            "fullName": "Mick Schumacher",
+            "team": "Haas F1 Team",
+            "grid": 6,
+            "position": 19,
+            "status": "Engine",
+            "points": 0.0
+          },
+          {
+            "driver": "PER",
+            "fullName": "Sergio Perez",
+            "team": "Red Bull Racing",
+            "grid": 13,
+            "position": 20,
+            "status": "Gearbox",
+            "points": 0.0
           }
         ],
-        "fastestLapDriver": null,
-        "pitStops": []
+        "fastestLapDriver": "SAI",
+        "pitStops": [
+          {
+            "constructor": "RB F1 Team",
+            "fastestStop": 23.25
+          },
+          {
+            "constructor": "Aston Martin",
+            "fastestStop": 23.41
+          },
+          {
+            "constructor": "Williams",
+            "fastestStop": 23.53
+          },
+          {
+            "constructor": "Red Bull Racing",
+            "fastestStop": 23.7
+          },
+          {
+            "constructor": "Alpine",
+            "fastestStop": 23.78
+          },
+          {
+            "constructor": "Mercedes",
+            "fastestStop": 23.84
+          },
+          {
+            "constructor": "Sauber",
+            "fastestStop": 23.98
+          },
+          {
+            "constructor": "McLaren",
+            "fastestStop": 24.13
+          },
+          {
+            "constructor": "Ferrari",
+            "fastestStop": 24.21
+          },
+          {
+            "constructor": "Haas F1 Team",
+            "fastestStop": 38.26
+          }
+        ],
+        "driverOfTheDay": null
       }
     },
     {
@@ -3984,185 +4362,223 @@
             "driver": "SAI",
             "fullName": "Carlos Sainz",
             "team": "Ferrari",
-            "grid": null,
+            "grid": 1,
             "position": 1,
-            "status": "",
-            "points": null
+            "status": "Finished",
+            "points": 25.0
           },
           {
             "driver": "PER",
             "fullName": "Sergio Perez",
             "team": "Red Bull Racing",
-            "grid": null,
+            "grid": 4,
             "position": 2,
-            "status": "",
-            "points": null
+            "status": "Finished",
+            "points": 18.0
           },
           {
             "driver": "HAM",
             "fullName": "Lewis Hamilton",
             "team": "Mercedes",
-            "grid": null,
+            "grid": 5,
             "position": 3,
-            "status": "",
-            "points": null
+            "status": "Finished",
+            "points": 16.0
           },
           {
             "driver": "LEC",
             "fullName": "Charles Leclerc",
             "team": "Ferrari",
-            "grid": null,
+            "grid": 3,
             "position": 4,
-            "status": "",
-            "points": null
+            "status": "Finished",
+            "points": 12.0
           },
           {
             "driver": "ALO",
             "fullName": "Fernando Alonso",
             "team": "Alpine",
-            "grid": null,
+            "grid": 7,
             "position": 5,
-            "status": "",
-            "points": null
+            "status": "Finished",
+            "points": 10.0
           },
           {
             "driver": "NOR",
             "fullName": "Lando Norris",
             "team": "McLaren",
-            "grid": null,
+            "grid": 6,
             "position": 6,
-            "status": "",
-            "points": null
+            "status": "Finished",
+            "points": 8.0
           },
           {
             "driver": "VER",
             "fullName": "Max Verstappen",
             "team": "Red Bull Racing",
-            "grid": null,
+            "grid": 2,
             "position": 7,
-            "status": "",
-            "points": null
+            "status": "Finished",
+            "points": 6.0
           },
           {
             "driver": "MSC",
             "fullName": "Mick Schumacher",
             "team": "Haas F1 Team",
-            "grid": null,
+            "grid": 19,
             "position": 8,
-            "status": "",
-            "points": null
+            "status": "Finished",
+            "points": 4.0
           },
           {
             "driver": "VET",
             "fullName": "Sebastian Vettel",
             "team": "Aston Martin",
-            "grid": null,
+            "grid": 18,
             "position": 9,
-            "status": "",
-            "points": null
+            "status": "Finished",
+            "points": 2.0
           },
           {
             "driver": "MAG",
             "fullName": "Kevin Magnussen",
             "team": "Haas F1 Team",
-            "grid": null,
+            "grid": 17,
             "position": 10,
-            "status": "",
-            "points": null
+            "status": "Finished",
+            "points": 1.0
           },
           {
             "driver": "STR",
             "fullName": "Lance Stroll",
             "team": "Aston Martin",
-            "grid": null,
+            "grid": 20,
             "position": 11,
-            "status": "",
-            "points": null
+            "status": "Finished",
+            "points": 0.0
           },
           {
             "driver": "LAT",
             "fullName": "Nicholas Latifi",
             "team": "Williams",
-            "grid": null,
+            "grid": 10,
             "position": 12,
-            "status": "",
-            "points": null
+            "status": "Finished",
+            "points": 0.0
           },
           {
             "driver": "RIC",
             "fullName": "Daniel Ricciardo",
             "team": "McLaren",
-            "grid": null,
+            "grid": 14,
             "position": 13,
-            "status": "",
-            "points": null
+            "status": "Finished",
+            "points": 0.0
           },
           {
             "driver": "TSU",
             "fullName": "Yuki Tsunoda",
             "team": "AlphaTauri",
-            "grid": null,
+            "grid": 13,
             "position": 14,
-            "status": "",
-            "points": null
+            "status": "Finished",
+            "points": 0.0
           },
           {
             "driver": "OCO",
             "fullName": "Esteban Ocon",
             "team": "Alpine",
-            "grid": null,
+            "grid": 15,
             "position": 15,
-            "status": "",
-            "points": null
+            "status": "Fuel pump",
+            "points": 0.0
           },
           {
             "driver": "GAS",
             "fullName": "Pierre Gasly",
             "team": "AlphaTauri",
-            "grid": null,
+            "grid": 11,
             "position": 16,
-            "status": "",
-            "points": null
+            "status": "Collision damage",
+            "points": 0.0
           },
           {
             "driver": "BOT",
             "fullName": "Valtteri Bottas",
             "team": "Alfa Romeo",
-            "grid": null,
+            "grid": 12,
             "position": 17,
-            "status": "",
-            "points": null
-          },
-          {
-            "driver": "ALB",
-            "fullName": "Alexander Albon",
-            "team": "Williams",
-            "grid": null,
-            "position": 18,
-            "status": "",
-            "points": null
-          },
-          {
-            "driver": "ZHO",
-            "fullName": "Guanyu Zhou",
-            "team": "Alfa Romeo",
-            "grid": null,
-            "position": 19,
-            "status": "",
-            "points": null
+            "status": "Gearbox",
+            "points": 0.0
           },
           {
             "driver": "RUS",
             "fullName": "George Russell",
             "team": "Mercedes",
-            "grid": null,
+            "grid": 8,
+            "position": 18,
+            "status": "Collision",
+            "points": 0.0
+          },
+          {
+            "driver": "ZHO",
+            "fullName": "Guanyu Zhou",
+            "team": "Alfa Romeo",
+            "grid": 9,
+            "position": 19,
+            "status": "Collision",
+            "points": 0.0
+          },
+          {
+            "driver": "ALB",
+            "fullName": "Alexander Albon",
+            "team": "Williams",
+            "grid": 16,
             "position": 20,
-            "status": "",
-            "points": null
+            "status": "Collision",
+            "points": 0.0
           }
         ],
         "fastestLapDriver": "HAM",
-        "pitStops": []
+        "pitStops": [
+          {
+            "constructor": "Red Bull Racing",
+            "fastestStop": 28.16
+          },
+          {
+            "constructor": "Ferrari",
+            "fastestStop": 28.43
+          },
+          {
+            "constructor": "Williams",
+            "fastestStop": 28.44
+          },
+          {
+            "constructor": "Aston Martin",
+            "fastestStop": 28.54
+          },
+          {
+            "constructor": "McLaren",
+            "fastestStop": 28.66
+          },
+          {
+            "constructor": "Alpine",
+            "fastestStop": 28.73
+          },
+          {
+            "constructor": "Mercedes",
+            "fastestStop": 29.0
+          },
+          {
+            "constructor": "Haas F1 Team",
+            "fastestStop": 29.15
+          },
+          {
+            "constructor": "RB F1 Team",
+            "fastestStop": 29.45
+          }
+        ],
+        "driverOfTheDay": null
       }
     },
     {
@@ -4177,59 +4593,119 @@
             "driver": "VER",
             "fullName": "Max Verstappen",
             "team": "Red Bull Racing",
-            "position": null,
-            "q1": null,
-            "q2": null,
-            "q3": null,
+            "position": 1,
+            "q1": "1:05.852",
+            "q2": "1:05.374",
+            "q3": "1:04.984",
             "status": ""
           },
           {
-            "driver": "RIC",
-            "fullName": "Daniel Ricciardo",
-            "team": "McLaren",
-            "position": null,
-            "q1": null,
-            "q2": null,
-            "q3": null,
+            "driver": "LEC",
+            "fullName": "Charles Leclerc",
+            "team": "Ferrari",
+            "position": 2,
+            "q1": "1:05.419",
+            "q2": "1:05.287",
+            "q3": "1:05.013",
             "status": ""
           },
           {
-            "driver": "NOR",
-            "fullName": "Lando Norris",
-            "team": "McLaren",
-            "position": null,
-            "q1": null,
-            "q2": null,
-            "q3": null,
+            "driver": "SAI",
+            "fullName": "Carlos Sainz",
+            "team": "Ferrari",
+            "position": 3,
+            "q1": "1:05.660",
+            "q2": "1:05.576",
+            "q3": "1:05.066",
             "status": ""
           },
           {
-            "driver": "VET",
-            "fullName": "Sebastian Vettel",
-            "team": "Aston Martin",
-            "position": null,
-            "q1": null,
-            "q2": null,
-            "q3": null,
+            "driver": "RUS",
+            "fullName": "George Russell",
+            "team": "Mercedes",
+            "position": 4,
+            "q1": "1:06.235",
+            "q2": "1:05.697",
+            "q3": "1:05.431",
             "status": ""
           },
           {
-            "driver": "LAT",
-            "fullName": "Nicholas Latifi",
-            "team": "Williams",
-            "position": null,
-            "q1": null,
-            "q2": null,
-            "q3": null,
+            "driver": "OCO",
+            "fullName": "Esteban Ocon",
+            "team": "Alpine",
+            "position": 5,
+            "q1": "1:06.468",
+            "q2": "1:05.993",
+            "q3": "1:05.726",
+            "status": ""
+          },
+          {
+            "driver": "MAG",
+            "fullName": "Kevin Magnussen",
+            "team": "Haas F1 Team",
+            "position": 6,
+            "q1": "1:06.366",
+            "q2": "1:05.894",
+            "q3": "1:05.879",
+            "status": ""
+          },
+          {
+            "driver": "MSC",
+            "fullName": "Mick Schumacher",
+            "team": "Haas F1 Team",
+            "position": 7,
+            "q1": "1:06.405",
+            "q2": "1:06.151",
+            "q3": "1:06.011",
+            "status": ""
+          },
+          {
+            "driver": "ALO",
+            "fullName": "Fernando Alonso",
+            "team": "Alpine",
+            "position": 8,
+            "q1": "1:06.016",
+            "q2": "1:06.082",
+            "q3": "1:06.103",
+            "status": ""
+          },
+          {
+            "driver": "HAM",
+            "fullName": "Lewis Hamilton",
+            "team": "Mercedes",
+            "position": 9,
+            "q1": "1:06.079",
+            "q2": "1:05.475",
+            "q3": "1:13.151",
             "status": ""
           },
           {
             "driver": "GAS",
             "fullName": "Pierre Gasly",
             "team": "AlphaTauri",
-            "position": null,
-            "q1": null,
-            "q2": null,
+            "position": 10,
+            "q1": "1:06.589",
+            "q2": "1:06.160",
+            "q3": null,
+            "status": ""
+          },
+          {
+            "driver": "ALB",
+            "fullName": "Alexander Albon",
+            "team": "Williams",
+            "position": 11,
+            "q1": "1:06.516",
+            "q2": "1:06.230",
+            "q3": null,
+            "status": ""
+          },
+          {
+            "driver": "BOT",
+            "fullName": "Valtteri Bottas",
+            "team": "Alfa Romeo",
+            "position": 12,
+            "q1": "1:06.442",
+            "q2": "1:06.319",
             "q3": null,
             "status": ""
           },
@@ -4237,28 +4713,38 @@
             "driver": "PER",
             "fullName": "Sergio Perez",
             "team": "Red Bull Racing",
-            "position": null,
-            "q1": null,
-            "q2": null,
+            "position": 13,
+            "q1": "1:06.143",
+            "q2": "1:06.458",
             "q3": null,
             "status": ""
           },
           {
-            "driver": "ALO",
-            "fullName": "Fernando Alonso",
-            "team": "Alpine",
-            "position": null,
-            "q1": null,
-            "q2": null,
+            "driver": "TSU",
+            "fullName": "Yuki Tsunoda",
+            "team": "AlphaTauri",
+            "position": 14,
+            "q1": "1:06.463",
+            "q2": "1:06.851",
             "q3": null,
             "status": ""
           },
           {
-            "driver": "LEC",
-            "fullName": "Charles Leclerc",
-            "team": "Ferrari",
-            "position": null,
-            "q1": null,
+            "driver": "NOR",
+            "fullName": "Lando Norris",
+            "team": "McLaren",
+            "position": 15,
+            "q1": "1:06.330",
+            "q2": "1:25.847",
+            "q3": null,
+            "status": ""
+          },
+          {
+            "driver": "RIC",
+            "fullName": "Daniel Ricciardo",
+            "team": "McLaren",
+            "position": 16,
+            "q1": "1:06.613",
             "q2": null,
             "q3": null,
             "status": ""
@@ -4267,38 +4753,8 @@
             "driver": "STR",
             "fullName": "Lance Stroll",
             "team": "Aston Martin",
-            "position": null,
-            "q1": null,
-            "q2": null,
-            "q3": null,
-            "status": ""
-          },
-          {
-            "driver": "MAG",
-            "fullName": "Kevin Magnussen",
-            "team": "Haas F1 Team",
-            "position": null,
-            "q1": null,
-            "q2": null,
-            "q3": null,
-            "status": ""
-          },
-          {
-            "driver": "TSU",
-            "fullName": "Yuki Tsunoda",
-            "team": "AlphaTauri",
-            "position": null,
-            "q1": null,
-            "q2": null,
-            "q3": null,
-            "status": ""
-          },
-          {
-            "driver": "ALB",
-            "fullName": "Alexander Albon",
-            "team": "Williams",
-            "position": null,
-            "q1": null,
+            "position": 17,
+            "q1": "1:06.847",
             "q2": null,
             "q3": null,
             "status": ""
@@ -4307,68 +4763,28 @@
             "driver": "ZHO",
             "fullName": "Guanyu Zhou",
             "team": "Alfa Romeo",
-            "position": null,
-            "q1": null,
+            "position": 18,
+            "q1": "1:06.901",
             "q2": null,
             "q3": null,
             "status": ""
           },
           {
-            "driver": "OCO",
-            "fullName": "Esteban Ocon",
-            "team": "Alpine",
-            "position": null,
-            "q1": null,
+            "driver": "LAT",
+            "fullName": "Nicholas Latifi",
+            "team": "Williams",
+            "position": 19,
+            "q1": "1:07.003",
             "q2": null,
             "q3": null,
             "status": ""
           },
           {
-            "driver": "HAM",
-            "fullName": "Lewis Hamilton",
-            "team": "Mercedes",
-            "position": null,
-            "q1": null,
-            "q2": null,
-            "q3": null,
-            "status": ""
-          },
-          {
-            "driver": "MSC",
-            "fullName": "Mick Schumacher",
-            "team": "Haas F1 Team",
-            "position": null,
-            "q1": null,
-            "q2": null,
-            "q3": null,
-            "status": ""
-          },
-          {
-            "driver": "SAI",
-            "fullName": "Carlos Sainz",
-            "team": "Ferrari",
-            "position": null,
-            "q1": null,
-            "q2": null,
-            "q3": null,
-            "status": ""
-          },
-          {
-            "driver": "RUS",
-            "fullName": "George Russell",
-            "team": "Mercedes",
-            "position": null,
-            "q1": null,
-            "q2": null,
-            "q3": null,
-            "status": ""
-          },
-          {
-            "driver": "BOT",
-            "fullName": "Valtteri Bottas",
-            "team": "Alfa Romeo",
-            "position": null,
-            "q1": null,
+            "driver": "VET",
+            "fullName": "Sebastian Vettel",
+            "team": "Aston Martin",
+            "position": 20,
+            "q1": "1:07.083",
             "q2": null,
             "q3": null,
             "status": ""
@@ -4566,185 +4982,227 @@
             "driver": "LEC",
             "fullName": "Charles Leclerc",
             "team": "Ferrari",
-            "grid": null,
+            "grid": 2,
             "position": 1,
-            "status": "",
-            "points": null
+            "status": "Finished",
+            "points": 25.0
           },
           {
             "driver": "VER",
             "fullName": "Max Verstappen",
             "team": "Red Bull Racing",
-            "grid": null,
+            "grid": 1,
             "position": 2,
-            "status": "",
-            "points": null
+            "status": "Finished",
+            "points": 19.0
           },
           {
             "driver": "HAM",
             "fullName": "Lewis Hamilton",
             "team": "Mercedes",
-            "grid": null,
+            "grid": 8,
             "position": 3,
-            "status": "",
-            "points": null
+            "status": "Finished",
+            "points": 15.0
           },
           {
             "driver": "RUS",
             "fullName": "George Russell",
             "team": "Mercedes",
-            "grid": null,
+            "grid": 4,
             "position": 4,
-            "status": "",
-            "points": null
+            "status": "Finished",
+            "points": 12.0
           },
           {
             "driver": "OCO",
             "fullName": "Esteban Ocon",
             "team": "Alpine",
-            "grid": null,
+            "grid": 6,
             "position": 5,
-            "status": "",
-            "points": null
+            "status": "Finished",
+            "points": 10.0
           },
           {
             "driver": "MSC",
             "fullName": "Mick Schumacher",
             "team": "Haas F1 Team",
-            "grid": null,
+            "grid": 9,
             "position": 6,
-            "status": "",
-            "points": null
+            "status": "+1 Lap",
+            "points": 8.0
           },
           {
             "driver": "NOR",
             "fullName": "Lando Norris",
             "team": "McLaren",
-            "grid": null,
+            "grid": 10,
             "position": 7,
-            "status": "",
-            "points": null
+            "status": "+1 Lap",
+            "points": 6.0
           },
           {
             "driver": "MAG",
             "fullName": "Kevin Magnussen",
             "team": "Haas F1 Team",
-            "grid": null,
+            "grid": 7,
             "position": 8,
-            "status": "",
-            "points": null
+            "status": "+1 Lap",
+            "points": 4.0
           },
           {
             "driver": "RIC",
             "fullName": "Daniel Ricciardo",
             "team": "McLaren",
-            "grid": null,
+            "grid": 11,
             "position": 9,
-            "status": "",
-            "points": null
+            "status": "+1 Lap",
+            "points": 2.0
           },
           {
             "driver": "ALO",
             "fullName": "Fernando Alonso",
             "team": "Alpine",
-            "grid": null,
+            "grid": 19,
             "position": 10,
-            "status": "",
-            "points": null
+            "status": "+1 Lap",
+            "points": 1.0
           },
           {
             "driver": "BOT",
             "fullName": "Valtteri Bottas",
             "team": "Alfa Romeo",
-            "grid": null,
+            "grid": 0,
             "position": 11,
-            "status": "",
-            "points": null
+            "status": "+1 Lap",
+            "points": 0.0
           },
           {
             "driver": "ALB",
             "fullName": "Alexander Albon",
             "team": "Williams",
-            "grid": null,
+            "grid": 15,
             "position": 12,
-            "status": "",
-            "points": null
+            "status": "+1 Lap",
+            "points": 0.0
           },
           {
             "driver": "STR",
             "fullName": "Lance Stroll",
             "team": "Aston Martin",
-            "grid": null,
+            "grid": 12,
             "position": 13,
-            "status": "",
-            "points": null
+            "status": "+1 Lap",
+            "points": 0.0
           },
           {
             "driver": "ZHO",
             "fullName": "Guanyu Zhou",
             "team": "Alfa Romeo",
-            "grid": null,
+            "grid": 13,
             "position": 14,
-            "status": "",
-            "points": null
+            "status": "+1 Lap",
+            "points": 0.0
           },
           {
             "driver": "GAS",
             "fullName": "Pierre Gasly",
             "team": "AlphaTauri",
-            "grid": null,
+            "grid": 14,
             "position": 15,
-            "status": "",
-            "points": null
-          },
-          {
-            "driver": "VET",
-            "fullName": "Sebastian Vettel",
-            "team": "Aston Martin",
-            "grid": null,
-            "position": 16,
-            "status": "",
-            "points": null
+            "status": "+1 Lap",
+            "points": 0.0
           },
           {
             "driver": "TSU",
             "fullName": "Yuki Tsunoda",
             "team": "AlphaTauri",
-            "grid": null,
+            "grid": 16,
+            "position": 16,
+            "status": "+1 Lap",
+            "points": 0.0
+          },
+          {
+            "driver": "VET",
+            "fullName": "Sebastian Vettel",
+            "team": "Aston Martin",
+            "grid": 18,
             "position": 17,
-            "status": "",
-            "points": null
+            "status": "+1 Lap",
+            "points": 0.0
           },
           {
             "driver": "SAI",
             "fullName": "Carlos Sainz",
             "team": "Ferrari",
-            "grid": null,
+            "grid": 3,
             "position": 18,
-            "status": "",
-            "points": null
+            "status": "Power Unit",
+            "points": 0.0
           },
           {
             "driver": "LAT",
             "fullName": "Nicholas Latifi",
             "team": "Williams",
-            "grid": null,
+            "grid": 17,
             "position": 19,
-            "status": "",
-            "points": null
+            "status": "Undertray",
+            "points": 0.0
           },
           {
             "driver": "PER",
             "fullName": "Sergio Perez",
             "team": "Red Bull Racing",
-            "grid": null,
+            "grid": 5,
             "position": 20,
-            "status": "",
-            "points": null
+            "status": "Collision damage",
+            "points": 0.0
           }
         ],
         "fastestLapDriver": "VER",
-        "pitStops": []
+        "pitStops": [
+          {
+            "constructor": "Williams",
+            "fastestStop": 21.21
+          },
+          {
+            "constructor": "Ferrari",
+            "fastestStop": 21.21
+          },
+          {
+            "constructor": "Red Bull Racing",
+            "fastestStop": 21.32
+          },
+          {
+            "constructor": "McLaren",
+            "fastestStop": 21.36
+          },
+          {
+            "constructor": "Aston Martin",
+            "fastestStop": 21.43
+          },
+          {
+            "constructor": "RB F1 Team",
+            "fastestStop": 21.52
+          },
+          {
+            "constructor": "Alpine",
+            "fastestStop": 21.55
+          },
+          {
+            "constructor": "Mercedes",
+            "fastestStop": 21.73
+          },
+          {
+            "constructor": "Haas F1 Team",
+            "fastestStop": 22.09
+          },
+          {
+            "constructor": "Sauber",
+            "fastestStop": 22.28
+          }
+        ],
+        "driverOfTheDay": null
       }
     },
     {
@@ -5142,7 +5600,49 @@
           }
         ],
         "fastestLapDriver": "SAI",
-        "pitStops": []
+        "pitStops": [
+          {
+            "constructor": "Red Bull Racing",
+            "fastestStop": 35.27
+          },
+          {
+            "constructor": "RB F1 Team",
+            "fastestStop": 35.97
+          },
+          {
+            "constructor": "McLaren",
+            "fastestStop": 36.26
+          },
+          {
+            "constructor": "Haas F1 Team",
+            "fastestStop": 36.4
+          },
+          {
+            "constructor": "Sauber",
+            "fastestStop": 36.44
+          },
+          {
+            "constructor": "Alpine",
+            "fastestStop": 36.52
+          },
+          {
+            "constructor": "Aston Martin",
+            "fastestStop": 36.67
+          },
+          {
+            "constructor": "Williams",
+            "fastestStop": 36.94
+          },
+          {
+            "constructor": "Mercedes",
+            "fastestStop": 37.19
+          },
+          {
+            "constructor": "Ferrari",
+            "fastestStop": 41.46
+          }
+        ],
+        "driverOfTheDay": null
       }
     },
     {
@@ -5154,21 +5654,161 @@
       "qualifying": {
         "results": [
           {
-            "driver": "LAT",
-            "fullName": "Nicholas Latifi",
-            "team": "Williams",
-            "position": null,
-            "q1": null,
-            "q2": null,
-            "q3": null,
+            "driver": "RUS",
+            "fullName": "George Russell",
+            "team": "Mercedes",
+            "position": 1,
+            "q1": "1:18.407",
+            "q2": "1:18.154",
+            "q3": "1:17.377",
+            "status": ""
+          },
+          {
+            "driver": "SAI",
+            "fullName": "Carlos Sainz",
+            "team": "Ferrari",
+            "position": 2,
+            "q1": "1:18.434",
+            "q2": "1:17.946",
+            "q3": "1:17.421",
             "status": ""
           },
           {
             "driver": "LEC",
             "fullName": "Charles Leclerc",
             "team": "Ferrari",
-            "position": null,
-            "q1": null,
+            "position": 3,
+            "q1": "1:18.806",
+            "q2": "1:17.768",
+            "q3": "1:17.567",
+            "status": ""
+          },
+          {
+            "driver": "NOR",
+            "fullName": "Lando Norris",
+            "team": "McLaren",
+            "position": 4,
+            "q1": "1:18.653",
+            "q2": "1:18.121",
+            "q3": "1:17.769",
+            "status": ""
+          },
+          {
+            "driver": "OCO",
+            "fullName": "Esteban Ocon",
+            "team": "Alpine",
+            "position": 5,
+            "q1": "1:18.866",
+            "q2": "1:18.216",
+            "q3": "1:18.018",
+            "status": ""
+          },
+          {
+            "driver": "ALO",
+            "fullName": "Fernando Alonso",
+            "team": "Alpine",
+            "position": 6,
+            "q1": "1:18.716",
+            "q2": "1:17.904",
+            "q3": "1:18.078",
+            "status": ""
+          },
+          {
+            "driver": "HAM",
+            "fullName": "Lewis Hamilton",
+            "team": "Mercedes",
+            "position": 7,
+            "q1": "1:18.374",
+            "q2": "1:18.035",
+            "q3": "1:18.142",
+            "status": ""
+          },
+          {
+            "driver": "BOT",
+            "fullName": "Valtteri Bottas",
+            "team": "Alfa Romeo",
+            "position": 8,
+            "q1": "1:18.935",
+            "q2": "1:18.445",
+            "q3": "1:18.157",
+            "status": ""
+          },
+          {
+            "driver": "RIC",
+            "fullName": "Daniel Ricciardo",
+            "team": "McLaren",
+            "position": 9,
+            "q1": "1:18.775",
+            "q2": "1:18.198",
+            "q3": "1:18.379",
+            "status": ""
+          },
+          {
+            "driver": "VER",
+            "fullName": "Max Verstappen",
+            "team": "Red Bull Racing",
+            "position": 10,
+            "q1": "1:18.509",
+            "q2": "1:17.703",
+            "q3": "1:18.823",
+            "status": ""
+          },
+          {
+            "driver": "PER",
+            "fullName": "Sergio Perez",
+            "team": "Red Bull Racing",
+            "position": 11,
+            "q1": "1:19.118",
+            "q2": "1:18.516",
+            "q3": null,
+            "status": ""
+          },
+          {
+            "driver": "ZHO",
+            "fullName": "Guanyu Zhou",
+            "team": "Alfa Romeo",
+            "position": 12,
+            "q1": "1:18.973",
+            "q2": "1:18.573",
+            "q3": null,
+            "status": ""
+          },
+          {
+            "driver": "MAG",
+            "fullName": "Kevin Magnussen",
+            "team": "Haas F1 Team",
+            "position": 13,
+            "q1": "1:18.993",
+            "q2": "1:18.825",
+            "q3": null,
+            "status": ""
+          },
+          {
+            "driver": "STR",
+            "fullName": "Lance Stroll",
+            "team": "Aston Martin",
+            "position": 14,
+            "q1": "1:19.205",
+            "q2": "1:19.137",
+            "q3": null,
+            "status": ""
+          },
+          {
+            "driver": "MSC",
+            "fullName": "Mick Schumacher",
+            "team": "Haas F1 Team",
+            "position": 15,
+            "q1": "1:19.164",
+            "q2": "1:19.202",
+            "q3": null,
+            "status": ""
+          },
+          {
+            "driver": "TSU",
+            "fullName": "Yuki Tsunoda",
+            "team": "AlphaTauri",
+            "position": 16,
+            "q1": "1:19.240",
             "q2": null,
             "q3": null,
             "status": ""
@@ -5177,58 +5817,8 @@
             "driver": "ALB",
             "fullName": "Alexander Albon",
             "team": "Williams",
-            "position": null,
-            "q1": null,
-            "q2": null,
-            "q3": null,
-            "status": ""
-          },
-          {
-            "driver": "VER",
-            "fullName": "Max Verstappen",
-            "team": "Red Bull Racing",
-            "position": null,
-            "q1": null,
-            "q2": null,
-            "q3": null,
-            "status": ""
-          },
-          {
-            "driver": "RUS",
-            "fullName": "George Russell",
-            "team": "Mercedes",
-            "position": null,
-            "q1": null,
-            "q2": null,
-            "q3": null,
-            "status": ""
-          },
-          {
-            "driver": "ALO",
-            "fullName": "Fernando Alonso",
-            "team": "Alpine",
-            "position": null,
-            "q1": null,
-            "q2": null,
-            "q3": null,
-            "status": ""
-          },
-          {
-            "driver": "SAI",
-            "fullName": "Carlos Sainz",
-            "team": "Ferrari",
-            "position": null,
-            "q1": null,
-            "q2": null,
-            "q3": null,
-            "status": ""
-          },
-          {
-            "driver": "NOR",
-            "fullName": "Lando Norris",
-            "team": "McLaren",
-            "position": null,
-            "q1": null,
+            "position": 17,
+            "q1": "1:19.256",
             "q2": null,
             "q3": null,
             "status": ""
@@ -5237,98 +5827,8 @@
             "driver": "VET",
             "fullName": "Sebastian Vettel",
             "team": "Aston Martin",
-            "position": null,
-            "q1": null,
-            "q2": null,
-            "q3": null,
-            "status": ""
-          },
-          {
-            "driver": "MAG",
-            "fullName": "Kevin Magnussen",
-            "team": "Haas F1 Team",
-            "position": null,
-            "q1": null,
-            "q2": null,
-            "q3": null,
-            "status": ""
-          },
-          {
-            "driver": "HAM",
-            "fullName": "Lewis Hamilton",
-            "team": "Mercedes",
-            "position": null,
-            "q1": null,
-            "q2": null,
-            "q3": null,
-            "status": ""
-          },
-          {
-            "driver": "MSC",
-            "fullName": "Mick Schumacher",
-            "team": "Haas F1 Team",
-            "position": null,
-            "q1": null,
-            "q2": null,
-            "q3": null,
-            "status": ""
-          },
-          {
-            "driver": "OCO",
-            "fullName": "Esteban Ocon",
-            "team": "Alpine",
-            "position": null,
-            "q1": null,
-            "q2": null,
-            "q3": null,
-            "status": ""
-          },
-          {
-            "driver": "RIC",
-            "fullName": "Daniel Ricciardo",
-            "team": "McLaren",
-            "position": null,
-            "q1": null,
-            "q2": null,
-            "q3": null,
-            "status": ""
-          },
-          {
-            "driver": "STR",
-            "fullName": "Lance Stroll",
-            "team": "Aston Martin",
-            "position": null,
-            "q1": null,
-            "q2": null,
-            "q3": null,
-            "status": ""
-          },
-          {
-            "driver": "ZHO",
-            "fullName": "Guanyu Zhou",
-            "team": "Alfa Romeo",
-            "position": null,
-            "q1": null,
-            "q2": null,
-            "q3": null,
-            "status": ""
-          },
-          {
-            "driver": "TSU",
-            "fullName": "Yuki Tsunoda",
-            "team": "AlphaTauri",
-            "position": null,
-            "q1": null,
-            "q2": null,
-            "q3": null,
-            "status": ""
-          },
-          {
-            "driver": "BOT",
-            "fullName": "Valtteri Bottas",
-            "team": "Alfa Romeo",
-            "position": null,
-            "q1": null,
+            "position": 18,
+            "q1": "1:19.273",
             "q2": null,
             "q3": null,
             "status": ""
@@ -5337,18 +5837,18 @@
             "driver": "GAS",
             "fullName": "Pierre Gasly",
             "team": "AlphaTauri",
-            "position": null,
-            "q1": null,
+            "position": 19,
+            "q1": "1:19.527",
             "q2": null,
             "q3": null,
             "status": ""
           },
           {
-            "driver": "PER",
-            "fullName": "Sergio Perez",
-            "team": "Red Bull Racing",
-            "position": null,
-            "q1": null,
+            "driver": "LAT",
+            "fullName": "Nicholas Latifi",
+            "team": "Williams",
+            "position": 20,
+            "q1": "1:19.570",
             "q2": null,
             "q3": null,
             "status": ""
@@ -5540,7 +6040,49 @@
           }
         ],
         "fastestLapDriver": "HAM",
-        "pitStops": []
+        "pitStops": [
+          {
+            "constructor": "Red Bull Racing",
+            "fastestStop": 21.12
+          },
+          {
+            "constructor": "Aston Martin",
+            "fastestStop": 21.4
+          },
+          {
+            "constructor": "RB F1 Team",
+            "fastestStop": 21.49
+          },
+          {
+            "constructor": "McLaren",
+            "fastestStop": 21.52
+          },
+          {
+            "constructor": "Ferrari",
+            "fastestStop": 21.54
+          },
+          {
+            "constructor": "Mercedes",
+            "fastestStop": 21.7
+          },
+          {
+            "constructor": "Williams",
+            "fastestStop": 21.82
+          },
+          {
+            "constructor": "Alpine",
+            "fastestStop": 22.08
+          },
+          {
+            "constructor": "Sauber",
+            "fastestStop": 22.27
+          },
+          {
+            "constructor": "Haas F1 Team",
+            "fastestStop": 22.57
+          }
+        ],
+        "driverOfTheDay": null
       }
     },
     {
@@ -5552,92 +6094,112 @@
       "qualifying": {
         "results": [
           {
-            "driver": "PER",
-            "fullName": "Sergio Perez",
-            "team": "Red Bull Racing",
-            "position": null,
-            "q1": null,
-            "q2": null,
-            "q3": null,
-            "status": ""
-          },
-          {
             "driver": "VER",
             "fullName": "Max Verstappen",
             "team": "Red Bull Racing",
-            "position": null,
-            "q1": null,
-            "q2": null,
-            "q3": null,
+            "position": 1,
+            "q1": "1:44.581",
+            "q2": "1:44.723",
+            "q3": "1:43.665",
             "status": ""
           },
           {
             "driver": "SAI",
             "fullName": "Carlos Sainz",
             "team": "Ferrari",
-            "position": null,
-            "q1": null,
-            "q2": null,
-            "q3": null,
+            "position": 2,
+            "q1": "1:45.050",
+            "q2": "1:45.418",
+            "q3": "1:44.297",
             "status": ""
           },
           {
-            "driver": "NOR",
-            "fullName": "Lando Norris",
-            "team": "McLaren",
-            "position": null,
-            "q1": null,
-            "q2": null,
-            "q3": null,
-            "status": ""
-          },
-          {
-            "driver": "ALO",
-            "fullName": "Fernando Alonso",
-            "team": "Alpine",
-            "position": null,
-            "q1": null,
-            "q2": null,
-            "q3": null,
-            "status": ""
-          },
-          {
-            "driver": "RUS",
-            "fullName": "George Russell",
-            "team": "Mercedes",
-            "position": null,
-            "q1": null,
-            "q2": null,
-            "q3": null,
+            "driver": "PER",
+            "fullName": "Sergio Perez",
+            "team": "Red Bull Racing",
+            "position": 3,
+            "q1": "1:45.377",
+            "q2": "1:44.794",
+            "q3": "1:44.462",
             "status": ""
           },
           {
             "driver": "LEC",
             "fullName": "Charles Leclerc",
             "team": "Ferrari",
-            "position": null,
-            "q1": null,
-            "q2": null,
-            "q3": null,
-            "status": ""
-          },
-          {
-            "driver": "VET",
-            "fullName": "Sebastian Vettel",
-            "team": "Aston Martin",
-            "position": null,
-            "q1": null,
-            "q2": null,
-            "q3": null,
+            "position": 4,
+            "q1": "1:45.572",
+            "q2": "1:44.551",
+            "q3": "1:44.553",
             "status": ""
           },
           {
             "driver": "OCO",
             "fullName": "Esteban Ocon",
             "team": "Alpine",
-            "position": null,
-            "q1": null,
-            "q2": null,
+            "position": 5,
+            "q1": "1:46.039",
+            "q2": "1:45.475",
+            "q3": "1:45.180",
+            "status": ""
+          },
+          {
+            "driver": "ALO",
+            "fullName": "Fernando Alonso",
+            "team": "Alpine",
+            "position": 6,
+            "q1": "1:46.075",
+            "q2": "1:45.552",
+            "q3": "1:45.368",
+            "status": ""
+          },
+          {
+            "driver": "HAM",
+            "fullName": "Lewis Hamilton",
+            "team": "Mercedes",
+            "position": 7,
+            "q1": "1:45.736",
+            "q2": "1:45.420",
+            "q3": "1:45.503",
+            "status": ""
+          },
+          {
+            "driver": "RUS",
+            "fullName": "George Russell",
+            "team": "Mercedes",
+            "position": 8,
+            "q1": "1:45.650",
+            "q2": "1:45.461",
+            "q3": "1:45.776",
+            "status": ""
+          },
+          {
+            "driver": "ALB",
+            "fullName": "Alexander Albon",
+            "team": "Williams",
+            "position": 9,
+            "q1": "1:45.672",
+            "q2": "1:45.675",
+            "q3": "1:45.837",
+            "status": ""
+          },
+          {
+            "driver": "NOR",
+            "fullName": "Lando Norris",
+            "team": "McLaren",
+            "position": 10,
+            "q1": "1:45.745",
+            "q2": "1:45.603",
+            "q3": "1:46.178",
+            "status": ""
+          },
+          {
+            "driver": "RIC",
+            "fullName": "Daniel Ricciardo",
+            "team": "McLaren",
+            "position": 11,
+            "q1": "1:46.212",
+            "q2": "1:45.767",
             "q3": null,
             "status": ""
           },
@@ -5645,28 +6207,48 @@
             "driver": "GAS",
             "fullName": "Pierre Gasly",
             "team": "AlphaTauri",
-            "position": null,
-            "q1": null,
-            "q2": null,
+            "position": 12,
+            "q1": "1:46.183",
+            "q2": "1:45.827",
             "q3": null,
             "status": ""
           },
           {
-            "driver": "RIC",
-            "fullName": "Daniel Ricciardo",
-            "team": "McLaren",
-            "position": null,
-            "q1": null,
-            "q2": null,
+            "driver": "ZHO",
+            "fullName": "Guanyu Zhou",
+            "team": "Alfa Romeo",
+            "position": 13,
+            "q1": "1:46.178",
+            "q2": "1:46.085",
             "q3": null,
             "status": ""
           },
           {
-            "driver": "HAM",
-            "fullName": "Lewis Hamilton",
-            "team": "Mercedes",
-            "position": null,
-            "q1": null,
+            "driver": "STR",
+            "fullName": "Lance Stroll",
+            "team": "Aston Martin",
+            "position": 14,
+            "q1": "1:46.256",
+            "q2": "1:46.611",
+            "q3": null,
+            "status": ""
+          },
+          {
+            "driver": "MSC",
+            "fullName": "Mick Schumacher",
+            "team": "Haas F1 Team",
+            "position": 15,
+            "q1": "1:46.342",
+            "q2": "1:47.718",
+            "q3": null,
+            "status": ""
+          },
+          {
+            "driver": "VET",
+            "fullName": "Sebastian Vettel",
+            "team": "Aston Martin",
+            "position": 16,
+            "q1": "1:46.344",
             "q2": null,
             "q3": null,
             "status": ""
@@ -5675,38 +6257,8 @@
             "driver": "LAT",
             "fullName": "Nicholas Latifi",
             "team": "Williams",
-            "position": null,
-            "q1": null,
-            "q2": null,
-            "q3": null,
-            "status": ""
-          },
-          {
-            "driver": "ALB",
-            "fullName": "Alexander Albon",
-            "team": "Williams",
-            "position": null,
-            "q1": null,
-            "q2": null,
-            "q3": null,
-            "status": ""
-          },
-          {
-            "driver": "BOT",
-            "fullName": "Valtteri Bottas",
-            "team": "Alfa Romeo",
-            "position": null,
-            "q1": null,
-            "q2": null,
-            "q3": null,
-            "status": ""
-          },
-          {
-            "driver": "STR",
-            "fullName": "Lance Stroll",
-            "team": "Aston Martin",
-            "position": null,
-            "q1": null,
+            "position": 17,
+            "q1": "1:46.401",
             "q2": null,
             "q3": null,
             "status": ""
@@ -5715,8 +6267,8 @@
             "driver": "MAG",
             "fullName": "Kevin Magnussen",
             "team": "Haas F1 Team",
-            "position": null,
-            "q1": null,
+            "position": 18,
+            "q1": "1:46.557",
             "q2": null,
             "q3": null,
             "status": ""
@@ -5725,28 +6277,18 @@
             "driver": "TSU",
             "fullName": "Yuki Tsunoda",
             "team": "AlphaTauri",
-            "position": null,
-            "q1": null,
+            "position": 19,
+            "q1": "1:46.692",
             "q2": null,
             "q3": null,
             "status": ""
           },
           {
-            "driver": "ZHO",
-            "fullName": "Guanyu Zhou",
+            "driver": "BOT",
+            "fullName": "Valtteri Bottas",
             "team": "Alfa Romeo",
-            "position": null,
-            "q1": null,
-            "q2": null,
-            "q3": null,
-            "status": ""
-          },
-          {
-            "driver": "MSC",
-            "fullName": "Mick Schumacher",
-            "team": "Haas F1 Team",
-            "position": null,
-            "q1": null,
+            "position": 20,
+            "q1": "1:47.866",
             "q2": null,
             "q3": null,
             "status": ""
@@ -5938,7 +6480,49 @@
           }
         ],
         "fastestLapDriver": "VER",
-        "pitStops": []
+        "pitStops": [
+          {
+            "constructor": "Red Bull Racing",
+            "fastestStop": 22.32
+          },
+          {
+            "constructor": "RB F1 Team",
+            "fastestStop": 22.54
+          },
+          {
+            "constructor": "Ferrari",
+            "fastestStop": 22.54
+          },
+          {
+            "constructor": "Alpine",
+            "fastestStop": 22.64
+          },
+          {
+            "constructor": "Mercedes",
+            "fastestStop": 22.82
+          },
+          {
+            "constructor": "Aston Martin",
+            "fastestStop": 22.83
+          },
+          {
+            "constructor": "McLaren",
+            "fastestStop": 23.04
+          },
+          {
+            "constructor": "Williams",
+            "fastestStop": 23.33
+          },
+          {
+            "constructor": "Sauber",
+            "fastestStop": 23.36
+          },
+          {
+            "constructor": "Haas F1 Team",
+            "fastestStop": 23.4
+          }
+        ],
+        "driverOfTheDay": null
       }
     },
     {
@@ -6336,7 +6920,49 @@
           }
         ],
         "fastestLapDriver": "VER",
-        "pitStops": []
+        "pitStops": [
+          {
+            "constructor": "RB F1 Team",
+            "fastestStop": 13.97
+          },
+          {
+            "constructor": "Ferrari",
+            "fastestStop": 14.01
+          },
+          {
+            "constructor": "Alpine",
+            "fastestStop": 14.04
+          },
+          {
+            "constructor": "Red Bull Racing",
+            "fastestStop": 14.11
+          },
+          {
+            "constructor": "Williams",
+            "fastestStop": 14.11
+          },
+          {
+            "constructor": "Aston Martin",
+            "fastestStop": 14.12
+          },
+          {
+            "constructor": "Sauber",
+            "fastestStop": 14.13
+          },
+          {
+            "constructor": "Haas F1 Team",
+            "fastestStop": 14.14
+          },
+          {
+            "constructor": "Mercedes",
+            "fastestStop": 14.15
+          },
+          {
+            "constructor": "McLaren",
+            "fastestStop": 14.49
+          }
+        ],
+        "driverOfTheDay": null
       }
     },
     {
@@ -6556,185 +7182,227 @@
             "driver": "VER",
             "fullName": "Max Verstappen",
             "team": "Red Bull Racing",
-            "grid": null,
+            "grid": 7,
             "position": 1,
-            "status": "",
-            "points": null
+            "status": "Finished",
+            "points": 25.0
           },
           {
             "driver": "LEC",
             "fullName": "Charles Leclerc",
             "team": "Ferrari",
-            "grid": null,
+            "grid": 1,
             "position": 2,
-            "status": "",
-            "points": null
+            "status": "Finished",
+            "points": 18.0
           },
           {
             "driver": "RUS",
             "fullName": "George Russell",
             "team": "Mercedes",
-            "grid": null,
+            "grid": 2,
             "position": 3,
-            "status": "",
-            "points": null
+            "status": "Finished",
+            "points": 15.0
           },
           {
             "driver": "SAI",
             "fullName": "Carlos Sainz",
             "team": "Ferrari",
-            "grid": null,
+            "grid": 18,
             "position": 4,
-            "status": "",
-            "points": null
+            "status": "Finished",
+            "points": 12.0
           },
           {
             "driver": "HAM",
             "fullName": "Lewis Hamilton",
             "team": "Mercedes",
-            "grid": null,
+            "grid": 19,
             "position": 5,
-            "status": "",
-            "points": null
+            "status": "Finished",
+            "points": 10.0
           },
           {
             "driver": "PER",
             "fullName": "Sergio Perez",
             "team": "Red Bull Racing",
-            "grid": null,
+            "grid": 13,
             "position": 6,
-            "status": "",
-            "points": null
+            "status": "Finished",
+            "points": 9.0
           },
           {
             "driver": "NOR",
             "fullName": "Lando Norris",
             "team": "McLaren",
-            "grid": null,
+            "grid": 3,
             "position": 7,
-            "status": "",
-            "points": null
+            "status": "Finished",
+            "points": 6.0
           },
           {
             "driver": "GAS",
             "fullName": "Pierre Gasly",
             "team": "AlphaTauri",
-            "grid": null,
+            "grid": 5,
             "position": 8,
-            "status": "",
-            "points": null
+            "status": "Finished",
+            "points": 4.0
           },
           {
             "driver": "DEV",
             "fullName": "Nyck De Vries",
             "team": "Williams",
-            "grid": null,
+            "grid": 8,
             "position": 9,
-            "status": "",
-            "points": null
+            "status": "Finished",
+            "points": 2.0
           },
           {
             "driver": "ZHO",
             "fullName": "Guanyu Zhou",
             "team": "Alfa Romeo",
-            "grid": null,
+            "grid": 9,
             "position": 10,
-            "status": "",
-            "points": null
+            "status": "Finished",
+            "points": 1.0
           },
           {
             "driver": "OCO",
             "fullName": "Esteban Ocon",
             "team": "Alpine",
-            "grid": null,
+            "grid": 14,
             "position": 11,
-            "status": "",
-            "points": null
+            "status": "Finished",
+            "points": 0.0
           },
           {
             "driver": "MSC",
             "fullName": "Mick Schumacher",
             "team": "Haas F1 Team",
-            "grid": null,
+            "grid": 17,
             "position": 12,
-            "status": "",
-            "points": null
+            "status": "Finished",
+            "points": 0.0
           },
           {
             "driver": "BOT",
             "fullName": "Valtteri Bottas",
             "team": "Alfa Romeo",
-            "grid": null,
+            "grid": 15,
             "position": 13,
-            "status": "",
-            "points": null
+            "status": "+1 Lap",
+            "points": 0.0
           },
           {
             "driver": "TSU",
             "fullName": "Yuki Tsunoda",
             "team": "AlphaTauri",
-            "grid": null,
+            "grid": 20,
             "position": 14,
-            "status": "",
-            "points": null
+            "status": "+1 Lap",
+            "points": 0.0
           },
           {
             "driver": "LAT",
             "fullName": "Nicholas Latifi",
             "team": "Williams",
-            "grid": null,
+            "grid": 10,
             "position": 15,
-            "status": "",
-            "points": null
+            "status": "+1 Lap",
+            "points": 0.0
           },
           {
             "driver": "MAG",
             "fullName": "Kevin Magnussen",
             "team": "Haas F1 Team",
-            "grid": null,
+            "grid": 16,
             "position": 16,
-            "status": "",
-            "points": null
+            "status": "+1 Lap",
+            "points": 0.0
           },
           {
             "driver": "RIC",
             "fullName": "Daniel Ricciardo",
             "team": "McLaren",
-            "grid": null,
+            "grid": 4,
             "position": 17,
-            "status": "",
-            "points": null
+            "status": "Oil leak",
+            "points": 0.0
           },
           {
             "driver": "STR",
             "fullName": "Lance Stroll",
             "team": "Aston Martin",
-            "grid": null,
+            "grid": 12,
             "position": 18,
-            "status": "",
-            "points": null
+            "status": "Engine",
+            "points": 0.0
           },
           {
             "driver": "ALO",
             "fullName": "Fernando Alonso",
             "team": "Alpine",
-            "grid": null,
+            "grid": 6,
             "position": 19,
-            "status": "",
-            "points": null
+            "status": "Water pressure",
+            "points": 0.0
           },
           {
             "driver": "VET",
             "fullName": "Sebastian Vettel",
             "team": "Aston Martin",
-            "grid": null,
+            "grid": 11,
             "position": 20,
-            "status": "",
-            "points": null
+            "status": "Engine",
+            "points": 0.0
           }
         ],
         "fastestLapDriver": "PER",
-        "pitStops": []
+        "pitStops": [
+          {
+            "constructor": "Red Bull Racing",
+            "fastestStop": 23.3
+          },
+          {
+            "constructor": "Ferrari",
+            "fastestStop": 23.53
+          },
+          {
+            "constructor": "RB F1 Team",
+            "fastestStop": 23.9
+          },
+          {
+            "constructor": "Mercedes",
+            "fastestStop": 24.11
+          },
+          {
+            "constructor": "Aston Martin",
+            "fastestStop": 24.25
+          },
+          {
+            "constructor": "Williams",
+            "fastestStop": 24.26
+          },
+          {
+            "constructor": "Alpine",
+            "fastestStop": 24.34
+          },
+          {
+            "constructor": "Sauber",
+            "fastestStop": 24.76
+          },
+          {
+            "constructor": "McLaren",
+            "fastestStop": 24.78
+          },
+          {
+            "constructor": "Haas F1 Team",
+            "fastestStop": 24.82
+          }
+        ],
+        "driverOfTheDay": null
       }
     },
     {
@@ -6749,49 +7417,109 @@
             "driver": "LEC",
             "fullName": "Charles Leclerc",
             "team": "Ferrari",
-            "position": null,
-            "q1": null,
-            "q2": null,
-            "q3": null,
-            "status": ""
-          },
-          {
-            "driver": "VER",
-            "fullName": "Max Verstappen",
-            "team": "Red Bull Racing",
-            "position": null,
-            "q1": null,
-            "q2": null,
-            "q3": null,
-            "status": ""
-          },
-          {
-            "driver": "SAI",
-            "fullName": "Carlos Sainz",
-            "team": "Ferrari",
-            "position": null,
-            "q1": null,
-            "q2": null,
-            "q3": null,
-            "status": ""
-          },
-          {
-            "driver": "ALO",
-            "fullName": "Fernando Alonso",
-            "team": "Alpine",
-            "position": null,
-            "q1": null,
-            "q2": null,
-            "q3": null,
+            "position": 1,
+            "q1": "1:54.129",
+            "q2": "1:52.343",
+            "q3": "1:49.412",
             "status": ""
           },
           {
             "driver": "PER",
             "fullName": "Sergio Perez",
             "team": "Red Bull Racing",
-            "position": null,
-            "q1": null,
-            "q2": null,
+            "position": 2,
+            "q1": "1:54.404",
+            "q2": "1:52.818",
+            "q3": "1:49.434",
+            "status": ""
+          },
+          {
+            "driver": "HAM",
+            "fullName": "Lewis Hamilton",
+            "team": "Mercedes",
+            "position": 3,
+            "q1": "1:53.161",
+            "q2": "1:52.691",
+            "q3": "1:49.466",
+            "status": ""
+          },
+          {
+            "driver": "SAI",
+            "fullName": "Carlos Sainz",
+            "team": "Ferrari",
+            "position": 4,
+            "q1": "1:54.559",
+            "q2": "1:53.219",
+            "q3": "1:49.583",
+            "status": ""
+          },
+          {
+            "driver": "ALO",
+            "fullName": "Fernando Alonso",
+            "team": "Alpine",
+            "position": 5,
+            "q1": "1:55.360",
+            "q2": "1:53.127",
+            "q3": "1:49.966",
+            "status": ""
+          },
+          {
+            "driver": "NOR",
+            "fullName": "Lando Norris",
+            "team": "McLaren",
+            "position": 6,
+            "q1": "1:55.914",
+            "q2": "1:53.942",
+            "q3": "1:50.584",
+            "status": ""
+          },
+          {
+            "driver": "GAS",
+            "fullName": "Pierre Gasly",
+            "team": "AlphaTauri",
+            "position": 7,
+            "q1": "1:55.606",
+            "q2": "1:53.546",
+            "q3": "1:51.211",
+            "status": ""
+          },
+          {
+            "driver": "VER",
+            "fullName": "Max Verstappen",
+            "team": "Red Bull Racing",
+            "position": 8,
+            "q1": "1:53.057",
+            "q2": "1:52.723",
+            "q3": "1:51.395",
+            "status": ""
+          },
+          {
+            "driver": "MAG",
+            "fullName": "Kevin Magnussen",
+            "team": "Haas F1 Team",
+            "position": 9,
+            "q1": "1:55.103",
+            "q2": "1:54.006",
+            "q3": "1:51.573",
+            "status": ""
+          },
+          {
+            "driver": "TSU",
+            "fullName": "Yuki Tsunoda",
+            "team": "AlphaTauri",
+            "position": 10,
+            "q1": "1:55.314",
+            "q2": "1:53.848",
+            "q3": "1:51.983",
+            "status": ""
+          },
+          {
+            "driver": "RUS",
+            "fullName": "George Russell",
+            "team": "Mercedes",
+            "position": 11,
+            "q1": "1:54.633",
+            "q2": "1:54.012",
             "q3": null,
             "status": ""
           },
@@ -6799,19 +7527,19 @@
             "driver": "STR",
             "fullName": "Lance Stroll",
             "team": "Aston Martin",
-            "position": null,
-            "q1": null,
-            "q2": null,
+            "position": 12,
+            "q1": "1:55.629",
+            "q2": "1:54.211",
             "q3": null,
             "status": ""
           },
           {
-            "driver": "OCO",
-            "fullName": "Esteban Ocon",
-            "team": "Alpine",
-            "position": null,
-            "q1": null,
-            "q2": null,
+            "driver": "MSC",
+            "fullName": "Mick Schumacher",
+            "team": "Haas F1 Team",
+            "position": 13,
+            "q1": "1:55.736",
+            "q2": "1:54.370",
             "q3": null,
             "status": ""
           },
@@ -6819,18 +7547,28 @@
             "driver": "VET",
             "fullName": "Sebastian Vettel",
             "team": "Aston Martin",
-            "position": null,
-            "q1": null,
-            "q2": null,
+            "position": 14,
+            "q1": "1:55.602",
+            "q2": "1:54.380",
             "q3": null,
             "status": ""
           },
           {
-            "driver": "RUS",
-            "fullName": "George Russell",
-            "team": "Mercedes",
-            "position": null,
-            "q1": null,
+            "driver": "ZHO",
+            "fullName": "Guanyu Zhou",
+            "team": "Alfa Romeo",
+            "position": 15,
+            "q1": "1:55.375",
+            "q2": "1:55.518",
+            "q3": null,
+            "status": ""
+          },
+          {
+            "driver": "BOT",
+            "fullName": "Valtteri Bottas",
+            "team": "Alfa Romeo",
+            "position": 16,
+            "q1": "1:56.083",
             "q2": null,
             "q3": null,
             "status": ""
@@ -6839,68 +7577,18 @@
             "driver": "RIC",
             "fullName": "Daniel Ricciardo",
             "team": "McLaren",
-            "position": null,
-            "q1": null,
+            "position": 17,
+            "q1": "1:56.226",
             "q2": null,
             "q3": null,
             "status": ""
           },
           {
-            "driver": "MAG",
-            "fullName": "Kevin Magnussen",
-            "team": "Haas F1 Team",
-            "position": null,
-            "q1": null,
-            "q2": null,
-            "q3": null,
-            "status": ""
-          },
-          {
-            "driver": "HAM",
-            "fullName": "Lewis Hamilton",
-            "team": "Mercedes",
-            "position": null,
-            "q1": null,
-            "q2": null,
-            "q3": null,
-            "status": ""
-          },
-          {
-            "driver": "GAS",
-            "fullName": "Pierre Gasly",
-            "team": "AlphaTauri",
-            "position": null,
-            "q1": null,
-            "q2": null,
-            "q3": null,
-            "status": ""
-          },
-          {
-            "driver": "MSC",
-            "fullName": "Mick Schumacher",
-            "team": "Haas F1 Team",
-            "position": null,
-            "q1": null,
-            "q2": null,
-            "q3": null,
-            "status": ""
-          },
-          {
-            "driver": "TSU",
-            "fullName": "Yuki Tsunoda",
-            "team": "AlphaTauri",
-            "position": null,
-            "q1": null,
-            "q2": null,
-            "q3": null,
-            "status": ""
-          },
-          {
-            "driver": "NOR",
-            "fullName": "Lando Norris",
-            "team": "McLaren",
-            "position": null,
-            "q1": null,
+            "driver": "OCO",
+            "fullName": "Esteban Ocon",
+            "team": "Alpine",
+            "position": 18,
+            "q1": "1:56.337",
             "q2": null,
             "q3": null,
             "status": ""
@@ -6909,28 +7597,8 @@
             "driver": "ALB",
             "fullName": "Alexander Albon",
             "team": "Williams",
-            "position": null,
-            "q1": null,
-            "q2": null,
-            "q3": null,
-            "status": ""
-          },
-          {
-            "driver": "BOT",
-            "fullName": "Valtteri Bottas",
-            "team": "Alfa Romeo",
-            "position": null,
-            "q1": null,
-            "q2": null,
-            "q3": null,
-            "status": ""
-          },
-          {
-            "driver": "ZHO",
-            "fullName": "Guanyu Zhou",
-            "team": "Alfa Romeo",
-            "position": null,
-            "q1": null,
+            "position": 19,
+            "q1": "1:56.985",
             "q2": null,
             "q3": null,
             "status": ""
@@ -6939,8 +7607,8 @@
             "driver": "LAT",
             "fullName": "Nicholas Latifi",
             "team": "Williams",
-            "position": null,
-            "q1": null,
+            "position": 20,
+            "q1": "1:57.532",
             "q2": null,
             "q3": null,
             "status": ""
@@ -6954,185 +7622,219 @@
             "driver": "PER",
             "fullName": "Sergio Perez",
             "team": "Red Bull Racing",
-            "grid": null,
+            "grid": 2,
             "position": 1,
-            "status": "",
-            "points": null
+            "status": "Finished",
+            "points": 25.0
           },
           {
             "driver": "LEC",
             "fullName": "Charles Leclerc",
             "team": "Ferrari",
-            "grid": null,
+            "grid": 1,
             "position": 2,
-            "status": "",
-            "points": null
+            "status": "Finished",
+            "points": 18.0
           },
           {
             "driver": "SAI",
             "fullName": "Carlos Sainz",
             "team": "Ferrari",
-            "grid": null,
+            "grid": 4,
             "position": 3,
-            "status": "",
-            "points": null
+            "status": "Finished",
+            "points": 15.0
           },
           {
             "driver": "NOR",
             "fullName": "Lando Norris",
             "team": "McLaren",
-            "grid": null,
+            "grid": 6,
             "position": 4,
-            "status": "",
-            "points": null
+            "status": "Finished",
+            "points": 12.0
           },
           {
             "driver": "RIC",
             "fullName": "Daniel Ricciardo",
             "team": "McLaren",
-            "grid": null,
+            "grid": 16,
             "position": 5,
-            "status": "",
-            "points": null
+            "status": "Finished",
+            "points": 10.0
           },
           {
             "driver": "STR",
             "fullName": "Lance Stroll",
             "team": "Aston Martin",
-            "grid": null,
+            "grid": 11,
             "position": 6,
-            "status": "",
-            "points": null
+            "status": "Finished",
+            "points": 8.0
           },
           {
             "driver": "VER",
             "fullName": "Max Verstappen",
             "team": "Red Bull Racing",
-            "grid": null,
+            "grid": 8,
             "position": 7,
-            "status": "",
-            "points": null
+            "status": "Finished",
+            "points": 6.0
           },
           {
             "driver": "VET",
             "fullName": "Sebastian Vettel",
             "team": "Aston Martin",
-            "grid": null,
+            "grid": 13,
             "position": 8,
-            "status": "",
-            "points": null
+            "status": "Finished",
+            "points": 4.0
           },
           {
             "driver": "HAM",
             "fullName": "Lewis Hamilton",
             "team": "Mercedes",
-            "grid": null,
+            "grid": 3,
             "position": 9,
-            "status": "",
-            "points": null
+            "status": "Finished",
+            "points": 2.0
           },
           {
             "driver": "GAS",
             "fullName": "Pierre Gasly",
             "team": "AlphaTauri",
-            "grid": null,
+            "grid": 7,
             "position": 10,
-            "status": "",
-            "points": null
+            "status": "Finished",
+            "points": 1.0
           },
           {
             "driver": "BOT",
             "fullName": "Valtteri Bottas",
             "team": "Alfa Romeo",
-            "grid": null,
+            "grid": 15,
             "position": 11,
-            "status": "",
-            "points": null
+            "status": "Finished",
+            "points": 0.0
           },
           {
             "driver": "MAG",
             "fullName": "Kevin Magnussen",
             "team": "Haas F1 Team",
-            "grid": null,
+            "grid": 9,
             "position": 12,
-            "status": "",
-            "points": null
+            "status": "Finished",
+            "points": 0.0
           },
           {
             "driver": "MSC",
             "fullName": "Mick Schumacher",
             "team": "Haas F1 Team",
-            "grid": null,
+            "grid": 12,
             "position": 13,
-            "status": "",
-            "points": null
+            "status": "+1 Lap",
+            "points": 0.0
           },
           {
             "driver": "RUS",
             "fullName": "George Russell",
             "team": "Mercedes",
-            "grid": null,
+            "grid": 0,
             "position": 14,
-            "status": "",
-            "points": null
+            "status": "+2 Laps",
+            "points": 0.0
           },
           {
             "driver": "TSU",
             "fullName": "Yuki Tsunoda",
             "team": "AlphaTauri",
-            "grid": null,
+            "grid": 10,
             "position": 15,
-            "status": "",
-            "points": null
+            "status": "Accident",
+            "points": 0.0
           },
           {
             "driver": "OCO",
             "fullName": "Esteban Ocon",
             "team": "Alpine",
-            "grid": null,
+            "grid": 17,
             "position": 16,
-            "status": "",
-            "points": null
+            "status": "Engine",
+            "points": 0.0
           },
           {
             "driver": "ALB",
             "fullName": "Alexander Albon",
             "team": "Williams",
-            "grid": null,
+            "grid": 18,
             "position": 17,
-            "status": "",
-            "points": null
+            "status": "Collision damage",
+            "points": 0.0
           },
           {
             "driver": "ALO",
             "fullName": "Fernando Alonso",
             "team": "Alpine",
-            "grid": null,
+            "grid": 5,
             "position": 18,
-            "status": "",
-            "points": null
-          },
-          {
-            "driver": "ZHO",
-            "fullName": "Guanyu Zhou",
-            "team": "Alfa Romeo",
-            "grid": null,
-            "position": 19,
-            "status": "",
-            "points": null
+            "status": "Engine",
+            "points": 0.0
           },
           {
             "driver": "LAT",
             "fullName": "Nicholas Latifi",
             "team": "Williams",
-            "grid": null,
+            "grid": 19,
+            "position": 19,
+            "status": "Collision damage",
+            "points": 0.0
+          },
+          {
+            "driver": "ZHO",
+            "fullName": "Guanyu Zhou",
+            "team": "Alfa Romeo",
+            "grid": 14,
             "position": 20,
-            "status": "",
-            "points": null
+            "status": "Collision",
+            "points": 0.0
           }
         ],
         "fastestLapDriver": "RUS",
-        "pitStops": []
+        "pitStops": [
+          {
+            "constructor": "Red Bull Racing",
+            "fastestStop": 29.41
+          },
+          {
+            "constructor": "Aston Martin",
+            "fastestStop": 29.7
+          },
+          {
+            "constructor": "Mercedes",
+            "fastestStop": 29.71
+          },
+          {
+            "constructor": "RB F1 Team",
+            "fastestStop": 29.87
+          },
+          {
+            "constructor": "McLaren",
+            "fastestStop": 30.53
+          },
+          {
+            "constructor": "Ferrari",
+            "fastestStop": 30.6
+          },
+          {
+            "constructor": "Haas F1 Team",
+            "fastestStop": 31.2
+          },
+          {
+            "constructor": "Sauber",
+            "fastestStop": 32.17
+          }
+        ],
+        "driverOfTheDay": null
       }
     },
     {
@@ -7352,185 +8054,227 @@
             "driver": "VER",
             "fullName": "Max Verstappen",
             "team": "Red Bull Racing",
-            "grid": null,
+            "grid": 1,
             "position": 1,
-            "status": "",
-            "points": null
-          },
-          {
-            "driver": "LEC",
-            "fullName": "Charles Leclerc",
-            "team": "Ferrari",
-            "grid": null,
-            "position": 2,
-            "status": "",
-            "points": null
+            "status": "Finished",
+            "points": 25.0
           },
           {
             "driver": "PER",
             "fullName": "Sergio Perez",
             "team": "Red Bull Racing",
-            "grid": null,
+            "grid": 4,
+            "position": 2,
+            "status": "Finished",
+            "points": 18.0
+          },
+          {
+            "driver": "LEC",
+            "fullName": "Charles Leclerc",
+            "team": "Ferrari",
+            "grid": 2,
             "position": 3,
-            "status": "",
-            "points": null
+            "status": "Finished",
+            "points": 15.0
           },
           {
             "driver": "OCO",
             "fullName": "Esteban Ocon",
             "team": "Alpine",
-            "grid": null,
+            "grid": 5,
             "position": 4,
-            "status": "",
-            "points": null
+            "status": "Finished",
+            "points": 12.0
           },
           {
             "driver": "HAM",
             "fullName": "Lewis Hamilton",
             "team": "Mercedes",
-            "grid": null,
+            "grid": 6,
             "position": 5,
-            "status": "",
-            "points": null
-          },
-          {
-            "driver": "ALO",
-            "fullName": "Fernando Alonso",
-            "team": "Alpine",
-            "grid": null,
-            "position": 6,
-            "status": "",
-            "points": null
+            "status": "Finished",
+            "points": 10.0
           },
           {
             "driver": "VET",
             "fullName": "Sebastian Vettel",
             "team": "Aston Martin",
-            "grid": null,
+            "grid": 9,
+            "position": 6,
+            "status": "Finished",
+            "points": 8.0
+          },
+          {
+            "driver": "ALO",
+            "fullName": "Fernando Alonso",
+            "team": "Alpine",
+            "grid": 7,
             "position": 7,
-            "status": "",
-            "points": null
+            "status": "Finished",
+            "points": 6.0
           },
           {
             "driver": "RUS",
             "fullName": "George Russell",
             "team": "Mercedes",
-            "grid": null,
+            "grid": 8,
             "position": 8,
-            "status": "",
-            "points": null
+            "status": "Finished",
+            "points": 4.0
           },
           {
             "driver": "LAT",
             "fullName": "Nicholas Latifi",
             "team": "Williams",
-            "grid": null,
+            "grid": 20,
             "position": 9,
-            "status": "",
-            "points": null
+            "status": "Finished",
+            "points": 2.0
           },
           {
             "driver": "NOR",
             "fullName": "Lando Norris",
             "team": "McLaren",
-            "grid": null,
+            "grid": 10,
             "position": 10,
-            "status": "",
-            "points": null
+            "status": "Finished",
+            "points": 1.0
           },
           {
             "driver": "RIC",
             "fullName": "Daniel Ricciardo",
             "team": "McLaren",
-            "grid": null,
+            "grid": 11,
             "position": 11,
-            "status": "",
-            "points": null
+            "status": "Finished",
+            "points": 0.0
           },
           {
             "driver": "STR",
             "fullName": "Lance Stroll",
             "team": "Aston Martin",
-            "grid": null,
+            "grid": 19,
             "position": 12,
-            "status": "",
-            "points": null
+            "status": "Finished",
+            "points": 0.0
           },
           {
             "driver": "TSU",
             "fullName": "Yuki Tsunoda",
             "team": "AlphaTauri",
-            "grid": null,
+            "grid": 13,
             "position": 13,
-            "status": "",
-            "points": null
+            "status": "Finished",
+            "points": 0.0
           },
           {
             "driver": "MAG",
             "fullName": "Kevin Magnussen",
             "team": "Haas F1 Team",
-            "grid": null,
+            "grid": 18,
             "position": 14,
-            "status": "",
-            "points": null
+            "status": "Finished",
+            "points": 0.0
           },
           {
             "driver": "BOT",
             "fullName": "Valtteri Bottas",
             "team": "Alfa Romeo",
-            "grid": null,
+            "grid": 12,
             "position": 15,
-            "status": "",
-            "points": null
+            "status": "Finished",
+            "points": 0.0
           },
           {
             "driver": "ZHO",
             "fullName": "Guanyu Zhou",
             "team": "Alfa Romeo",
-            "grid": null,
+            "grid": 14,
             "position": 16,
-            "status": "",
-            "points": null
-          },
-          {
-            "driver": "GAS",
-            "fullName": "Pierre Gasly",
-            "team": "AlphaTauri",
-            "grid": null,
-            "position": 17,
-            "status": "",
-            "points": null
+            "status": "Finished",
+            "points": 0.0
           },
           {
             "driver": "MSC",
             "fullName": "Mick Schumacher",
             "team": "Haas F1 Team",
-            "grid": null,
-            "position": 18,
-            "status": "",
-            "points": null
+            "grid": 15,
+            "position": 17,
+            "status": "Finished",
+            "points": 0.0
           },
           {
-            "driver": "ALB",
-            "fullName": "Alexander Albon",
-            "team": "Williams",
-            "grid": null,
-            "position": 19,
-            "status": "",
-            "points": null
+            "driver": "GAS",
+            "fullName": "Pierre Gasly",
+            "team": "AlphaTauri",
+            "grid": 17,
+            "position": 18,
+            "status": "Finished",
+            "points": 0.0
           },
           {
             "driver": "SAI",
             "fullName": "Carlos Sainz",
             "team": "Ferrari",
-            "grid": null,
+            "grid": 3,
+            "position": 19,
+            "status": "Accident",
+            "points": 0.0
+          },
+          {
+            "driver": "ALB",
+            "fullName": "Alexander Albon",
+            "team": "Williams",
+            "grid": 16,
             "position": 20,
-            "status": "",
-            "points": null
+            "status": "Hydraulics",
+            "points": 0.0
           }
         ],
         "fastestLapDriver": "ZHO",
-        "pitStops": []
+        "pitStops": [
+          {
+            "constructor": "RB F1 Team",
+            "fastestStop": 23.76
+          },
+          {
+            "constructor": "Aston Martin",
+            "fastestStop": 23.87
+          },
+          {
+            "constructor": "Alpine",
+            "fastestStop": 24.11
+          },
+          {
+            "constructor": "Sauber",
+            "fastestStop": 24.27
+          },
+          {
+            "constructor": "Red Bull Racing",
+            "fastestStop": 24.31
+          },
+          {
+            "constructor": "McLaren",
+            "fastestStop": 24.59
+          },
+          {
+            "constructor": "Haas F1 Team",
+            "fastestStop": 24.61
+          },
+          {
+            "constructor": "Williams",
+            "fastestStop": 24.79
+          },
+          {
+            "constructor": "Mercedes",
+            "fastestStop": 25.06
+          },
+          {
+            "constructor": "Ferrari",
+            "fastestStop": 25.9
+          }
+        ],
+        "driverOfTheDay": null
       }
     },
     {
@@ -7542,72 +8286,112 @@
       "qualifying": {
         "results": [
           {
-            "driver": "VER",
-            "fullName": "Max Verstappen",
-            "team": "Red Bull Racing",
-            "position": null,
-            "q1": null,
-            "q2": null,
-            "q3": null,
+            "driver": "SAI",
+            "fullName": "Carlos Sainz",
+            "team": "Ferrari",
+            "position": 1,
+            "q1": "1:35.297",
+            "q2": "1:35.590",
+            "q3": "1:34.356",
             "status": ""
           },
           {
             "driver": "LEC",
             "fullName": "Charles Leclerc",
             "team": "Ferrari",
-            "position": null,
-            "q1": null,
-            "q2": null,
-            "q3": null,
+            "position": 2,
+            "q1": "1:35.795",
+            "q2": "1:35.246",
+            "q3": "1:34.421",
             "status": ""
           },
           {
-            "driver": "SAI",
-            "fullName": "Carlos Sainz",
-            "team": "Ferrari",
-            "position": null,
-            "q1": null,
-            "q2": null,
-            "q3": null,
+            "driver": "VER",
+            "fullName": "Max Verstappen",
+            "team": "Red Bull Racing",
+            "position": 3,
+            "q1": "1:35.864",
+            "q2": "1:35.294",
+            "q3": "1:34.448",
             "status": ""
           },
           {
             "driver": "PER",
             "fullName": "Sergio Perez",
             "team": "Red Bull Racing",
-            "position": null,
-            "q1": null,
-            "q2": null,
-            "q3": null,
+            "position": 4,
+            "q1": "1:36.163",
+            "q2": "1:35.864",
+            "q3": "1:34.645",
             "status": ""
           },
           {
             "driver": "HAM",
             "fullName": "Lewis Hamilton",
             "team": "Mercedes",
-            "position": null,
-            "q1": null,
-            "q2": null,
-            "q3": null,
-            "status": ""
-          },
-          {
-            "driver": "ALO",
-            "fullName": "Fernando Alonso",
-            "team": "Alpine",
-            "position": null,
-            "q1": null,
-            "q2": null,
-            "q3": null,
+            "position": 5,
+            "q1": "1:36.148",
+            "q2": "1:35.732",
+            "q3": "1:34.947",
             "status": ""
           },
           {
             "driver": "RUS",
             "fullName": "George Russell",
             "team": "Mercedes",
-            "position": null,
-            "q1": null,
-            "q2": null,
+            "position": 6,
+            "q1": "1:36.195",
+            "q2": "1:35.692",
+            "q3": "1:34.988",
+            "status": ""
+          },
+          {
+            "driver": "STR",
+            "fullName": "Lance Stroll",
+            "team": "Aston Martin",
+            "position": 7,
+            "q1": "1:36.860",
+            "q2": "1:36.032",
+            "q3": "1:35.598",
+            "status": ""
+          },
+          {
+            "driver": "NOR",
+            "fullName": "Lando Norris",
+            "team": "McLaren",
+            "position": 8,
+            "q1": "1:36.465",
+            "q2": "1:36.341",
+            "q3": "1:35.690",
+            "status": ""
+          },
+          {
+            "driver": "ALO",
+            "fullName": "Fernando Alonso",
+            "team": "Alpine",
+            "position": 9,
+            "q1": "1:36.446",
+            "q2": "1:35.988",
+            "q3": "1:35.876",
+            "status": ""
+          },
+          {
+            "driver": "BOT",
+            "fullName": "Valtteri Bottas",
+            "team": "Alfa Romeo",
+            "position": 10,
+            "q1": "1:36.746",
+            "q2": "1:36.321",
+            "q3": "1:36.319",
+            "status": ""
+          },
+          {
+            "driver": "ALB",
+            "fullName": "Alexander Albon",
+            "team": "Williams",
+            "position": 11,
+            "q1": "1:36.932",
+            "q2": "1:36.368",
             "q3": null,
             "status": ""
           },
@@ -7615,19 +8399,9 @@
             "driver": "VET",
             "fullName": "Sebastian Vettel",
             "team": "Aston Martin",
-            "position": null,
-            "q1": null,
-            "q2": null,
-            "q3": null,
-            "status": ""
-          },
-          {
-            "driver": "STR",
-            "fullName": "Lance Stroll",
-            "team": "Aston Martin",
-            "position": null,
-            "q1": null,
-            "q2": null,
+            "position": 12,
+            "q1": "1:36.695",
+            "q2": "1:36.398",
             "q3": null,
             "status": ""
           },
@@ -7635,39 +8409,29 @@
             "driver": "GAS",
             "fullName": "Pierre Gasly",
             "team": "AlphaTauri",
-            "position": null,
-            "q1": null,
-            "q2": null,
+            "position": 13,
+            "q1": "1:36.577",
+            "q2": "1:36.740",
             "q3": null,
             "status": ""
           },
           {
-            "driver": "BOT",
-            "fullName": "Valtteri Bottas",
+            "driver": "ZHO",
+            "fullName": "Guanyu Zhou",
             "team": "Alfa Romeo",
-            "position": null,
-            "q1": null,
-            "q2": null,
+            "position": 14,
+            "q1": "1:36.656",
+            "q2": "1:36.970",
             "q3": null,
             "status": ""
           },
           {
-            "driver": "NOR",
-            "fullName": "Lando Norris",
-            "team": "McLaren",
-            "position": null,
-            "q1": null,
-            "q2": null,
-            "q3": null,
-            "status": ""
-          },
-          {
-            "driver": "OCO",
-            "fullName": "Esteban Ocon",
-            "team": "Alpine",
-            "position": null,
-            "q1": null,
-            "q2": null,
+            "driver": "TSU",
+            "fullName": "Yuki Tsunoda",
+            "team": "AlphaTauri",
+            "position": 15,
+            "q1": "1:36.808",
+            "q2": "1:37.147",
             "q3": null,
             "status": ""
           },
@@ -7675,8 +8439,8 @@
             "driver": "MAG",
             "fullName": "Kevin Magnussen",
             "team": "Haas F1 Team",
-            "position": null,
-            "q1": null,
+            "position": 16,
+            "q1": "1:36.949",
             "q2": null,
             "q3": null,
             "status": ""
@@ -7685,38 +8449,18 @@
             "driver": "RIC",
             "fullName": "Daniel Ricciardo",
             "team": "McLaren",
-            "position": null,
-            "q1": null,
+            "position": 17,
+            "q1": "1:37.046",
             "q2": null,
             "q3": null,
             "status": ""
           },
           {
-            "driver": "TSU",
-            "fullName": "Yuki Tsunoda",
-            "team": "AlphaTauri",
-            "position": null,
-            "q1": null,
-            "q2": null,
-            "q3": null,
-            "status": ""
-          },
-          {
-            "driver": "ALB",
-            "fullName": "Alexander Albon",
-            "team": "Williams",
-            "position": null,
-            "q1": null,
-            "q2": null,
-            "q3": null,
-            "status": ""
-          },
-          {
-            "driver": "LAT",
-            "fullName": "Nicholas Latifi",
-            "team": "Williams",
-            "position": null,
-            "q1": null,
+            "driver": "OCO",
+            "fullName": "Esteban Ocon",
+            "team": "Alpine",
+            "position": 18,
+            "q1": "1:37.068",
             "q2": null,
             "q3": null,
             "status": ""
@@ -7725,18 +8469,18 @@
             "driver": "MSC",
             "fullName": "Mick Schumacher",
             "team": "Haas F1 Team",
-            "position": null,
-            "q1": null,
+            "position": 19,
+            "q1": "1:37.111",
             "q2": null,
             "q3": null,
             "status": ""
           },
           {
-            "driver": "ZHO",
-            "fullName": "Guanyu Zhou",
-            "team": "Alfa Romeo",
-            "position": null,
-            "q1": null,
+            "driver": "LAT",
+            "fullName": "Nicholas Latifi",
+            "team": "Williams",
+            "position": 20,
+            "q1": "1:37.244",
             "q2": null,
             "q3": null,
             "status": ""
@@ -7928,7 +8672,49 @@
           }
         ],
         "fastestLapDriver": "RUS",
-        "pitStops": []
+        "pitStops": [
+          {
+            "constructor": "RB F1 Team",
+            "fastestStop": 23.24
+          },
+          {
+            "constructor": "Red Bull Racing",
+            "fastestStop": 23.4
+          },
+          {
+            "constructor": "McLaren",
+            "fastestStop": 23.7
+          },
+          {
+            "constructor": "Ferrari",
+            "fastestStop": 23.75
+          },
+          {
+            "constructor": "Alpine",
+            "fastestStop": 23.87
+          },
+          {
+            "constructor": "Mercedes",
+            "fastestStop": 23.95
+          },
+          {
+            "constructor": "Williams",
+            "fastestStop": 24.2
+          },
+          {
+            "constructor": "Aston Martin",
+            "fastestStop": 24.31
+          },
+          {
+            "constructor": "Haas F1 Team",
+            "fastestStop": 24.65
+          },
+          {
+            "constructor": "Sauber",
+            "fastestStop": 25.01
+          }
+        ],
+        "driverOfTheDay": null
       }
     },
     {
@@ -7940,112 +8726,112 @@
       "qualifying": {
         "results": [
           {
+            "driver": "VER",
+            "fullName": "Max Verstappen",
+            "team": "Red Bull Racing",
+            "position": 1,
+            "q1": "1:19.222",
+            "q2": "1:18.566",
+            "q3": "1:17.775",
+            "status": ""
+          },
+          {
             "driver": "RUS",
             "fullName": "George Russell",
             "team": "Mercedes",
-            "position": null,
-            "q1": null,
-            "q2": null,
-            "q3": null,
+            "position": 2,
+            "q1": "1:19.583",
+            "q2": "1:18.565",
+            "q3": "1:18.079",
             "status": ""
           },
           {
             "driver": "HAM",
             "fullName": "Lewis Hamilton",
             "team": "Mercedes",
-            "position": null,
-            "q1": null,
-            "q2": null,
-            "q3": null,
-            "status": ""
-          },
-          {
-            "driver": "VER",
-            "fullName": "Max Verstappen",
-            "team": "Red Bull Racing",
-            "position": null,
-            "q1": null,
-            "q2": null,
-            "q3": null,
-            "status": ""
-          },
-          {
-            "driver": "LEC",
-            "fullName": "Charles Leclerc",
-            "team": "Ferrari",
-            "position": null,
-            "q1": null,
-            "q2": null,
-            "q3": null,
+            "position": 3,
+            "q1": "1:19.169",
+            "q2": "1:18.552",
+            "q3": "1:18.084",
             "status": ""
           },
           {
             "driver": "PER",
             "fullName": "Sergio Perez",
             "team": "Red Bull Racing",
-            "position": null,
-            "q1": null,
-            "q2": null,
-            "q3": null,
+            "position": 4,
+            "q1": "1:19.706",
+            "q2": "1:18.615",
+            "q3": "1:18.128",
             "status": ""
           },
           {
             "driver": "SAI",
             "fullName": "Carlos Sainz",
             "team": "Ferrari",
-            "position": null,
-            "q1": null,
-            "q2": null,
-            "q3": null,
-            "status": ""
-          },
-          {
-            "driver": "NOR",
-            "fullName": "Lando Norris",
-            "team": "McLaren",
-            "position": null,
-            "q1": null,
-            "q2": null,
-            "q3": null,
+            "position": 5,
+            "q1": "1:19.566",
+            "q2": "1:18.560",
+            "q3": "1:18.351",
             "status": ""
           },
           {
             "driver": "BOT",
             "fullName": "Valtteri Bottas",
             "team": "Alfa Romeo",
-            "position": null,
-            "q1": null,
-            "q2": null,
-            "q3": null,
+            "position": 6,
+            "q1": "1:19.523",
+            "q2": "1:18.762",
+            "q3": "1:18.401",
             "status": ""
           },
           {
-            "driver": "TSU",
-            "fullName": "Yuki Tsunoda",
-            "team": "AlphaTauri",
-            "position": null,
-            "q1": null,
-            "q2": null,
-            "q3": null,
+            "driver": "LEC",
+            "fullName": "Charles Leclerc",
+            "team": "Ferrari",
+            "position": 7,
+            "q1": "1:19.505",
+            "q2": "1:19.109",
+            "q3": "1:18.555",
             "status": ""
           },
           {
-            "driver": "ALB",
-            "fullName": "Alexander Albon",
-            "team": "Williams",
-            "position": null,
-            "q1": null,
-            "q2": null,
-            "q3": null,
+            "driver": "NOR",
+            "fullName": "Lando Norris",
+            "team": "McLaren",
+            "position": 8,
+            "q1": "1:19.857",
+            "q2": "1:19.119",
+            "q3": "1:18.721",
+            "status": ""
+          },
+          {
+            "driver": "ALO",
+            "fullName": "Fernando Alonso",
+            "team": "Alpine",
+            "position": 9,
+            "q1": "1:20.006",
+            "q2": "1:19.272",
+            "q3": "1:18.939",
             "status": ""
           },
           {
             "driver": "OCO",
             "fullName": "Esteban Ocon",
             "team": "Alpine",
-            "position": null,
-            "q1": null,
-            "q2": null,
+            "position": 10,
+            "q1": "1:19.945",
+            "q2": "1:19.081",
+            "q3": "1:19.010",
+            "status": ""
+          },
+          {
+            "driver": "RIC",
+            "fullName": "Daniel Ricciardo",
+            "team": "McLaren",
+            "position": 11,
+            "q1": "1:20.279",
+            "q2": "1:19.325",
             "q3": null,
             "status": ""
           },
@@ -8053,29 +8839,19 @@
             "driver": "ZHO",
             "fullName": "Guanyu Zhou",
             "team": "Alfa Romeo",
-            "position": null,
-            "q1": null,
-            "q2": null,
+            "position": 12,
+            "q1": "1:20.283",
+            "q2": "1:19.476",
             "q3": null,
             "status": ""
           },
           {
-            "driver": "ALO",
-            "fullName": "Fernando Alonso",
-            "team": "Alpine",
-            "position": null,
-            "q1": null,
-            "q2": null,
-            "q3": null,
-            "status": ""
-          },
-          {
-            "driver": "RIC",
-            "fullName": "Daniel Ricciardo",
-            "team": "McLaren",
-            "position": null,
-            "q1": null,
-            "q2": null,
+            "driver": "TSU",
+            "fullName": "Yuki Tsunoda",
+            "team": "AlphaTauri",
+            "position": 13,
+            "q1": "1:19.907",
+            "q2": "1:19.589",
             "q3": null,
             "status": ""
           },
@@ -8083,19 +8859,19 @@
             "driver": "GAS",
             "fullName": "Pierre Gasly",
             "team": "AlphaTauri",
-            "position": null,
-            "q1": null,
-            "q2": null,
+            "position": 14,
+            "q1": "1:20.256",
+            "q2": "1:19.672",
             "q3": null,
             "status": ""
           },
           {
-            "driver": "STR",
-            "fullName": "Lance Stroll",
-            "team": "Aston Martin",
-            "position": null,
-            "q1": null,
-            "q2": null,
+            "driver": "MAG",
+            "fullName": "Kevin Magnussen",
+            "team": "Haas F1 Team",
+            "position": 15,
+            "q1": "1:20.293",
+            "q2": "1:19.833",
             "q3": null,
             "status": ""
           },
@@ -8103,18 +8879,8 @@
             "driver": "MSC",
             "fullName": "Mick Schumacher",
             "team": "Haas F1 Team",
-            "position": null,
-            "q1": null,
-            "q2": null,
-            "q3": null,
-            "status": ""
-          },
-          {
-            "driver": "LAT",
-            "fullName": "Nicholas Latifi",
-            "team": "Williams",
-            "position": null,
-            "q1": null,
+            "position": 16,
+            "q1": "1:20.419",
             "q2": null,
             "q3": null,
             "status": ""
@@ -8123,18 +8889,38 @@
             "driver": "VET",
             "fullName": "Sebastian Vettel",
             "team": "Aston Martin",
-            "position": null,
-            "q1": null,
+            "position": 17,
+            "q1": "1:20.419",
             "q2": null,
             "q3": null,
             "status": ""
           },
           {
-            "driver": "MAG",
-            "fullName": "Kevin Magnussen",
-            "team": "Haas F1 Team",
-            "position": null,
-            "q1": null,
+            "driver": "STR",
+            "fullName": "Lance Stroll",
+            "team": "Aston Martin",
+            "position": 18,
+            "q1": "1:20.520",
+            "q2": null,
+            "q3": null,
+            "status": ""
+          },
+          {
+            "driver": "ALB",
+            "fullName": "Alexander Albon",
+            "team": "Williams",
+            "position": 19,
+            "q1": "1:20.859",
+            "q2": null,
+            "q3": null,
+            "status": ""
+          },
+          {
+            "driver": "LAT",
+            "fullName": "Nicholas Latifi",
+            "team": "Williams",
+            "position": 20,
+            "q1": "1:21.167",
             "q2": null,
             "q3": null,
             "status": ""
@@ -8326,7 +9112,49 @@
           }
         ],
         "fastestLapDriver": "RUS",
-        "pitStops": []
+        "pitStops": [
+          {
+            "constructor": "Ferrari",
+            "fastestStop": 22.19
+          },
+          {
+            "constructor": "McLaren",
+            "fastestStop": 22.28
+          },
+          {
+            "constructor": "Alpine",
+            "fastestStop": 22.34
+          },
+          {
+            "constructor": "RB F1 Team",
+            "fastestStop": 22.47
+          },
+          {
+            "constructor": "Red Bull Racing",
+            "fastestStop": 22.49
+          },
+          {
+            "constructor": "Aston Martin",
+            "fastestStop": 22.53
+          },
+          {
+            "constructor": "Mercedes",
+            "fastestStop": 22.8
+          },
+          {
+            "constructor": "Williams",
+            "fastestStop": 23.18
+          },
+          {
+            "constructor": "Haas F1 Team",
+            "fastestStop": 23.68
+          },
+          {
+            "constructor": "Sauber",
+            "fastestStop": 23.86
+          }
+        ],
+        "driverOfTheDay": null
       }
     },
     {
@@ -8545,181 +9373,181 @@
             "driver": "RUS",
             "fullName": "George Russell",
             "team": "Mercedes",
-            "grid": null,
+            "grid": 3,
             "position": 1,
-            "status": "",
-            "points": null
+            "status": "Finished",
+            "points": 8.0
           },
           {
             "driver": "SAI",
             "fullName": "Carlos Sainz",
             "team": "Ferrari",
-            "grid": null,
+            "grid": 5,
             "position": 2,
-            "status": "",
-            "points": null
+            "status": "Finished",
+            "points": 7.0
           },
           {
             "driver": "HAM",
             "fullName": "Lewis Hamilton",
             "team": "Mercedes",
-            "grid": null,
+            "grid": 8,
             "position": 3,
-            "status": "",
-            "points": null
+            "status": "Finished",
+            "points": 6.0
           },
           {
             "driver": "VER",
             "fullName": "Max Verstappen",
             "team": "Red Bull Racing",
-            "grid": null,
+            "grid": 2,
             "position": 4,
-            "status": "",
-            "points": null
+            "status": "Finished",
+            "points": 5.0
           },
           {
             "driver": "PER",
             "fullName": "Sergio Perez",
             "team": "Red Bull Racing",
-            "grid": null,
+            "grid": 9,
             "position": 5,
-            "status": "",
-            "points": null
+            "status": "Finished",
+            "points": 4.0
           },
           {
             "driver": "LEC",
             "fullName": "Charles Leclerc",
             "team": "Ferrari",
-            "grid": null,
+            "grid": 10,
             "position": 6,
-            "status": "",
-            "points": null
+            "status": "Finished",
+            "points": 3.0
           },
           {
             "driver": "NOR",
             "fullName": "Lando Norris",
             "team": "McLaren",
-            "grid": null,
+            "grid": 4,
             "position": 7,
-            "status": "",
-            "points": null
+            "status": "Finished",
+            "points": 2.0
           },
           {
             "driver": "MAG",
             "fullName": "Kevin Magnussen",
             "team": "Haas F1 Team",
-            "grid": null,
+            "grid": 1,
             "position": 8,
-            "status": "",
-            "points": null
+            "status": "Finished",
+            "points": 1.0
           },
           {
             "driver": "VET",
             "fullName": "Sebastian Vettel",
             "team": "Aston Martin",
-            "grid": null,
+            "grid": 13,
             "position": 9,
-            "status": "",
-            "points": null
+            "status": "Finished",
+            "points": 0.0
           },
           {
             "driver": "GAS",
             "fullName": "Pierre Gasly",
             "team": "AlphaTauri",
-            "grid": null,
+            "grid": 12,
             "position": 10,
-            "status": "",
-            "points": null
+            "status": "Finished",
+            "points": 0.0
           },
           {
             "driver": "RIC",
             "fullName": "Daniel Ricciardo",
             "team": "McLaren",
-            "grid": null,
+            "grid": 14,
             "position": 11,
-            "status": "",
-            "points": null
-          },
-          {
-            "driver": "STR",
-            "fullName": "Lance Stroll",
-            "team": "Aston Martin",
-            "grid": null,
-            "position": 12,
-            "status": "",
-            "points": null
+            "status": "Finished",
+            "points": 0.0
           },
           {
             "driver": "MSC",
             "fullName": "Mick Schumacher",
             "team": "Haas F1 Team",
-            "grid": null,
-            "position": 13,
-            "status": "",
-            "points": null
+            "grid": 20,
+            "position": 12,
+            "status": "Finished",
+            "points": 0.0
           },
           {
             "driver": "ZHO",
             "fullName": "Guanyu Zhou",
             "team": "Alfa Romeo",
-            "grid": null,
-            "position": 14,
-            "status": "",
-            "points": null
+            "grid": 17,
+            "position": 13,
+            "status": "Finished",
+            "points": 0.0
           },
           {
             "driver": "BOT",
             "fullName": "Valtteri Bottas",
             "team": "Alfa Romeo",
-            "grid": null,
-            "position": 15,
-            "status": "",
-            "points": null
-          },
-          {
-            "driver": "ALO",
-            "fullName": "Fernando Alonso",
-            "team": "Alpine",
-            "grid": null,
-            "position": 16,
-            "status": "",
-            "points": null
+            "grid": 18,
+            "position": 14,
+            "status": "Finished",
+            "points": 0.0
           },
           {
             "driver": "TSU",
             "fullName": "Yuki Tsunoda",
             "team": "AlphaTauri",
-            "grid": null,
-            "position": 17,
-            "status": "",
-            "points": null
+            "grid": 19,
+            "position": 15,
+            "status": "Finished",
+            "points": 0.0
+          },
+          {
+            "driver": "STR",
+            "fullName": "Lance Stroll",
+            "team": "Aston Martin",
+            "grid": 15,
+            "position": 16,
+            "status": "Finished",
+            "points": 0.0
           },
           {
             "driver": "OCO",
             "fullName": "Esteban Ocon",
             "team": "Alpine",
-            "grid": null,
+            "grid": 6,
+            "position": 17,
+            "status": "Finished",
+            "points": 0.0
+          },
+          {
+            "driver": "ALO",
+            "fullName": "Fernando Alonso",
+            "team": "Alpine",
+            "grid": 7,
             "position": 18,
-            "status": "",
-            "points": null
+            "status": "Finished",
+            "points": 0.0
           },
           {
             "driver": "LAT",
             "fullName": "Nicholas Latifi",
             "team": "Williams",
-            "grid": null,
+            "grid": 16,
             "position": 19,
-            "status": "",
-            "points": null
+            "status": "Finished",
+            "points": 0.0
           },
           {
             "driver": "ALB",
             "fullName": "Alexander Albon",
             "team": "Williams",
-            "grid": null,
+            "grid": 11,
             "position": 20,
-            "status": "",
-            "points": null
+            "status": "Retired",
+            "points": 0.0
           }
         ],
         "fastestLapDriver": "RUS"
@@ -8908,7 +9736,49 @@
           }
         ],
         "fastestLapDriver": "RUS",
-        "pitStops": []
+        "pitStops": [
+          {
+            "constructor": "Red Bull Racing",
+            "fastestStop": 22.87
+          },
+          {
+            "constructor": "RB F1 Team",
+            "fastestStop": 23.01
+          },
+          {
+            "constructor": "Ferrari",
+            "fastestStop": 23.12
+          },
+          {
+            "constructor": "Williams",
+            "fastestStop": 23.32
+          },
+          {
+            "constructor": "Mercedes",
+            "fastestStop": 23.41
+          },
+          {
+            "constructor": "Aston Martin",
+            "fastestStop": 23.47
+          },
+          {
+            "constructor": "Alpine",
+            "fastestStop": 23.48
+          },
+          {
+            "constructor": "Sauber",
+            "fastestStop": 23.91
+          },
+          {
+            "constructor": "Haas F1 Team",
+            "fastestStop": 24.49
+          },
+          {
+            "constructor": "McLaren",
+            "fastestStop": 24.67
+          }
+        ],
+        "driverOfTheDay": null
       }
     },
     {
@@ -8920,122 +9790,112 @@
       "qualifying": {
         "results": [
           {
-            "driver": "PER",
-            "fullName": "Sergio Perez",
-            "team": "Red Bull Racing",
-            "position": null,
-            "q1": null,
-            "q2": null,
-            "q3": null,
-            "status": ""
-          },
-          {
             "driver": "VER",
             "fullName": "Max Verstappen",
             "team": "Red Bull Racing",
-            "position": null,
-            "q1": null,
-            "q2": null,
-            "q3": null,
+            "position": 1,
+            "q1": "1:24.754",
+            "q2": "1:24.622",
+            "q3": "1:23.824",
             "status": ""
           },
           {
-            "driver": "HAM",
-            "fullName": "Lewis Hamilton",
-            "team": "Mercedes",
-            "position": null,
-            "q1": null,
-            "q2": null,
-            "q3": null,
-            "status": ""
-          },
-          {
-            "driver": "RUS",
-            "fullName": "George Russell",
-            "team": "Mercedes",
-            "position": null,
-            "q1": null,
-            "q2": null,
-            "q3": null,
-            "status": ""
-          },
-          {
-            "driver": "NOR",
-            "fullName": "Lando Norris",
-            "team": "McLaren",
-            "position": null,
-            "q1": null,
-            "q2": null,
-            "q3": null,
+            "driver": "PER",
+            "fullName": "Sergio Perez",
+            "team": "Red Bull Racing",
+            "position": 2,
+            "q1": "1:24.820",
+            "q2": "1:24.419",
+            "q3": "1:24.052",
             "status": ""
           },
           {
             "driver": "LEC",
             "fullName": "Charles Leclerc",
             "team": "Ferrari",
-            "position": null,
-            "q1": null,
-            "q2": null,
-            "q3": null,
+            "position": 3,
+            "q1": "1:25.211",
+            "q2": "1:24.517",
+            "q3": "1:24.092",
             "status": ""
           },
           {
             "driver": "SAI",
             "fullName": "Carlos Sainz",
             "team": "Ferrari",
-            "position": null,
-            "q1": null,
-            "q2": null,
-            "q3": null,
+            "position": 4,
+            "q1": "1:25.090",
+            "q2": "1:24.521",
+            "q3": "1:24.242",
             "status": ""
           },
           {
-            "driver": "RIC",
-            "fullName": "Daniel Ricciardo",
+            "driver": "HAM",
+            "fullName": "Lewis Hamilton",
+            "team": "Mercedes",
+            "position": 5,
+            "q1": "1:25.594",
+            "q2": "1:24.774",
+            "q3": "1:24.508",
+            "status": ""
+          },
+          {
+            "driver": "RUS",
+            "fullName": "George Russell",
+            "team": "Mercedes",
+            "position": 6,
+            "q1": "1:25.545",
+            "q2": "1:24.940",
+            "q3": "1:24.511",
+            "status": ""
+          },
+          {
+            "driver": "NOR",
+            "fullName": "Lando Norris",
             "team": "McLaren",
-            "position": null,
-            "q1": null,
-            "q2": null,
-            "q3": null,
-            "status": ""
-          },
-          {
-            "driver": "VET",
-            "fullName": "Sebastian Vettel",
-            "team": "Aston Martin",
-            "position": null,
-            "q1": null,
-            "q2": null,
-            "q3": null,
-            "status": ""
-          },
-          {
-            "driver": "ALB",
-            "fullName": "Alexander Albon",
-            "team": "Williams",
-            "position": null,
-            "q1": null,
-            "q2": null,
-            "q3": null,
+            "position": 7,
+            "q1": "1:25.387",
+            "q2": "1:24.903",
+            "q3": "1:24.769",
             "status": ""
           },
           {
             "driver": "OCO",
             "fullName": "Esteban Ocon",
             "team": "Alpine",
-            "position": null,
-            "q1": null,
-            "q2": null,
-            "q3": null,
+            "position": 8,
+            "q1": "1:25.735",
+            "q2": "1:25.007",
+            "q3": "1:24.830",
+            "status": ""
+          },
+          {
+            "driver": "VET",
+            "fullName": "Sebastian Vettel",
+            "team": "Aston Martin",
+            "position": 9,
+            "q1": "1:25.523",
+            "q2": "1:24.974",
+            "q3": "1:24.961",
+            "status": ""
+          },
+          {
+            "driver": "RIC",
+            "fullName": "Daniel Ricciardo",
+            "team": "McLaren",
+            "position": 10,
+            "q1": "1:25.766",
+            "q2": "1:25.068",
+            "q3": "1:25.045",
             "status": ""
           },
           {
             "driver": "ALO",
             "fullName": "Fernando Alonso",
             "team": "Alpine",
-            "position": null,
-            "q1": null,
-            "q2": null,
+            "position": 11,
+            "q1": "1:25.782",
+            "q2": "1:25.096",
             "q3": null,
             "status": ""
           },
@@ -9043,18 +9903,48 @@
             "driver": "TSU",
             "fullName": "Yuki Tsunoda",
             "team": "AlphaTauri",
-            "position": null,
-            "q1": null,
-            "q2": null,
+            "position": 12,
+            "q1": "1:25.630",
+            "q2": "1:25.219",
             "q3": null,
             "status": ""
           },
           {
-            "driver": "BOT",
-            "fullName": "Valtteri Bottas",
+            "driver": "MSC",
+            "fullName": "Mick Schumacher",
+            "team": "Haas F1 Team",
+            "position": 13,
+            "q1": "1:25.711",
+            "q2": "1:25.225",
+            "q3": null,
+            "status": ""
+          },
+          {
+            "driver": "STR",
+            "fullName": "Lance Stroll",
+            "team": "Aston Martin",
+            "position": 14,
+            "q1": "1:25.741",
+            "q2": "1:25.359",
+            "q3": null,
+            "status": ""
+          },
+          {
+            "driver": "ZHO",
+            "fullName": "Guanyu Zhou",
             "team": "Alfa Romeo",
-            "position": null,
-            "q1": null,
+            "position": 15,
+            "q1": "1:25.594",
+            "q2": "1:25.408",
+            "q3": null,
+            "status": ""
+          },
+          {
+            "driver": "MAG",
+            "fullName": "Kevin Magnussen",
+            "team": "Haas F1 Team",
+            "position": 16,
+            "q1": "1:25.834",
             "q2": null,
             "q3": null,
             "status": ""
@@ -9063,48 +9953,28 @@
             "driver": "GAS",
             "fullName": "Pierre Gasly",
             "team": "AlphaTauri",
-            "position": null,
-            "q1": null,
+            "position": 17,
+            "q1": "1:25.859",
             "q2": null,
             "q3": null,
             "status": ""
           },
           {
-            "driver": "STR",
-            "fullName": "Lance Stroll",
-            "team": "Aston Martin",
-            "position": null,
-            "q1": null,
-            "q2": null,
-            "q3": null,
-            "status": ""
-          },
-          {
-            "driver": "MAG",
-            "fullName": "Kevin Magnussen",
-            "team": "Haas F1 Team",
-            "position": null,
-            "q1": null,
-            "q2": null,
-            "q3": null,
-            "status": ""
-          },
-          {
-            "driver": "MSC",
-            "fullName": "Mick Schumacher",
-            "team": "Haas F1 Team",
-            "position": null,
-            "q1": null,
-            "q2": null,
-            "q3": null,
-            "status": ""
-          },
-          {
-            "driver": "ZHO",
-            "fullName": "Guanyu Zhou",
+            "driver": "BOT",
+            "fullName": "Valtteri Bottas",
             "team": "Alfa Romeo",
-            "position": null,
-            "q1": null,
+            "position": 18,
+            "q1": "1:25.892",
+            "q2": null,
+            "q3": null,
+            "status": ""
+          },
+          {
+            "driver": "ALB",
+            "fullName": "Alexander Albon",
+            "team": "Williams",
+            "position": 19,
+            "q1": "1:26.028",
             "q2": null,
             "q3": null,
             "status": ""
@@ -9113,8 +9983,8 @@
             "driver": "LAT",
             "fullName": "Nicholas Latifi",
             "team": "Williams",
-            "position": null,
-            "q1": null,
+            "position": 20,
+            "q1": "1:26.054",
             "q2": null,
             "q3": null,
             "status": ""
@@ -9306,7 +10176,49 @@
           }
         ],
         "fastestLapDriver": "NOR",
-        "pitStops": []
+        "pitStops": [
+          {
+            "constructor": "Mercedes",
+            "fastestStop": 21.27
+          },
+          {
+            "constructor": "Red Bull Racing",
+            "fastestStop": 21.36
+          },
+          {
+            "constructor": "McLaren",
+            "fastestStop": 21.56
+          },
+          {
+            "constructor": "Ferrari",
+            "fastestStop": 21.57
+          },
+          {
+            "constructor": "RB F1 Team",
+            "fastestStop": 21.59
+          },
+          {
+            "constructor": "Alpine",
+            "fastestStop": 21.73
+          },
+          {
+            "constructor": "Williams",
+            "fastestStop": 21.79
+          },
+          {
+            "constructor": "Aston Martin",
+            "fastestStop": 21.8
+          },
+          {
+            "constructor": "Haas F1 Team",
+            "fastestStop": 22.28
+          },
+          {
+            "constructor": "Sauber",
+            "fastestStop": 22.43
+          }
+        ],
+        "driverOfTheDay": null
       }
     }
   ]

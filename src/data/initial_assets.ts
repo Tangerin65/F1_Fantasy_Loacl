@@ -42,12 +42,17 @@ export const CONSTRUCTOR_SEEDS: ConstructorSeed[] = [
   { name: 'Mercedes', defaultPrice: 22.8 },
   { name: 'Aston Martin', defaultPrice: 16.4 },
   { name: 'Alpine', defaultPrice: 12.2 },
+  { name: 'Renault', defaultPrice: 12.2 },
   { name: 'Williams', defaultPrice: 11.4 },
   { name: 'RB F1 Team', defaultPrice: 10.7 },
   { name: 'AlphaTauri', defaultPrice: 10.7 },
   { name: 'Toro Rosso', defaultPrice: 10.7 },
   { name: 'Haas F1 Team', defaultPrice: 9.8 },
   { name: 'Stake F1 Team Kick Sauber', defaultPrice: 8.9 },
+  { name: 'Sauber', defaultPrice: 8.9 },
+  { name: 'Alfa Romeo Sauber', defaultPrice: 8.9 },
+  { name: 'Racing Point', defaultPrice: 12.5 },
+  { name: 'Force India', defaultPrice: 12.5 },
 ]
 
 export const DRIVER_SEED_MAP = new Map(DRIVER_SEEDS.map((seed) => [seed.abbreviation, seed]))
@@ -92,18 +97,42 @@ const normalizeName = (raw: string, season?: number): string => {
   if (lower.includes('ferrari')) return 'Ferrari'
   if (lower.includes('mclaren')) return 'McLaren'
   if (lower.includes('mercedes')) return 'Mercedes'
-  if (lower.includes('aston martin')) return 'Aston Martin'
-  if (lower.includes('alpine')) return 'Alpine'
   if (lower.includes('williams')) return 'Williams'
-  if (isRbFamily(lower)) return season ? rbFamilyName(season) : 'RB F1 Team'
   if (lower.includes('haas')) return 'Haas F1 Team'
+  if (isRbFamily(lower)) return season ? rbFamilyName(season) : 'RB F1 Team'
+
+  // Sauber / Alfa Romeo — "Alfa Romeo Sauber" in 2018-2021
   if (
     lower.includes('sauber') ||
     lower.includes('alfa romeo') ||
     lower.includes('alfa') ||
     lower.includes('kick') ||
     lower.includes('stake')
-  ) return 'Sauber'
+  ) {
+    if (season && season >= 2018 && season <= 2021) return 'Alfa Romeo Sauber'
+    return 'Sauber'
+  }
+
+  // Alpine → Renault (the team was called Renault until 2020)
+  if (lower.includes('alpine')) {
+    if (season && season <= 2020) return 'Renault'
+    return 'Alpine'
+  }
+
+  // Aston Martin → Racing Point (2019-2020, before the works team returned)
+  if (lower.includes('aston martin')) {
+    if (season && season >= 2019 && season <= 2020) return 'Racing Point'
+    return 'Aston Martin'
+  }
+
+  // Racing Point → Force India in 2018
+  if (lower.includes('racing point')) {
+    if (season && season === 2018) return 'Force India'
+    return 'Racing Point'
+  }
+
+  if (lower.includes('force india')) return 'Force India'
+  if (lower.includes('renault')) return 'Renault'
   return raw
 }
 

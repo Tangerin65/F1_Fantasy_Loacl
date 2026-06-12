@@ -341,18 +341,42 @@ const getQualifyingConstructorBonus = (
     if (lower.includes('ferrari')) return 'Ferrari' === constructorName
     if (lower.includes('mclaren')) return 'McLaren' === constructorName
     if (lower.includes('mercedes')) return 'Mercedes' === constructorName
-    if (lower.includes('aston martin')) return 'Aston Martin' === constructorName
-    if (lower.includes('alpine')) return 'Alpine' === constructorName
     if (lower.includes('williams')) return 'Williams' === constructorName
-    if (isRbFamily(lower)) return (season ? rbFamilyName(season) : 'RB F1 Team') === constructorName
     if (lower.includes('haas')) return 'Haas F1 Team' === constructorName
+    if (isRbFamily(lower)) return (season ? rbFamilyName(season) : 'RB F1 Team') === constructorName
+
+    // Sauber / Alfa Romeo — "Alfa Romeo Sauber" in 2018-2021
     if (
       lower.includes('sauber') ||
       lower.includes('alfa romeo') ||
       lower.includes('alfa') ||
       lower.includes('kick') ||
       lower.includes('stake')
-    ) return 'Sauber' === constructorName
+    ) {
+      if (season && season >= 2018 && season <= 2021) return 'Alfa Romeo Sauber' === constructorName
+      return 'Sauber' === constructorName
+    }
+
+    // Alpine → Renault (the team was called Renault until 2020)
+    if (lower.includes('alpine')) {
+      if (season && season <= 2020) return 'Renault' === constructorName
+      return 'Alpine' === constructorName
+    }
+
+    // Aston Martin → Racing Point (2019-2020)
+    if (lower.includes('aston martin')) {
+      if (season && season >= 2019 && season <= 2020) return 'Racing Point' === constructorName
+      return 'Aston Martin' === constructorName
+    }
+
+    // Racing Point → Force India in 2018
+    if (lower.includes('racing point')) {
+      if (season && season === 2018) return 'Force India' === constructorName
+      return 'Racing Point' === constructorName
+    }
+
+    if (lower.includes('force india')) return 'Force India' === constructorName
+    if (lower.includes('renault')) return 'Renault' === constructorName
     return entry.team === constructorName
   })
   const q2Count = constructorResults.filter((entry) => Boolean(entry.q2)).length
@@ -389,10 +413,11 @@ const scoreSprintDriver = (
   return positionPoints + movementPoints + fastestLapPoints + dnfPenalty
 }
 
-const scoreRaceDriver = (result: RaceResult, fastestLapDriver: string) => {
+const scoreRaceDriver = (result: RaceResult, fastestLapDriver: string, driverOfTheDay: string | null) => {
   const positionPoints = getRacePositionPoints(result.position)
   const movementPoints = getPositionDeltaPoints(result.grid, result.position)
   const fastestLapPoints = result.driver === fastestLapDriver ? 10 : 0
+  const dotdPoints = result.driver === driverOfTheDay ? 10 : 0
   const retirementPenalty = isDsqStatus(result.status)
     ? -20
     : !isFinishedStatus(result.status)
@@ -400,9 +425,10 @@ const scoreRaceDriver = (result: RaceResult, fastestLapDriver: string) => {
       : 0
 
   return {
-    total: positionPoints + movementPoints + fastestLapPoints + retirementPenalty,
-    withoutFastestLap: positionPoints + movementPoints + retirementPenalty,
+    total: positionPoints + movementPoints + fastestLapPoints + dotdPoints + retirementPenalty,
+    constructorApplicablePoints: positionPoints + movementPoints + retirementPenalty,
     fastestLapPoints,
+    dotdPoints,
   }
 }
 
@@ -462,6 +488,7 @@ const getSprintBreakdown = (
 const getRaceBreakdown = (
   result: RaceResult,
   fastestLapDriver: string,
+  driverOfTheDay: string | null,
 ): ScoreBreakdownItem[] => {
   const items: ScoreBreakdownItem[] = []
 
@@ -484,6 +511,10 @@ const getRaceBreakdown = (
     items.push({ label: 'Race fastest lap', labelZh: '正赛最快圈速', points: 10 })
   }
 
+  if (result.driver === driverOfTheDay) {
+    items.push({ label: 'Driver of the Day', labelZh: '今日最佳车手', points: 10 })
+  }
+
   if (isDsqStatus(result.status)) {
     items.push({ label: 'Disqualified (DSQ)', labelZh: '取消正赛资格 (DSQ)', points: -20 })
   } else if (!isFinishedStatus(result.status)) {
@@ -494,6 +525,8 @@ const getRaceBreakdown = (
 }
 
 const buildDriverScoreMap = (roundData: RoundData) => {
+  const driverOfTheDay = roundData.race.driverOfTheDay ?? null
+
   const qualifyingMap = new Map(
     roundData.qualifying.results.map((entry) => [entry.driver, scoreQualifyingDriver(entry)]),
   )
@@ -506,7 +539,7 @@ const buildDriverScoreMap = (roundData: RoundData) => {
   )
 
   const raceMap = new Map(
-    roundData.race.results.map((entry) => [entry.driver, scoreRaceDriver(entry, roundData.race.fastestLapDriver)]),
+    roundData.race.results.map((entry) => [entry.driver, scoreRaceDriver(entry, roundData.race.fastestLapDriver, driverOfTheDay)]),
   )
 
   // Build detailed breakdowns per driver from raw results.
@@ -522,7 +555,7 @@ const buildDriverScoreMap = (roundData: RoundData) => {
   const raceBreakdownMap = new Map(
     roundData.race.results.map((entry) => [
       entry.driver,
-      getRaceBreakdown(entry, roundData.race.fastestLapDriver),
+      getRaceBreakdown(entry, roundData.race.fastestLapDriver, driverOfTheDay),
     ]),
   )
 
@@ -564,18 +597,42 @@ const buildConstructorScoreMap = (roundData: RoundData, season?: number) => {
     if (lower.includes('ferrari')) return 'Ferrari'
     if (lower.includes('mclaren')) return 'McLaren'
     if (lower.includes('mercedes')) return 'Mercedes'
-    if (lower.includes('aston martin')) return 'Aston Martin'
-    if (lower.includes('alpine')) return 'Alpine'
     if (lower.includes('williams')) return 'Williams'
-    if (isRbFamily(lower)) return season ? rbFamilyName(season) : 'RB F1 Team'
     if (lower.includes('haas')) return 'Haas F1 Team'
+    if (isRbFamily(lower)) return season ? rbFamilyName(season) : 'RB F1 Team'
+
+    // Sauber / Alfa Romeo — "Alfa Romeo Sauber" in 2018-2021
     if (
       lower.includes('sauber') ||
       lower.includes('alfa romeo') ||
       lower.includes('alfa') ||
       lower.includes('kick') ||
       lower.includes('stake')
-    ) return 'Sauber'
+    ) {
+      if (season && season >= 2018 && season <= 2021) return 'Alfa Romeo Sauber'
+      return 'Sauber'
+    }
+
+    // Alpine → Renault (the team was called Renault until 2020)
+    if (lower.includes('alpine')) {
+      if (season && season <= 2020) return 'Renault'
+      return 'Alpine'
+    }
+
+    // Aston Martin → Racing Point (2019-2020, before the works team returned)
+    if (lower.includes('aston martin')) {
+      if (season && season >= 2019 && season <= 2020) return 'Racing Point'
+      return 'Aston Martin'
+    }
+
+    // Racing Point → Force India in 2018
+    if (lower.includes('racing point')) {
+      if (season && season === 2018) return 'Force India'
+      return 'Racing Point'
+    }
+
+    if (lower.includes('force india')) return 'Force India'
+    if (lower.includes('renault')) return 'Renault'
     return raw
   }
 
@@ -651,8 +708,8 @@ const buildConstructorScoreMap = (roundData: RoundData, season?: number) => {
     const raceTeam = normalizeName(raceResult.team)
     ensureEntry(raceTeam)
     const score = constructorScores.get(raceTeam)!
-    const raceDriverScore = scoreRaceDriver(raceResult, roundData.race.fastestLapDriver)
-    score.racePoints += raceDriverScore.withoutFastestLap
+    const raceDriverScore = scoreRaceDriver(raceResult, roundData.race.fastestLapDriver, roundData.race.driverOfTheDay ?? null)
+    score.racePoints += raceDriverScore.constructorApplicablePoints
 
     const delta = raceResult.grid - raceResult.position
     let raceLabel = `${raceResult.driver} — Race P${raceResult.position}`
@@ -668,7 +725,7 @@ const buildConstructorScoreMap = (roundData: RoundData, season?: number) => {
     raceItems.get(raceTeam)!.push({
       label: raceLabel,
       labelZh: raceLabelZh,
-      points: raceDriverScore.withoutFastestLap,
+      points: raceDriverScore.constructorApplicablePoints,
     })
 
     const pitInfo = pitStopRanking.get(raceTeam)
