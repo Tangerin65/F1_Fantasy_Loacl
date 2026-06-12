@@ -816,6 +816,13 @@
   opacity: 0.62;
 }
 
+.market-row--team,
+.roster-row--team {
+  border-color: transparent;
+  background-clip: border-box;
+  overflow: hidden;
+}
+
 .roster-row--team .secondary-button,
 .market-row--team .action-button {
   border-color: rgba(255, 255, 255, 0.22);

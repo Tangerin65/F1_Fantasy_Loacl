@@ -223,4 +223,4 @@ export const MAX_FREE_TRANSFERS = 3;
 export const TRANSFER_PENALTY = -10;
 export const PRICE_FLOOR = 3.0;   // $3M minimum
 export const PRICE_CEILING = 35.0; // $35M maximum
-export const PRICE_MAX_CHANGE = 1.5; // max $1.5M change per round
+export const PRICE_MAX_CHANGE = 1.0; // max $1.0M change per round

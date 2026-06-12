@@ -368,9 +368,10 @@ Windows 批处理快捷方式，等价于 `npm run dev`，用于在 Windows 环�
 枚举所有 5 车手 + 2 车队组合，在预算内最大化风格加权分函数。
 
 **动态定价（`adjustPrices`）：**
-每个资产价格根据 3 场滚动平均得分与期望得分的差值调整，最大幅度 ±\$1.5M。
-- 车手期望分 = 价格 × 0.95
-- 车队期望分 = 价格 × 1.08
+每个资产价格根据 3 场滚动平均得分与期望得分的差值调整，最大幅度 ±\$1.0M，并在接近价格上下限时自动阻尼，避免赛季中后段价格过度两极分化。
+- 车手期望分 = 价格 × 1.00
+- 车队期望分 = 价格 × 1.45
+- 低价资产带有保护：低于 \$6M 时降价放缓，低于 \$5M 且近期非负分时不再继续下探
 
 #### `src/context/useGame.ts`
 **React Context 消费者 Hook。** 一行封装：`useContext(GameContext)`。所有视图组件通过此 Hook 访问游戏状态和操作，无需手动引入 Context。
@@ -749,10 +750,12 @@ FastF1 库的 HTTP 响应缓存（SQLite 格式），加速数据重新提取。
 
 ```
 rolling_avg = 最近 3 场得分平均值
-expected = price × coefficient (车手 0.95, 车队 1.08)
-delta = rolling_avg - expected
-price_change = clamp(delta / coefficient, -1.5, 1.5)  // 单位: $M
-new_price = max(price + price_change, floor_price)
+expected = price × coefficient (车手 1.00, 车队 1.45)
+raw_delta = (rolling_avg - expected) / 12
+limit_damping = 接近价格上限/下限时递减，最低保留 20% 调整强度
+protected_delta = 低价资产降价保护（低于 $6M 放缓，低于 $5M 且非负分则停止降价）
+price_change = clamp(raw_delta × limit_damping，经低价保护, -1.0, 1.0)  // 单位: $M
+new_price = clamp(price + price_change, floor_price, ceiling_price)
 ```
 
 ### 12.3 AI 建队算法 (`buildOpeningRoster`)

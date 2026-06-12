@@ -28,7 +28,7 @@
 
 #### 2.1 阵容与资金
 - **初始阵容**：100M 初始预算，挑选 5 位车手 + 2 支车队。
-- **动态身价**：根据车手/车队在过去三站的真实表现（3-GP Rolling Form），与他们的期望得分对比进行动态涨跌，单次涨跌幅在 ±$1.5M 之间。
+- **动态身价**：根据车手/车队在过去三站的真实表现（3-GP Rolling Form），与他们的期望得分对比进行动态涨跌；单次涨跌幅限制为 ±$1.0M，并加入接近价格上下限的阻尼与低价保护，避免赛季中后段身价过度两极分化。
 
 #### 2.2 积分系统 (Scoring)
 - **排位赛 (Qualifying)**：根据排位赛最终名次给分（1-10名依次递减）。如果未能做出有效成绩或被取消资格(DSQ)会扣分。车队还将获得旗下两位车手晋级 Q2/Q3 的额外加分。
@@ -96,7 +96,7 @@ This simulator recreates the authentic F1 Fantasy experience. All scoring is per
 
 #### 2.1 Garage & Budget
 - **Lineup**: Start with a `$100M` budget to draft 5 drivers + 2 constructors.
-- **Dynamic Pricing**: Asset prices adjust based on their real-world performance over the last 3 races (3-GP Rolling Form) compared to their expected points, shifting up to ±$1.5M per round.
+- **Dynamic Pricing**: Asset prices adjust based on their real-world performance over the last 3 races (3-GP Rolling Form) compared to their expected points; per-round movement is capped at ±$1.0M with near-limit damping and low-price protection to avoid excessive mid/late-season price polarization.
 
 #### 2.2 Scoring System
 - **Qualifying**: Points are awarded based on final positions (1st to 10th). Penalty points for DNF/DSQ. Constructors get bonus points if their drivers advance to Q2/Q3.

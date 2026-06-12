@@ -1260,6 +1260,39 @@ const applyAiStrategy = (
   return nextManager
 }
 
+const getPriceExpectation = (price: number, kind: 'driver' | 'constructor') =>
+  price * (kind === 'driver' ? 1.0 : 1.45)
+
+const getPriceLimitDamping = (price: number, delta: number) => {
+  const priceRange = PRICE_CEILING - PRICE_FLOOR
+  if (priceRange <= 0 || delta === 0) {
+    return 1
+  }
+
+  const distance = delta > 0 ? PRICE_CEILING - price : price - PRICE_FLOOR
+  return Math.max(0.2, Math.min(1, distance / priceRange))
+}
+
+const getLowPriceProtection = (price: number, delta: number, average: number) => {
+  if (delta >= 0) {
+    return delta
+  }
+
+  if (price < 4) {
+    return average < 0 ? delta * 0.35 : 0
+  }
+
+  if (price < 5 && average >= 0) {
+    return 0
+  }
+
+  if (price < 6) {
+    return delta * 0.5
+  }
+
+  return delta
+}
+
 const adjustPrices = <TAsset extends DriverAsset | ConstructorAsset>(
   assets: TAsset[],
   kind: 'driver' | 'constructor',
@@ -1268,10 +1301,13 @@ const adjustPrices = <TAsset extends DriverAsset | ConstructorAsset>(
     const average =
       asset.recentScores.reduce((sum, score) => sum + score, 0) /
       Math.max(1, asset.recentScores.length)
-    const expected = kind === 'driver' ? asset.price * 0.95 : asset.price * 1.08
+    const expected = getPriceExpectation(asset.price, kind)
+    const rawDelta = (average - expected) / 12
+    const dampedDelta = rawDelta * getPriceLimitDamping(asset.price, rawDelta)
+    const protectedDelta = getLowPriceProtection(asset.price, dampedDelta, average)
     const delta = Math.max(
       -PRICE_MAX_CHANGE,
-      Math.min(PRICE_MAX_CHANGE, (average - expected) / 12),
+      Math.min(PRICE_MAX_CHANGE, protectedDelta),
     )
     const newPrice = clampPrice(asset.price + delta)
 
