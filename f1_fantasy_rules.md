@@ -1,127 +1,227 @@
-# F1 Fantasy 本地版官方游戏规则 (基于 FastF1 数据集微调版)
+<!-- en -->
+# F1 Fantasy — Game Rules
 
-本游戏完全基于 **FastF1 Python API** 获取的真实历史赛季数据（2018-2025）进行积分计算与数值结算。由于 FastF1 提供的原始数据结构不同于商业转播统计，本规则对 F1 官方 Fantasy 的积分模型进行了针对性的微调，以保证**数据 100% 取材于 FastF1 接口且结算结果完全精确**。
+## 1. Season & Team Setup
 
----
-
-## 1. 赛季与阵容基础设定
-
-*   **游戏模式**：玩家选择 2018–2025 中的一个完整历史赛季。
-*   **车队阵容 (Roster)**：5 名车手 (Drivers) + 2 家车队/制造厂商 (Constructors)。
-*   **资金预算 (Budget)**：初始为 **$100,000,000 ($100M)**。
-*   **动态身价机制 (Dynamic Pricing)**：
-    *   车手与车队的初始价格根据赛季首站的真实战力进行科学定价。
-    *   在每站比赛结束后，系统将重新计算过去 **三站大奖赛的 Fantasy 平均积分 (3-GP Rolling Form)**，并与该资产的期望积分（身价越高，期望越高）进行比对，动态微调身价（每次变动区间为 $\pm \$1.5\text{M}$，身价下限为 $\$3.0\text{M}$，上限为 $\$35.0\text{M}$）。
+*   **Game Mode**: Choose any complete historical season from **2018–2025**.
+*   **Team Roster**: **5 Drivers** + **2 Constructors** (teams).
+*   **Starting Budget**: **$100,000,000 ($100M)**.
+*   **Dynamic Pricing**:
+    *   Driver and constructor prices are set based on their real performance at the start of the season.
+    *   After each race, prices are adjusted based on the **3-race rolling average** of Fantasy points scored. The higher the price, the higher the expected return.
+    *   Price changes are capped at **±$1.5M** per race, with a floor of **$3.0M** and a ceiling of **$35.0M**.
 
 ---
 
-## 2. 积分系统 (Scoring System)
+## 2. Scoring System
 
-积分计算完全基于 FastF1 中 `session.results`、`session.laps` 和 `session.pit_stops` 导出的数据。
+### 2.1 Qualifying
 
-### 2.1 排位赛积分 (Qualifying - Q)
-基于排位赛最终名次与车手在 Q1/Q2/Q3 中做出的成绩进行统计。
+#### Driver Qualifying Position Points
+*   **1st (Pole)** — 10 pts
+*   **2nd** — 9 pts
+*   **3rd** — 8 pts
+*   **4th** — 7 pts
+*   **5th** — 6 pts
+*   **6th** — 5 pts
+*   **7th** — 4 pts
+*   **8th** — 3 pts
+*   **9th** — 2 pts
+*   **10th** — 1 pt
+*   **11th–20th** — 0 pts
+*   **No time set in Q1** — –5 pts
+*   **Disqualified (DSQ)** — –5 pts
+
+#### Constructor Qualifying Bonus
+Constructors receive the sum of both drivers' qualifying position points, plus a bonus based on how far both drivers advanced *(only the highest tier applies)*:
+*   **Both drivers eliminated in Q1** — –1 pt
+*   **One driver reached Q2** — +1 pt
+*   **Both drivers reached Q2** — +3 pts
+*   **One driver reached Q3** — +5 pts
+*   **Both drivers reached Q3** — +10 pts
+
+---
+
+### 2.2 Sprint Race *(Sprint weekends only)*
+
+#### Sprint Finishing Position Points (Top 8)
+*   **1st–8th** — 8, 7, 6, 5, 4, 3, 2, 1 pts respectively.
+*   **9th–20th** — 0 pts.
+
+#### Sprint Bonus & Penalty Points
+*   **Positions Gained** (finish vs. grid) — **+1 pt** per position gained.
+*   **Positions Lost** (finish vs. grid) — **–1 pt** per position lost *(max penalty: –10 pts)*.
+*   **Fastest Lap** — **+5 pts**.
+*   **Did Not Finish (DNF)** — **–10 pts**.
+
+---
+
+### 2.3 Grand Prix Race
+
+#### Race Finishing Position Points (Top 10)
+*   **1st–10th** — 25, 18, 15, 12, 10, 8, 6, 4, 2, 1 pts respectively.
+*   **11th–20th** — 0 pts.
+
+#### Race Bonus & Penalty Points
+*   **Positions Gained** (finish vs. grid) — **+1 pt** per position gained.
+*   **Positions Lost** (finish vs. grid) — **–1 pt** per position lost *(max penalty: –10 pts)*.
+*   **Fastest Lap** — **+10 pts**.
+*   **DNF** — **–20 pts**.
+*   **DSQ** — **–20 pts**.
+*   **Driver of the Day (DOTD)** — **+10 pts**. This bonus is awarded to **one driver only** and counts **only toward the driver's individual score** — it does **not** count toward their constructor's points.
+
+---
+
+### 2.4 Constructor Race Points & Pit Stops
+
+A constructor's race score is calculated as:
+**Driver A's base race points + Driver B's base race points + Pit Stop bonus**
+
+> Fastest Lap and Driver of the Day bonuses are **individual driver achievements** and do **not** count toward constructor points.
+
+#### Pit Stop Performance
+After each Grand Prix, every constructor's single fastest pit stop time is ranked across all teams:
+*   **Fastest pit stop** — **+15 pts**
+*   **2nd fastest** — **+10 pts**
+*   **3rd fastest** — **+5 pts**
+
+---
+
+## 3. Transfers & Penalties
+
+*   **Free Transfers**: **2 free transfers** between each race weekend.
+*   **Transfer Carryover**: Unused free transfers carry over to the next weekend, up to a maximum of **3**.
+*   **Excess Transfer Penalty**: Each transfer beyond your free allowance costs **–10 pts** from your weekend total.
+
+---
+
+## 4. Weekly Boost & Season Chips
+
+### 4.1 Weekly DRS Boost
+*   **Frequency**: Usable **every race weekend** — you must select a driver each week.
+*   **Effect**: **Double points (2x)**. All points earned by the selected driver that weekend — including qualifying, sprint, and race points, plus all bonuses and penalties — are multiplied by 2.
+*   **Restrictions**: None. Can be used on any driver in your lineup, regardless of price.
+
+### 4.2 Season Chips (One-Time Use)
+Each chip can be used **only once per season**. Only **one chip** may be activated per race weekend.
+
+1.  **Extra DRS (3x)** — Pick one driver for **triple points (3x)** this weekend, replacing the regular 2x DRS Boost.
+2.  **Autopilot** — After scoring, if your regular DRS driver is not your highest-scoring driver, the 2x DRS bonus is automatically **transferred to your top scorer** instead.
+3.  **No Negative** — Any driver or constructor in your lineup with a **negative weekend score** has their score reset to **0**.
+4.  **Limitless** — Removes the **$100M budget cap** and grants **unlimited free transfers** for one weekend. After the weekend, your lineup and budget **revert to their pre-chip state**.
+5.  **Wildcard** — Grants **unlimited free transfers** for one weekend, while still respecting the $100M budget cap. All changes are **permanent**.
+6.  **Final Fix** — After qualifying ends but before the race starts, you may make **1 additional transfer**, temporarily exceeding the budget cap. Budget is restored after the race.
+
+<!-- zh -->
+# F1 Fantasy — 游戏规则
+
+## 1. 赛季与阵容设定
+
+*   **游戏模式**：选择 **2018–2025** 中的任意一个完整历史赛季。
+*   **车队阵容**：**5 名车手** + **2 支制造商车队**。
+*   **初始预算**：**$100,000,000（1 亿美金）**。
+*   **动态身价机制**：
+    *   车手与车队的初始价格根据赛季初的真实战力进行科学定价。
+    *   每站比赛后，系统根据**过去三站的 Fantasy 平均积分**动态调整身价——身价越高，期望回报越高。
+    *   每次变动上限为 **±$150 万**，身价下限 **$300 万**，上限 **$3500 万**。
+
+---
+
+## 2. 积分系统
+
+### 2.1 排位赛
 
 #### 车手排位名次积分
-*   **第 1 名 (杆位)**：10 pts
-*   **第 2 名**：9 pts
-*   **第 3 名**：8 pts
-*   **第 4 名**：7 pts
-*   **第 5 名**：6 pts
-*   **第 6 名**：5 pts
-*   **第 7 名**：4 pts
-*   **第 8 名**：3 pts
-*   **第 9 名**：2 pts
-*   **第 10 名**：1 pt
-*   **第 11-20 名**：0 pts
-*   **未做出有效成绩 (No Time in Q1)**：-5 pts （在 FastF1 中表现为 `Q1` 时间为 NaN/NaT 且状态为非正常）
-*   **排位赛取消资格 (DSQ)**：-5 pts （FastF1 状态为 DSQ）
+*   **第 1 名（杆位）**—— 10 分
+*   **第 2 名**—— 9 分
+*   **第 3 名**—— 8 分
+*   **第 4 名**—— 7 分
+*   **第 5 名**—— 6 分
+*   **第 6 名**—— 5 分
+*   **第 7 名**—— 4 分
+*   **第 8 名**—— 3 分
+*   **第 9 名**—— 2 分
+*   **第 10 名**—— 1 分
+*   **第 11–20 名**—— 0 分
+*   **Q1 未做出有效成绩**—— –5 分
+*   **取消资格（DSQ）**—— –5 分
 
-#### 车队（制造厂商）排位赛晋级奖励
-车队自动获得旗下两名车手的排位名次积分之和，并根据两名车手的**晋级阶段**额外获得以下奖励（不累加，取最高项）：
-*   **两名车手均止步于 Q1**（`Q2` 时间均为 NaN/NaT）：-1 pt
-*   **仅一名车手晋级 Q2**（一人 `Q2` 有时间，但两人 `Q3` 均无时间）：+1 pt
-*   **两名车手均晋级 Q2**（两人 `Q2` 均有时间，但两人 `Q3` 均无时间）：+3 pts
-*   **仅一名车手晋级 Q3**（一人 `Q3` 有时间）：+5 pts
-*   **两名车手均晋级 Q3**（两人 `Q3` 均有时间）：+10 pts
+#### 车队排位奖励
+车队自动获得旗下两名车手的排位名次积分之和，并根据两名车手的晋级情况获得额外奖励*（仅取最高档，不叠加）*：
+*   **两名车手均止步 Q1**—— –1 分
+*   **仅一名车手晋级 Q2**—— +1 分
+*   **两名车手均晋级 Q2**—— +3 分
+*   **仅一名车手晋级 Q3**—— +5 分
+*   **两名车手均晋级 Q3**—— +10 分
 
 ---
 
-### 2.2 冲刺赛积分 (Sprint Race - S)
-*仅在设有冲刺赛的周末进行结算。*
+### 2.2 冲刺赛 *（仅在设有冲刺赛的周末进行）*
 
 #### 冲刺赛名次积分（前 8 名）
-*   **第 1-8 名**：依次获得 8, 7, 6, 5, 4, 3, 2, 1 pts。
-*   **第 9-20 名**：0 pts。
+*   **第 1–8 名**—— 依次获得 8, 7, 6, 5, 4, 3, 2, 1 分。
+*   **第 9–20 名**—— 0 分。
 
-#### 冲刺赛额外加减分（基于 FastF1 发车位 `GridPosition` 与终点位 `Position`）
-*   **位置提升 (Positions Gained)**：每提升一个位置 **+1 pt**（`GridPosition > Position`）。
-*   **位置下降 (Positions Lost)**：每下降一个位置 **-1 pt**（`GridPosition < Position`，最大扣除上限为 **-10 pts**）。
-*   **最快圈速 (Fastest Lap)**：**+5 pts** （通过 FastF1 `session.laps.pick_fastest()` 匹配出获得最快圈的车手）。
-*   **冲刺赛退赛 (DNF)**：**-10 pts** （在 FastF1 中表现为 `Status` 非 "Finished" 或非 "+X Laps" 且未能完赛）。
+#### 冲刺赛额外加减分
+*   **位置提升**（终点 vs. 发车位）—— 每提升 1 位 **+1 分**。
+*   **位置下降**（终点 vs. 发车位）—— 每下降 1 位 **–1 分** *（最多扣除 –10 分）*。
+*   **最快圈速**—— **+5 分**。
+*   **退赛（DNF）**—— **–10 分**。
 
 ---
 
-### 2.3 大奖赛正赛积分 (Grand Prix Race - R)
+### 2.3 大奖赛正赛
 
 #### 正赛名次积分（前 10 名）
-*   **第 1-10 名**：依次获得 25, 18, 15, 12, 10, 8, 6, 4, 2, 1 pts。
-*   **第 11-20 名**：0 pts。
+*   **第 1–10 名**—— 依次获得 25, 18, 15, 12, 10, 8, 6, 4, 2, 1 分。
+*   **第 11–20 名**—— 0 分。
 
-#### 正赛额外加减分（基于 FastF1 数据）
-*   **位置提升 (Positions Gained)**：每比发车位提升一个位置 **+1 pt**。
-*   **位置下降 (Positions Lost)**：每比发车位下降一个位置 **-1 pt**（最大扣除上限为 **-10 pts**）。
-*   **正赛最快圈速 (Fastest Lap)**：**+10 pts**（通过 FastF1 圈速表锁定的全场最快圈车手）。
-*   **退赛罚分 (DNF)**：车手 **-20 pts**（`Status` 非正常完赛且未被官方分类）。
-*   **取消资格罚分 (DSQ)**：车手 **-20 pts**。
-*   **今日最佳车手 (Driver of the Day / DOTD)**：车手 **+10 pts**（需由玩家在赛后手动填写 JSON 中的 `driverOfTheDay` 字段）。该加分**仅计入车手个人总分，不计入其所属车队（Constructor）的正赛积分**。若未填写（值为 `null`），则 DOTD 加分不会生效。
-
----
-
-### 2.4 车队正赛积分与进站换胎积分 (Constructor Race & Pit Stops)
-
-车队在正赛中的积分计算方式如下：
-$$\text{车队正赛积分} = \text{车手 A 的正赛基础积分} + \text{车手 B 的正赛基础积分} + \text{进站换胎积分}$$
-
-> [!WARNING]
-> 车手获得的”最快圈速”额外 10 分以及”今日最佳车手 (DOTD)”额外 10 分均属于个人荣誉，**不会**计入车队积分。
-
-#### 换胎表现积分 (基于 FastF1 `session.pit_stops` 进站通道时长数据)
-由于 FastF1 记录的是车手从进站信号线到出站信号线的**总进站通道时长 (Pit Lane Duration)**，而非静止换胎时间，因此我们将官方换胎积分改造为以下更合理的竞速指标：
-*   在每场大奖赛结束后，系统提取 `session.pit_stops` 中所有车队的进站耗时。
-*   为每个车队（Constructor）锁定其**单次最快进站通道时长**。
-*   对 10 支车队的最快进站时间进行全场升序排名，并给予前三名高额积分奖励：
-    *   **进站耗时全场最快车队 (1st)**：**+15 pts**
-    *   **进站耗时全场次快车队 (2nd)**：**+10 pts**
-    *   **进站耗时全场第参车队 (3rd)**：**+5 pts**
+#### 正赛额外加减分
+*   **位置提升**（终点 vs. 发车位）—— 每提升 1 位 **+1 分**。
+*   **位置下降**（终点 vs. 发车位）—— 每下降 1 位 **–1 分** *（最多扣除 –10 分）*。
+*   **最快圈速**—— **+10 分**。
+*   **退赛（DNF）**—— **–20 分**。
+*   **取消资格（DSQ）**—— **–20 分**。
+*   **今日最佳车手（DOTD）**—— **+10 分**。该加分**仅计入车手个人总分**，**不计入**其所属制造商的车队积分。
 
 ---
 
-## 3. 转会与罚分机制 (Transfers & Penalties)
+### 2.4 车队正赛积分与进站换胎
 
-*   **免费转会 (Free Transfers)**：每站比赛间拥有 **2 次** 免费转会额度。
-*   **免费额度结转**：本周未使用的额度可结转到下周，但累积的免费额度**上限为 3 次**。
-*   **超额惩罚**：超出免费额度的每次转会，将在当周结算时从车队总分中扣除 **-10 pts**。
+车队的正赛积分计算方式为：
+**车手 A 正赛基础分 + 车手 B 正赛基础分 + 进站换胎奖励**
 
----
+> 最快圈速与今日最佳车手（DOTD）加分属于**车手个人荣誉**，**不计入**车队积分。
 
-## 4. 常规每周加成与六大特权芯片 (Weekly Boost & Chips)
-
-### 4.1 常规每周加成：DRS 提升 (DRS Boost)
-*   **使用频次**：**每周每支经理车队均可且必须使用一次**（不占用芯片额度，不限次数，每站比赛都可以指定）。
-*   **核心效果**：双倍积分 (x2)。被指定的车手在该大奖赛周末获得的所有积分（包括排位赛、冲刺赛和正赛的基础积分、加分及罚分）都将乘以 2。
-*   **限制条件**：无身价限制，可以为阵中的任何车手（包括最贵的高分车手）使用。
-
-### 4.2 六大单次特权芯片 (Season Chips)
-特权芯片属于**赛季级单次消耗品**。每个经理在整个赛季中对每个芯片**只能激活一次**，且每个大奖赛周末**最多只能激活一个**芯片。
-
-1.  **超级 DRS (Extra DRS - 3x)**：指定一名车手，当站获得**三倍积分 (3x)**（替代本周常规的 2x DRS Boost）。
-2.  **自动驾驶 (Autopilot)**：如果在当站结算后，你指定的常规 DRS 车手得分不是你队内车手最高，系统会自动将 2x DRS 提升效果**转移给得分最高的车手**进行结算。
-3.  **免受负分 (No Negative)**：结算当站积分时，若队内任何成员（车手或车队）的总积分和小于 0，则该成员的得分**自动将其重置为 0 分**（防止倒扣分）。
-4.  **无限预算 (Limitless)**：在一个周末内，**取消车队 $100M 身价预算限制**，并且转会次数无限。周末结束后，阵容与预算自动回退为使用芯片前的状态。
-5.  **外卡 (Wildcard)**：在一个周末内拥有**无限次免费转会**，但必须维持在当前 $100M 预算内。所有阵容修改是**永久性**的。
-6.  **最终修正 (Final Fix)**：允许在排位赛结束后、正赛开始前，**进行 1 次额外的车队转会**（可临时超出预算，但正赛后恢复）。
+#### 进站换胎表现
+每场大奖赛后，统计每支车队本站的**单次最快进站时间**，在全部 10 支车队中排名：
+*   **进站最快**—— **+15 分**
+*   **进站第二快**—— **+10 分**
+*   **进站第三快**—— **+5 分**
 
 ---
 
-通过这套基于真实 FastF1 数据精心打磨的积分规则，本游戏将为玩家提供一个极具竞技深度、高还原度且数据绝对真实的本地 F1 Fantasy 体验！
+## 3. 转会与罚分
+
+*   **免费转会**：每站之间拥有 **2 次**免费转会额度。
+*   **额度结转**：未使用的免费额度可结转到下一站，累积上限为 **3 次**。
+*   **超额罚分**：超出免费额度的每次转会，从当周总分中扣除 **–10 分**。
+
+---
+
+## 4. 常规加成与赛季芯片
+
+### 4.1 每周 DRS 加成
+*   **使用频率**：**每站均可且必须使用**——每站需指定一名车手。
+*   **效果**：**双倍积分（2x）**。被指定的车手在该周末获得的所有积分（排位、冲刺、正赛及所有加减分）均乘以 2。
+*   **限制**：无。可以对阵容中任意车手使用，不受身价限制。
+
+### 4.2 赛季芯片（单次使用）
+每种芯片每赛季**仅可使用一次**。每个比赛周末**最多激活一个**芯片。
+
+1.  **超级 DRS（3x）**—— 指定一名车手获得**三倍积分（3x）**，替代当周常规 2x DRS 加成。
+2.  **自动驾驶** —— 计分后，如果你指定的 DRS 车手不是队内得分最高的，系统自动将 2x 加成**转移给最高分车手**。
+3.  **免受负分** —— 队内任意车手或车队当周得分为负时，将其重置为 **0 分**。
+4.  **无限预算** —— 当周**取消 $1 亿预算上限**并获得**无限免费转会**。周末结束后，阵容与预算**恢复至使用前状态**。
+5.  **外卡** —— 当周拥有**无限免费转会**，但仍需遵守 $1 亿预算上限。所有阵容变更为**永久性**的。
+6.  **最终修正** —— 排位赛结束后、正赛开始前，可进行 **1 次额外转会**，可暂时超出预算。正赛后预算恢复。

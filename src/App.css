@@ -57,9 +57,15 @@
   border: 1px solid var(--border);
 }
 
+.season-select__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
 .season-select__grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  grid-template-columns: repeat(4, minmax(0, 1fr));
   gap: 16px;
 }
 
@@ -769,6 +775,8 @@
   grid-template-columns: minmax(0, 0.95fr) minmax(0, 1.05fr);
   gap: 16px;
   align-items: stretch;
+  max-height: min(820px, calc(100vh - 120px));
+  min-height: 620px;
 }
 
 .roster-list,
@@ -781,11 +789,12 @@
 
 .roster-row,
 .market-row {
-  padding: 12px 14px;
+  padding: 22px 18px;
   display: flex;
   justify-content: space-between;
-  gap: 12px;
+  gap: 16px;
   align-items: center;
+  min-height: 108px;
 }
 
 .roster-row small,
@@ -854,9 +863,29 @@
   border-color: rgba(255, 255, 255, 0.22);
 }
 
+.roster-list {
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+  padding-right: 4px;
+  align-content: start;
+}
+
+.roster-list::-webkit-scrollbar,
+.market-list--fill::-webkit-scrollbar {
+  width: 10px;
+}
+
+.roster-list::-webkit-scrollbar-thumb,
+.market-list--fill::-webkit-scrollbar-thumb {
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.16);
+}
+
 /* T3: fill available vertical space in the right-hand market panel */
 .market-list--fill {
   flex: 1;
+  min-height: 0;
   overflow-y: auto;
   padding-right: 4px;
   display: grid;
@@ -864,19 +893,11 @@
   align-content: start;
 }
 
-.market-list--fill::-webkit-scrollbar {
-  width: 10px;
-}
-
-.market-list--fill::-webkit-scrollbar-thumb {
-  border-radius: 999px;
-  background: rgba(255, 255, 255, 0.16);
-}
-
-/* T3: make the right panel a flex column so the list fills remaining height */
+/* T3: make fill panels flex columns so their scroll areas share height */
 .panel--fill {
   display: flex;
   flex-direction: column;
+  min-height: 0;
 }
 
 .panel--fill .panel__header {
@@ -887,6 +908,7 @@
   display: grid;
   gap: 16px;
   margin-top: 16px;
+  flex-shrink: 0;
 }
 
 .drs-panel__group {
@@ -943,14 +965,55 @@
 .chip-badge {
   min-height: 90px;
   width: 100%;
-  padding: 16px 18px;
+  padding: 28px 18px 16px;
   display: grid;
   gap: 8px;
   text-align: left;
+  position: relative;
 }
 
 .chip-badge.is-spent {
   opacity: 0.45;
+}
+
+.chip-badge__help {
+  position: absolute;
+  top: 8px;
+  right: 10px;
+  width: 18px;
+  height: 18px;
+  display: grid;
+  place-items: center;
+  border-radius: 999px;
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  color: var(--muted);
+  font: 800 0.72rem/1 var(--body);
+}
+
+.chip-badge__tooltip {
+  position: absolute;
+  right: 8px;
+  bottom: calc(100% + 8px);
+  width: min(260px, 80vw);
+  padding: 10px 12px;
+  border: 1px solid var(--border-strong);
+  border-radius: 12px;
+  background: rgba(13, 17, 26, 0.98);
+  color: var(--text-strong);
+  box-shadow: var(--shadow-lg);
+  font: 600 0.78rem/1.35 var(--body);
+  opacity: 0;
+  pointer-events: none;
+  transform: translateY(4px);
+  transition: opacity 160ms ease, transform 160ms ease;
+  z-index: 5;
+}
+
+.chip-badge:hover .chip-badge__tooltip,
+.chip-badge:focus-visible .chip-badge__tooltip,
+.chip-badge__help:hover + .chip-badge__tooltip {
+  opacity: 1;
+  transform: translateY(0);
 }
 
 .chip-badge__name {
@@ -1123,8 +1186,24 @@
   gap: 10px;
   align-items: center;
   padding: 10px 12px;
+  border: 0;
   border-radius: 12px;
   background: rgba(255, 255, 255, 0.03);
+  color: var(--text);
+  text-align: left;
+  width: 100%;
+}
+
+.detail-table__row--button {
+  cursor: pointer;
+  transition: border-color 160ms ease, background 160ms ease, transform 160ms ease;
+}
+
+.detail-table__row--button:hover,
+.detail-table__row--button:focus-visible {
+  background: rgba(0, 255, 255, 0.08);
+  outline: 1px solid rgba(0, 255, 255, 0.35);
+  transform: translateY(-1px);
 }
 
 .detail-table__row span,
@@ -1209,6 +1288,90 @@
 .summary-card--clickable.is-expanded {
   border-color: var(--neon-cyan);
   background: rgba(0, 255, 255, 0.1);
+}
+
+.breakdown-detail--compact {
+  margin-top: 0;
+  padding: 12px;
+}
+
+.season-score-list {
+  display: grid;
+  gap: 10px;
+}
+
+.season-score-row {
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  background: rgba(255, 255, 255, 0.025);
+  overflow: hidden;
+}
+
+.season-score-row__summary {
+  width: 100%;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 6px 16px;
+  align-items: center;
+  padding: 14px 16px;
+  border: 0;
+  background: transparent;
+  color: var(--text);
+  text-align: left;
+}
+
+.season-score-row__summary strong {
+  color: var(--text-strong);
+  font: 800 1.05rem/1 var(--display);
+}
+
+.season-score-row__summary small {
+  grid-column: 1 / -1;
+  color: var(--muted);
+}
+
+.season-score-row__summary:hover,
+.season-score-row__summary:focus-visible,
+.season-score-row__summary.is-expanded {
+  background: rgba(0, 255, 255, 0.08);
+  outline: none;
+}
+
+.season-score-row__detail {
+  display: grid;
+  gap: 10px;
+  padding: 0 16px 16px;
+}
+
+.rules-modal__content {
+  display: grid;
+  gap: 8px;
+  color: var(--text);
+}
+
+.rules-modal__content h2,
+.rules-modal__content h3,
+.rules-modal__content h4 {
+  margin-top: 12px;
+  color: var(--text-strong);
+}
+
+.rules-modal__content p {
+  margin: 0;
+  line-height: 1.65;
+}
+
+.rules-modal__bullet {
+  padding-left: 14px;
+}
+
+.rules-modal__note {
+  padding: 8px 12px;
+  border-left: 3px solid var(--accent, #ff8700);
+  background: var(--surface-raised);
+  border-radius: 4px;
+  font-style: italic;
+  color: var(--text-strong);
 }
 
 /* T5: price change indicator */
@@ -1426,6 +1589,16 @@
     grid-template-columns: 1fr;
   }
 
+  .split-layout {
+    max-height: none;
+    min-height: 0;
+  }
+
+  .roster-list,
+  .market-list--fill {
+    overflow-y: visible;
+  }
+
   .app-header,
   .panel__header,
   .drs-panel__summary,
@@ -1433,6 +1606,22 @@
     flex-direction: column;
     align-items: stretch;
   }
+}
+
+/* Sub-modal overlay — stacks above parent modal (z-index 40) */
+.overlay-backdrop--higher {
+  z-index: 50;
+}
+
+/* Highlighted row in round detail tables — gold outline for selected asset */
+.detail-table__row--highlighted {
+  outline: 2px solid var(--champion-gold);
+  background: rgba(255, 215, 0, 0.08);
+}
+
+.detail-table__row--highlighted:hover,
+.detail-table__row--highlighted:focus-visible {
+  background: rgba(255, 215, 0, 0.15);
 }
 
 @media (max-width: 700px) {
@@ -1458,7 +1647,8 @@
 
   .garage-grid__row--constructors,
   .garage-grid__row--drivers,
-  .chip-grid--equal {
+  .chip-grid--equal,
+  .season-select__grid {
     grid-template-columns: 1fr;
   }
 

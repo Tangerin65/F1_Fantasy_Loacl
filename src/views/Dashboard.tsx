@@ -1,7 +1,7 @@
-import { useState } from 'react'
+import { useState, useMemo } from 'react'
 import { DriverCard } from '../components/DriverCard'
 import { ValueChip } from '../components/ValueChip'
-import type { ConstructorRoundScore, DriverRoundScore, ScoreBreakdownItem } from '../types'
+import type { ConstructorRoundScore, DriverRoundScore, RoundData, ScoreBreakdownItem } from '../types'
 import {
   copyText,
   formatDriverNameTwoLines,
@@ -9,13 +9,18 @@ import {
   getTeamSurfaceStyle,
   normalizeTeamName,
 } from '../lib/presentation'
+import { buildConstructorScoreMap, buildDriverScoreMap } from '../context/GameContext'
 import { useGame } from '../context/useGame'
-
-const formatMoney = (value: number) => `$${value.toFixed(1)}M`
+import { RoundDetailModal } from '../components/RoundDetailModal'
 
 type SelectedAsset =
   | { kind: 'driver'; id: string }
   | { kind: 'constructor'; id: string }
+  | null
+
+type SeasonScoreAsset =
+  | { kind: 'driver'; id: string; name: string }
+  | { kind: 'constructor'; id: string; name: string }
   | null
 
 type DriverExpandedStage = 'qualifying' | 'sprint' | 'race'
@@ -23,6 +28,22 @@ type ExpandedStage = DriverExpandedStage | 'pitStop' | null
 
 const isDriverExpandedStage = (stage: ExpandedStage): stage is DriverExpandedStage =>
   stage === 'qualifying' || stage === 'sprint' || stage === 'race'
+
+export const getRaceLabel = (roundData: RoundData) => `R${roundData.round} · ${roundData.raceName}`
+
+const getDriverRoundScore = (roundData: RoundData, driverId: string) =>
+  buildDriverScoreMap(roundData).get(driverId) ?? null
+
+const getConstructorRoundScore = (roundData: RoundData, constructorId: string, season: number) =>
+  buildConstructorScoreMap(roundData, season).get(constructorId) ?? null
+
+const getStageTotal = (score: DriverRoundScore | ConstructorRoundScore, stage: ExpandedStage) => {
+  if (stage === 'qualifying') return score.qualifyingPoints
+  if (stage === 'sprint') return score.sprintPoints
+  if (stage === 'race') return score.racePoints
+  if (stage === 'pitStop' && 'pitStopPoints' in score) return score.pitStopPoints
+  return 'totalFinal' in score ? score.totalFinal : score.total
+}
 
 const renderBreakdownList = (items: ScoreBreakdownItem[]) => (
   <ul className="breakdown-list">
@@ -36,10 +57,16 @@ const renderBreakdownList = (items: ScoreBreakdownItem[]) => (
 )
 
 export function Dashboard() {
-  const { currentRoundData, humanManager, selectedSeasonEntry, state } = useGame()
+  const { currentRoundData, humanManager, selectedSeasonEntry, standings, state } = useGame()
   const [selectedAsset, setSelectedAsset] = useState<SelectedAsset>(null)
+  const [seasonScoreAsset, setSeasonScoreAsset] = useState<SeasonScoreAsset>(null)
   const [showWeekendBreakdown, setShowWeekendBreakdown] = useState(false)
   const [expandedStage, setExpandedStage] = useState<ExpandedStage>(null)
+  const [selectedRoundDetail, setSelectedRoundDetail] = useState<{
+    roundData: RoundData
+    roundIndex: number
+    score: DriverRoundScore | ConstructorRoundScore
+  } | null>(null)
 
   if (!humanManager || !selectedSeasonEntry || !state.seasonData) {
     return null
@@ -51,9 +78,7 @@ export function Dashboard() {
     state.constructors.map((constructor) => [constructor.name, constructor]),
   )
   const chipsLeft = Object.values(humanManager.chips).filter(Boolean).length
-  const nextRoundLabel = currentRoundData
-    ? `R${currentRoundData.round}`
-    : copyText('Season Complete', '赛季已完成')
+  const currentRank = standings.findIndex((manager) => manager.id === humanManager.id) + 1
 
   const lastRoundData =
     state.lastProcessedRound >= 0
@@ -88,6 +113,39 @@ export function Dashboard() {
       : null
 
   const hasSprint = lastRoundData?.isSprint ?? false
+  const openSeasonScore = (asset: Exclude<SeasonScoreAsset, null>) => {
+    setSeasonScoreAsset(asset)
+    setSelectedRoundDetail(null)
+  }
+
+  const seasonScores = useMemo(() => {
+    if (!seasonScoreAsset || !state.seasonData) return []
+    return state.seasonData.rounds
+      .map((roundData, roundIndex) => {
+        const roundResult = state.roundResults[roundIndex]
+        if (!roundResult) return null
+        const managerResult = roundResult.find(
+          (entry) => entry.managerId === humanManager.id,
+        )
+        if (!managerResult) return null
+        if (seasonScoreAsset.kind === 'driver') {
+          const score = managerResult.driverScores.find(
+            (s) => s.driver === seasonScoreAsset.id,
+          )
+          return score ? { roundData, roundIndex, score } : null
+        } else {
+          const score = managerResult.constructorScores.find(
+            (s) => s.constructor === seasonScoreAsset.id,
+          )
+          return score ? { roundData, roundIndex, score } : null
+        }
+      })
+      .filter(Boolean) as {
+      roundData: RoundData
+      roundIndex: number
+      score: DriverRoundScore | ConstructorRoundScore
+    }[]
+  }, [seasonScoreAsset, state.seasonData, state.roundResults, humanManager])
 
   return (
     <section className="view-stack">
@@ -108,18 +166,21 @@ export function Dashboard() {
         </div>
         <div className="metric-grid">
           <ValueChip
-            label={copyText('Total Points', '总积分')}
+            label={copyText('Last Round', '上一场积分')}
+            value={lastRoundResult ? lastRoundResult.netPoints.toFixed(0) : '--'}
+          />
+          <ValueChip
+            label={copyText('Total Points', '赛季总积分')}
             value={humanManager.totalPoints.toFixed(0)}
           />
-          <ValueChip label="Bank" value={formatMoney(humanManager.budget)} />
           <ValueChip
             label={copyText('Chips Left', '剩余 Chips')}
             value={`${chipsLeft}`}
             tone="accent"
           />
           <ValueChip
-            label={copyText('Next Round', '下一站')}
-            value={nextRoundLabel}
+            label={copyText('Current Rank', '当前排名')}
+            value={currentRank > 0 ? `P${currentRank}/${standings.length}` : '--'}
           />
         </div>
       </section>
@@ -329,12 +390,17 @@ export function Dashboard() {
                 <h4>{copyText('Qualifying results', '排位赛全结果')}</h4>
                 <div className="detail-table">
                   {lastRoundData.qualifying.results.map((result) => (
-                    <div key={`qual-${result.driver}`} className="detail-table__row">
+                    <button
+                      key={`qual-${result.driver}`}
+                      type="button"
+                      className="detail-table__row detail-table__row--button"
+                      onClick={() => openSeasonScore({ kind: 'driver', id: result.driver, name: result.fullName })}
+                    >
                       <span>P{result.position}</span>
                       <strong>{result.fullName}</strong>
                       <small>{normalizeTeamName(result.team, season)}</small>
                       <span>{result.q3 ?? result.q2 ?? result.q1 ?? result.status}</span>
-                    </div>
+                    </button>
                   ))}
                 </div>
               </section>
@@ -343,12 +409,17 @@ export function Dashboard() {
                 <h4>{copyText('Race results', '正赛全结果')}</h4>
                 <div className="detail-table">
                   {lastRoundData.race.results.map((result) => (
-                    <div key={`race-${result.driver}`} className="detail-table__row">
+                    <button
+                      key={`race-${result.driver}`}
+                      type="button"
+                      className="detail-table__row detail-table__row--button"
+                      onClick={() => openSeasonScore({ kind: 'driver', id: result.driver, name: result.fullName })}
+                    >
                       <span>P{result.position}</span>
                       <strong>{result.fullName}</strong>
                       <small>{copyText('Grid', '发车位')} {result.grid}</small>
                       <span>{result.status}</span>
-                    </div>
+                    </button>
                   ))}
                 </div>
               </section>
@@ -358,12 +429,20 @@ export function Dashboard() {
                 <h4>{copyText('Top pit stops', '最快进站前三')}</h4>
                 <div className="detail-table">
                   {lastRoundData.race.pitStops.map((stop, index) => (
-                    <div key={`${stop.constructor}-${index}`} className="detail-table__row">
+                    <button
+                      key={`${stop.constructor}-${index}`}
+                      type="button"
+                      className="detail-table__row detail-table__row--button"
+                      onClick={() => {
+                        const constructorName = normalizeTeamName(stop.constructor, season)
+                        openSeasonScore({ kind: 'constructor', id: constructorName, name: constructorName })
+                      }}
+                    >
                       <span>P{index + 1}</span>
                       <strong>{normalizeTeamName(stop.constructor, season)}</strong>
                       <small>{copyText('Pit crew', '维修区')}</small>
                       <span>{stop.fastestStop.toFixed(3)}s</span>
-                    </div>
+                    </button>
                   ))}
                 </div>
               </section>
@@ -374,12 +453,17 @@ export function Dashboard() {
                   {getOvertakeLeaders(lastRoundData)
                     .slice(0, 8)
                     .map((entry) => (
-                      <div key={`gain-${entry.driver}`} className="detail-table__row">
+                      <button
+                        key={`gain-${entry.driver}`}
+                        type="button"
+                        className="detail-table__row detail-table__row--button"
+                        onClick={() => openSeasonScore({ kind: 'driver', id: entry.driver, name: entry.fullName })}
+                      >
                         <span>{entry.driver}</span>
                         <strong>{entry.fullName}</strong>
                         <small>{normalizeTeamName(entry.team, season)}</small>
                         <span>{entry.gained >= 0 ? `+${entry.gained}` : entry.gained}</span>
-                      </div>
+                      </button>
                     ))}
                 </div>
               </section>
@@ -392,12 +476,17 @@ export function Dashboard() {
                   <h4>{copyText('Sprint results', '冲刺赛结果')}</h4>
                   <div className="detail-table">
                     {lastRoundData.sprint.results.map((result) => (
-                      <div key={`sprint-${result.driver}`} className="detail-table__row">
+                      <button
+                        key={`sprint-${result.driver}`}
+                        type="button"
+                        className="detail-table__row detail-table__row--button"
+                        onClick={() => openSeasonScore({ kind: 'driver', id: result.driver, name: result.fullName })}
+                      >
                         <span>P{result.position}</span>
                         <strong>{result.fullName}</strong>
                         <small>{copyText('Grid', '发车位')} {result.grid}</small>
                         <span>{result.status}</span>
-                      </div>
+                      </button>
                     ))}
                   </div>
                 </section>
@@ -405,6 +494,75 @@ export function Dashboard() {
             ) : null}
           </section>
         </div>
+      ) : null}
+
+      {seasonScoreAsset ? (
+        <div className="overlay-backdrop" role="presentation" onClick={() => { setSeasonScoreAsset(null); setSelectedRoundDetail(null); }}>
+          <section
+            className="modal-panel modal-panel--wide"
+            role="dialog"
+            aria-modal="true"
+            onClick={(event) => event.stopPropagation()}
+          >
+            <div className="panel__header">
+              <div>
+                <p className="panel__kicker">
+                  {copyText('Season score history', '赛季得分历史')}
+                </p>
+                <h3>{seasonScoreAsset.name}</h3>
+              </div>
+              <button
+                type="button"
+                className="secondary-button"
+                onClick={() => { setSeasonScoreAsset(null); setSelectedRoundDetail(null); }}
+              >
+                {copyText('Close', '关闭')}
+              </button>
+            </div>
+
+            {seasonScores.length > 0 ? (
+              <div className="season-score-list">
+                {seasonScores.map(({ roundData, roundIndex, score }) => (
+                  <article
+                    key={`${seasonScoreAsset.kind}-${seasonScoreAsset.id}-${roundIndex}`}
+                    className="season-score-row"
+                  >
+                    <button
+                      type="button"
+                      className="season-score-row__summary"
+                      onClick={() =>
+                        setSelectedRoundDetail({ roundData, roundIndex, score })
+                      }
+                    >
+                      <span>{getRaceLabel(roundData)}</span>
+                      <strong>
+                        {('totalFinal' in score ? score.totalFinal : score.total).toFixed(0)} pts
+                      </strong>
+                      <small>
+                        Q {score.qualifyingPoints} · S {score.sprintPoints} · R {score.racePoints}
+                        {'pitStopPoints' in score ? ` · P ${score.pitStopPoints}` : ''}
+                      </small>
+                    </button>
+                  </article>
+                ))}
+              </div>
+            ) : (
+              <p className="muted-copy">
+                {copyText('No processed score is available for this asset yet.', '该资产暂无已结算分站得分。')}
+              </p>
+            )}
+          </section>
+        </div>
+      ) : null}
+
+      {selectedRoundDetail ? (
+        <RoundDetailModal
+          roundData={selectedRoundDetail.roundData}
+          season={season}
+          selectedAsset={seasonScoreAsset}
+          roundScore={selectedRoundDetail.score}
+          onClose={() => setSelectedRoundDetail(null)}
+        />
       ) : null}
 
       {/* D5: score breakdown with expandable stage details */}

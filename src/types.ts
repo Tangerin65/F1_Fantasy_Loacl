@@ -70,14 +70,6 @@ export interface SeasonData {
 
 export type ChipType = 'extraDrs' | 'autopilot' | 'noNegative' | 'limitless' | 'wildcard';
 
-export const CHIP_NAMES: Record<ChipType, string> = {
-  extraDrs: 'Extra DRS (3x)',
-  autopilot: 'Autopilot',
-  noNegative: 'No Negative',
-  limitless: 'Limitless',
-  wildcard: 'Wildcard',
-};
-
 export interface ChipStatus {
   extraDrs: boolean;   // true = still available
   autopilot: boolean;

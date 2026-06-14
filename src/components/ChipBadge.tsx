@@ -1,4 +1,5 @@
-import { CHIP_NAMES, type ChipType } from '../types'
+import { type ChipType } from '../types'
+import { getChipDescription, getChipName, getChipStateLabel } from '../lib/presentation'
 
 interface ChipBadgeProps {
   chip: ChipType
@@ -8,16 +9,22 @@ interface ChipBadgeProps {
 }
 
 export function ChipBadge({ chip, active, available, onClick }: ChipBadgeProps) {
+  const stateLabel = getChipStateLabel(available, active)
+  const description = getChipDescription(chip)
+  const name = getChipName(chip)
+
   return (
     <button
       type="button"
       className={`chip-badge${active ? ' is-active' : ''}${!available ? ' is-spent' : ''}`}
       onClick={onClick}
       disabled={!available}
-      title={CHIP_NAMES[chip]}
+      title={description}
     >
-      <span className="chip-badge__name">{CHIP_NAMES[chip]}</span>
-      <span className="chip-badge__state">{!available ? 'Spent' : active ? 'Armed' : 'Ready'}</span>
+      <span className="chip-badge__help" aria-label={description}>?</span>
+      <span className="chip-badge__tooltip" role="tooltip">{description}</span>
+      <span className="chip-badge__name">{name}</span>
+      <span className="chip-badge__state">{stateLabel}</span>
     </button>
   )
 }

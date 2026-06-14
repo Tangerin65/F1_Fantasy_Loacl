@@ -9,7 +9,8 @@ import {
   normalizeTeamName,
 } from '../lib/presentation'
 import { useGame } from '../context/useGame'
-import { CHIP_NAMES, MAX_CONSTRUCTORS, MAX_DRIVERS, type ChipType } from '../types'
+import { MAX_CONSTRUCTORS, MAX_DRIVERS, type ChipType } from '../types'
+import { getChipName } from '../lib/presentation'
 
 const formatMoney = (value: number) => `$${value.toFixed(1)}M`
 const CHIPS: ChipType[] = ['extraDrs', 'autopilot', 'noNegative', 'limitless', 'wildcard']
@@ -55,7 +56,7 @@ export function Transfer() {
   }
 
   const summary = getTransferSummary(humanManager.id)
-  const activeChipName = humanManager.activeChip ? CHIP_NAMES[humanManager.activeChip] : 'None'
+  const activeChipName = humanManager.activeChip ? getChipName(humanManager.activeChip) : copyText('None', '无')
   const budgetUsage = Math.min(100, Math.max(0, summary.lineupCost))
   const driverSlots = Array.from(
     { length: MAX_DRIVERS },

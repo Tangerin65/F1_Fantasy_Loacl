@@ -1,0 +1,225 @@
+{
+  "season": 2018,
+  "generatedFromSeason": 2017,
+  "defaultDriverPrice": 6.0,
+  "defaultConstructorPrice": 8.0,
+  "drivers": {
+    "HAM": 30.0,
+    "VET": 28.0,
+    "BOT": 27.0,
+    "RAI": 23.4,
+    "RIC": 22.6,
+    "VER": 21.0,
+    "PER": 18.4,
+    "OCO": 17.3,
+    "SAI": 15.7,
+    "HUL": 14.7,
+    "MAS": 14.0,
+    "STR": 13.2,
+    "GRO": 12.2,
+    "MAG": 11.2,
+    "ALO": 10.5,
+    "VAN": 9.6,
+    "PAL": 8.8,
+    "WEH": 8.0,
+    "KVY": 7.3,
+    "ERI": 6.5,
+    "GAS": 5.8,
+    "GIO": 5.1,
+    "HAR": 4.4,
+    "BUT": 3.7,
+    "DIR": 3.0
+  },
+  "constructors": {
+    "Mercedes": 30.0,
+    "Ferrari": 25.9,
+    "Red Bull Racing": 21.7,
+    "Force India": 17.0,
+    "Williams": 13.6,
+    "Renault": 11.3,
+    "Toro Rosso": 9.4,
+    "Haas F1 Team": 7.4,
+    "McLaren": 5.3,
+    "Sauber": 3.1
+  },
+  "metadata": {
+    "source": "Jolpica Ergast-compatible championship standings",
+    "driverPriceRange": [
+      3.0,
+      30.0
+    ],
+    "constructorPriceRange": [
+      3.0,
+      30.0
+    ],
+    "driverStandings": {
+      "HAM": {
+        "name": "Lewis Hamilton",
+        "standing": 1,
+        "points": 363.0
+      },
+      "VET": {
+        "name": "Sebastian Vettel",
+        "standing": 2,
+        "points": 317.0
+      },
+      "BOT": {
+        "name": "Valtteri Bottas",
+        "standing": 3,
+        "points": 305.0
+      },
+      "RAI": {
+        "name": "Kimi Räikkönen",
+        "standing": 4,
+        "points": 205.0
+      },
+      "RIC": {
+        "name": "Daniel Ricciardo",
+        "standing": 5,
+        "points": 200.0
+      },
+      "VER": {
+        "name": "Max Verstappen",
+        "standing": 6,
+        "points": 168.0
+      },
+      "PER": {
+        "name": "Sergio Pérez",
+        "standing": 7,
+        "points": 100.0
+      },
+      "OCO": {
+        "name": "Esteban Ocon",
+        "standing": 8,
+        "points": 87.0
+      },
+      "SAI": {
+        "name": "Carlos Sainz",
+        "standing": 9,
+        "points": 54.0
+      },
+      "HUL": {
+        "name": "Nico Hülkenberg",
+        "standing": 10,
+        "points": 43.0
+      },
+      "MAS": {
+        "name": "Felipe Massa",
+        "standing": 11,
+        "points": 43.0
+      },
+      "STR": {
+        "name": "Lance Stroll",
+        "standing": 12,
+        "points": 40.0
+      },
+      "GRO": {
+        "name": "Romain Grosjean",
+        "standing": 13,
+        "points": 28.0
+      },
+      "MAG": {
+        "name": "Kevin Magnussen",
+        "standing": 14,
+        "points": 19.0
+      },
+      "ALO": {
+        "name": "Fernando Alonso",
+        "standing": 15,
+        "points": 17.0
+      },
+      "VAN": {
+        "name": "Stoffel Vandoorne",
+        "standing": 16,
+        "points": 13.0
+      },
+      "PAL": {
+        "name": "Jolyon Palmer",
+        "standing": 17,
+        "points": 8.0
+      },
+      "WEH": {
+        "name": "Pascal Wehrlein",
+        "standing": 18,
+        "points": 5.0
+      },
+      "KVY": {
+        "name": "Daniil Kvyat",
+        "standing": 19,
+        "points": 5.0
+      },
+      "ERI": {
+        "name": "Marcus Ericsson",
+        "standing": 20,
+        "points": 0.0
+      },
+      "GAS": {
+        "name": "Pierre Gasly",
+        "standing": 21,
+        "points": 0.0
+      },
+      "GIO": {
+        "name": "Antonio Giovinazzi",
+        "standing": 22,
+        "points": 0.0
+      },
+      "HAR": {
+        "name": "Brendon Hartley",
+        "standing": 23,
+        "points": 0.0
+      },
+      "BUT": {
+        "name": "Jenson Button",
+        "standing": 24,
+        "points": 0.0
+      },
+      "DIR": {
+        "name": "Paul di Resta",
+        "standing": 25,
+        "points": 0.0
+      }
+    },
+    "constructorStandings": {
+      "Mercedes": {
+        "standing": 1,
+        "points": 668.0
+      },
+      "Ferrari": {
+        "standing": 2,
+        "points": 522.0
+      },
+      "Red Bull Racing": {
+        "standing": 3,
+        "points": 368.0
+      },
+      "Force India": {
+        "standing": 4,
+        "points": 187.0
+      },
+      "Williams": {
+        "standing": 5,
+        "points": 83.0
+      },
+      "Renault": {
+        "standing": 6,
+        "points": 57.0
+      },
+      "Toro Rosso": {
+        "standing": 7,
+        "points": 53.0
+      },
+      "Haas F1 Team": {
+        "standing": 8,
+        "points": 47.0
+      },
+      "McLaren": {
+        "standing": 9,
+        "points": 30.0
+      },
+      "Sauber": {
+        "standing": 10,
+        "points": 5.0
+      }
+    }
+  }
+}

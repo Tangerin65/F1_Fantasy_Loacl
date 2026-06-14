@@ -520,7 +520,7 @@ const getRaceBreakdown = (
   return items
 }
 
-const buildDriverScoreMap = (roundData: RoundData) => {
+export const buildDriverScoreMap = (roundData: RoundData) => {
   const driverOfTheDay = roundData.race.driverOfTheDay ?? null
 
   const qualifyingMap = new Map(
@@ -577,7 +577,7 @@ const buildDriverScoreMap = (roundData: RoundData) => {
   }, new Map<string, DriverRoundScore>())
 }
 
-const buildConstructorScoreMap = (roundData: RoundData, season?: number) => {
+export const buildConstructorScoreMap = (roundData: RoundData, season?: number) => {
   const constructorScores = new Map<string, ConstructorRoundScore>()
 
   // Track breakdown items alongside totals for each constructor.

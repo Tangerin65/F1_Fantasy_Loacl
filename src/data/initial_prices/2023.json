@@ -1,0 +1,207 @@
+{
+  "season": 2023,
+  "generatedFromSeason": 2022,
+  "defaultDriverPrice": 6.0,
+  "defaultConstructorPrice": 8.0,
+  "drivers": {
+    "VER": 30.0,
+    "LEC": 25.9,
+    "PER": 25.0,
+    "RUS": 23.6,
+    "SAI": 22.1,
+    "HAM": 21.2,
+    "NOR": 17.7,
+    "OCO": 16.2,
+    "ALO": 15.2,
+    "BOT": 13.7,
+    "RIC": 12.6,
+    "VET": 11.8,
+    "MAG": 10.7,
+    "GAS": 9.9,
+    "STR": 9.0,
+    "MSC": 8.1,
+    "TSU": 7.3,
+    "ZHO": 6.3,
+    "ALB": 5.5,
+    "LAT": 4.6,
+    "DEV": 3.8,
+    "HUL": 3.0
+  },
+  "constructors": {
+    "Red Bull Racing": 30.0,
+    "Ferrari": 25.4,
+    "Mercedes": 23.0,
+    "Alpine": 16.5,
+    "McLaren": 14.4,
+    "Sauber": 11.2,
+    "Aston Martin": 9.3,
+    "Haas F1 Team": 7.2,
+    "AlphaTauri": 5.3,
+    "Williams": 3.1
+  },
+  "metadata": {
+    "source": "Jolpica Ergast-compatible championship standings",
+    "driverPriceRange": [
+      3.0,
+      30.0
+    ],
+    "constructorPriceRange": [
+      3.0,
+      30.0
+    ],
+    "driverStandings": {
+      "VER": {
+        "name": "Max Verstappen",
+        "standing": 1,
+        "points": 454.0
+      },
+      "LEC": {
+        "name": "Charles Leclerc",
+        "standing": 2,
+        "points": 308.0
+      },
+      "PER": {
+        "name": "Sergio Pérez",
+        "standing": 3,
+        "points": 305.0
+      },
+      "RUS": {
+        "name": "George Russell",
+        "standing": 4,
+        "points": 275.0
+      },
+      "SAI": {
+        "name": "Carlos Sainz",
+        "standing": 5,
+        "points": 246.0
+      },
+      "HAM": {
+        "name": "Lewis Hamilton",
+        "standing": 6,
+        "points": 240.0
+      },
+      "NOR": {
+        "name": "Lando Norris",
+        "standing": 7,
+        "points": 122.0
+      },
+      "OCO": {
+        "name": "Esteban Ocon",
+        "standing": 8,
+        "points": 92.0
+      },
+      "ALO": {
+        "name": "Fernando Alonso",
+        "standing": 9,
+        "points": 81.0
+      },
+      "BOT": {
+        "name": "Valtteri Bottas",
+        "standing": 10,
+        "points": 49.0
+      },
+      "RIC": {
+        "name": "Daniel Ricciardo",
+        "standing": 11,
+        "points": 37.0
+      },
+      "VET": {
+        "name": "Sebastian Vettel",
+        "standing": 12,
+        "points": 37.0
+      },
+      "MAG": {
+        "name": "Kevin Magnussen",
+        "standing": 13,
+        "points": 25.0
+      },
+      "GAS": {
+        "name": "Pierre Gasly",
+        "standing": 14,
+        "points": 23.0
+      },
+      "STR": {
+        "name": "Lance Stroll",
+        "standing": 15,
+        "points": 18.0
+      },
+      "MSC": {
+        "name": "Mick Schumacher",
+        "standing": 16,
+        "points": 12.0
+      },
+      "TSU": {
+        "name": "Yuki Tsunoda",
+        "standing": 17,
+        "points": 12.0
+      },
+      "ZHO": {
+        "name": "Guanyu Zhou",
+        "standing": 18,
+        "points": 6.0
+      },
+      "ALB": {
+        "name": "Alexander Albon",
+        "standing": 19,
+        "points": 4.0
+      },
+      "LAT": {
+        "name": "Nicholas Latifi",
+        "standing": 20,
+        "points": 2.0
+      },
+      "DEV": {
+        "name": "Nyck de Vries",
+        "standing": 21,
+        "points": 2.0
+      },
+      "HUL": {
+        "name": "Nico Hülkenberg",
+        "standing": 22,
+        "points": 0.0
+      }
+    },
+    "constructorStandings": {
+      "Red Bull Racing": {
+        "standing": 1,
+        "points": 759.0
+      },
+      "Ferrari": {
+        "standing": 2,
+        "points": 554.0
+      },
+      "Mercedes": {
+        "standing": 3,
+        "points": 515.0
+      },
+      "Alpine": {
+        "standing": 4,
+        "points": 173.0
+      },
+      "McLaren": {
+        "standing": 5,
+        "points": 159.0
+      },
+      "Sauber": {
+        "standing": 6,
+        "points": 55.0
+      },
+      "Aston Martin": {
+        "standing": 7,
+        "points": 55.0
+      },
+      "Haas F1 Team": {
+        "standing": 8,
+        "points": 37.0
+      },
+      "AlphaTauri": {
+        "standing": 9,
+        "points": 35.0
+      },
+      "Williams": {
+        "standing": 10,
+        "points": 8.0
+      }
+    }
+  }
+}

@@ -1,5 +1,37 @@
 import type { ConstructorAsset, DriverAsset, SeasonData } from '../types'
 
+interface InitialPriceBook {
+  season: number
+  generatedFromSeason?: number
+  defaultDriverPrice?: number
+  defaultConstructorPrice?: number
+  drivers?: Record<string, number>
+  constructors?: Record<string, number>
+}
+
+const rawInitialPriceModules = import.meta.glob('./initial_prices/*.json', { eager: true })
+
+const normalizeInitialPriceBook = (value: unknown): InitialPriceBook | null => {
+  if (!value || typeof value !== 'object') {
+    return null
+  }
+
+  const maybeModule = value as { default?: InitialPriceBook }
+  const book = maybeModule.default ?? (value as InitialPriceBook)
+  return typeof book.season === 'number' ? book : null
+}
+
+const initialPriceBooks = new Map<number, InitialPriceBook>()
+
+for (const rawModule of Object.values(rawInitialPriceModules)) {
+  const book = normalizeInitialPriceBook(rawModule)
+  if (book) {
+    initialPriceBooks.set(book.season, book)
+  }
+}
+
+const getInitialPriceBook = (season: number) => initialPriceBooks.get(season) ?? null
+
 export interface DriverSeed {
   abbreviation: string
   fullName: string
@@ -58,7 +90,7 @@ export const CONSTRUCTOR_SEEDS: ConstructorSeed[] = [
 export const DRIVER_SEED_MAP = new Map(DRIVER_SEEDS.map((seed) => [seed.abbreviation, seed]))
 export const CONSTRUCTOR_SEED_MAP = new Map(CONSTRUCTOR_SEEDS.map((seed) => [seed.name, seed]))
 
-const clampPrice = (value: number) => Math.max(3, Math.min(35, Number(value.toFixed(1))))
+const clampPrice = (value: number) => Math.max(3, Math.min(30, Number(value.toFixed(1))))
 
 const getDriverScoreHint = (seasonData: SeasonData, abbreviation: string) => {
   const firstRound = seasonData.rounds[0]
@@ -149,6 +181,7 @@ const getConstructorScoreHint = (seasonData: SeasonData, constructor: string) =>
 
 export const buildInitialDrivers = (seasonData: SeasonData): DriverAsset[] => {
   const seen = new Map<string, DriverAsset>()
+  const priceBook = getInitialPriceBook(seasonData.season)
 
   for (const round of seasonData.rounds) {
     for (const result of round.race.results) {
@@ -157,12 +190,14 @@ export const buildInitialDrivers = (seasonData: SeasonData): DriverAsset[] => {
       }
 
       const seed = DRIVER_SEED_MAP.get(result.driver)
-      const fallbackBase = 6 + getDriverScoreHint(seasonData, result.driver) * 0.65
+      const fallbackBase = priceBook?.defaultDriverPrice ?? 6 + getDriverScoreHint(seasonData, result.driver) * 0.65
+      // Use computed fallback before seed so rookies get a price anchored to
+      // their actual first-race performance rather than a career-peak default.
       seen.set(result.driver, {
         abbreviation: result.driver,
         fullName: result.fullName,
         team: result.team,
-        price: clampPrice(seed?.defaultPrice ?? fallbackBase),
+        price: clampPrice(priceBook?.drivers?.[result.driver] ?? fallbackBase ?? seed?.defaultPrice),
         fantasyPoints: 0,
         recentScores: [],
         lastPriceChange: 0,
@@ -175,6 +210,7 @@ export const buildInitialDrivers = (seasonData: SeasonData): DriverAsset[] => {
 
 export const buildInitialConstructors = (seasonData: SeasonData): ConstructorAsset[] => {
   const seen = new Map<string, ConstructorAsset>()
+  const priceBook = getInitialPriceBook(seasonData.season)
 
   for (const round of seasonData.rounds) {
     for (const stop of round.race.pitStops) {
@@ -184,10 +220,10 @@ export const buildInitialConstructors = (seasonData: SeasonData): ConstructorAss
       }
 
       const seed = CONSTRUCTOR_SEED_MAP.get(key)
-      const fallbackBase = 8 + getConstructorScoreHint(seasonData, key) * 0.9
+      const fallbackBase = priceBook?.defaultConstructorPrice ?? 8 + getConstructorScoreHint(seasonData, key) * 0.9
       seen.set(key, {
         name: key,
-        price: clampPrice(seed?.defaultPrice ?? fallbackBase),
+        price: clampPrice(priceBook?.constructors?.[key] ?? fallbackBase ?? seed?.defaultPrice),
         fantasyPoints: 0,
         recentScores: [],
         lastPriceChange: 0,
@@ -202,10 +238,10 @@ export const buildInitialConstructors = (seasonData: SeasonData): ConstructorAss
     }
 
     const seed = CONSTRUCTOR_SEED_MAP.get(key)
-    const fallbackBase = 8 + getConstructorScoreHint(seasonData, key) * 0.9
+    const fallbackBase = priceBook?.defaultConstructorPrice ?? 8 + getConstructorScoreHint(seasonData, key) * 0.9
     seen.set(key, {
       name: key,
-      price: clampPrice(seed?.defaultPrice ?? fallbackBase),
+      price: clampPrice(priceBook?.constructors?.[key] ?? fallbackBase ?? seed?.defaultPrice),
       fantasyPoints: 0,
       recentScores: [],
       lastPriceChange: 0,

@@ -1,5 +1,5 @@
 import type { CSSProperties } from 'react'
-import type { RoundData } from '../types'
+import type { ChipType, RoundData } from '../types'
 
 type UiLanguage = 'en' | 'zh'
 
@@ -21,6 +21,44 @@ export const isChineseUi = () => activeLanguage === 'zh'
 
 export const copyText = (english: string, chinese: string) =>
   isChineseUi() ? chinese : english
+
+// -----------------------------------------------------------
+// Chip localisation
+// -----------------------------------------------------------
+const CHIP_DESCRIPTIONS_ZH: Record<ChipType, string> = {
+  extraDrs: '选择一位车手本周获得 3x 积分；替代常规 2x DRS 目标。',
+  autopilot: '计分后自动将 2x DRS 转移至本场得分最高的车手（如有需要）。',
+  noNegative: '阵容中任意车手或车队本周得分为负时，将其分数重置为 0。',
+  limitless: '本周无视预算上限，赛后恢复原有阵容。',
+  wildcard: '本周可无限次转会，且不产生转会罚分。',
+}
+
+const CHIP_DESCRIPTIONS_EN: Record<ChipType, string> = {
+  extraDrs: 'Pick one driver for 3x points this weekend; replaces the regular 2x DRS target.',
+  autopilot: 'After scoring, automatically moves 2x DRS to your highest-scoring driver if needed.',
+  noNegative: 'Any driver or constructor in your lineup with a negative weekend score is reset to 0.',
+  limitless: 'Ignore the budget cap for this weekend, then restore the previous lineup afterwards.',
+  wildcard: 'Make unlimited transfers for this weekend without transfer penalties.',
+}
+
+const CHIP_NAMES_EN: Record<ChipType, string> = {
+  extraDrs: 'Extra DRS (3x)',
+  autopilot: 'Autopilot',
+  noNegative: 'No Negative',
+  limitless: 'Limitless',
+  wildcard: 'Wildcard',
+}
+
+export const getChipName = (chip: ChipType): string => CHIP_NAMES_EN[chip]
+
+export const getChipDescription = (chip: ChipType): string =>
+  isChineseUi() ? CHIP_DESCRIPTIONS_ZH[chip] : CHIP_DESCRIPTIONS_EN[chip]
+
+export const getChipStateLabel = (available: boolean, active: boolean): string => {
+  if (!available) return copyText('Spent', '已使用')
+  if (active) return copyText('Armed', '已激活')
+  return copyText('Ready', '就绪')
+}
 
 // -----------------------------------------------------------
 // RB-family helpers (shared between normalisation functions)
@@ -183,7 +221,7 @@ const SEASON_TEAM_OVERRIDES: Record<string, TeamPalette> = {
   '2025:Alpine': { base: '#005BA9', edge: '#F3A6C8', text: '#111111' },
 
   // Williams — completely different liveries per era
-  '2018:Williams': { base: '#E0E0E0', edge: '#E0E0E0' },
+  '2018:Williams': { base: '#00205B', edge: '#E0E0E0' },
   '2019:Williams': { base: '#E0E0E0', edge: '#00A3E0' },
   '2020:Williams': { base: '#005AFF', edge: '#E0E0E0', text: '#001E60' },
   '2021:Williams': { base: '#003DA5', edge: '#00A3E0', text: '#FFD200' },

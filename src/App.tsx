@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import heroImage from './assets/hero.png'
+import rulesText from '../f1_fantasy_rules.md?raw'
 import './App.css'
 import { copyText, getUiLanguage, setUiLanguage } from './lib/presentation'
 import { Navigation } from './components/Navigation'
@@ -10,8 +11,91 @@ import { SeasonSummary } from './views/SeasonSummary'
 import { Standings } from './views/Standings'
 import { Transfer } from './views/Transfer'
 
+function renderInlineMarkdown(text: string): React.ReactNode {
+  const parts: React.ReactNode[] = []
+  // Match **bold** or *italic* — ** is tried first so it doesn't get consumed by single *
+  const regex = /(\*\*(.+?)\*\*|\*(.+?)\*)/g
+  let lastIndex = 0
+  let match: RegExpExecArray | null
+
+  while ((match = regex.exec(text)) !== null) {
+    if (match.index > lastIndex) {
+      parts.push(text.slice(lastIndex, match.index))
+    }
+    if (match[2] !== undefined) {
+      parts.push(<strong key={parts.length}>{match[2]}</strong>)
+    } else if (match[3] !== undefined) {
+      parts.push(<em key={parts.length}>{match[3]}</em>)
+    }
+    lastIndex = match.index + match[0].length
+  }
+
+  if (lastIndex < text.length) {
+    parts.push(text.slice(lastIndex))
+  }
+
+  return parts.length > 0 ? <>{parts}</> : text
+}
+
+function renderRulesText(text: string) {
+  const language = getUiLanguage()
+  let currentSection: 'en' | 'zh' | null = null
+
+  return text.split('\n').map((line, index) => {
+    const trimmed = line.trim()
+
+    // Track language sections
+    if (trimmed === '<!-- en -->') {
+      currentSection = 'en'
+      return null
+    }
+    if (trimmed === '<!-- zh -->') {
+      currentSection = 'zh'
+      return null
+    }
+
+    // Skip lines that don't belong to the current language
+    if (currentSection !== language) {
+      return null
+    }
+
+    if (!trimmed || trimmed === '---') {
+      return null
+    }
+
+    // Check from most-specific to least-specific so #### / ### / ## / # don't overlap
+    if (trimmed.startsWith('#### ')) {
+      return <h4 key={index}>{renderInlineMarkdown(trimmed.slice(5))}</h4>
+    }
+
+    if (trimmed.startsWith('### ')) {
+      return <h4 key={index}>{renderInlineMarkdown(trimmed.slice(4))}</h4>
+    }
+
+    if (trimmed.startsWith('## ')) {
+      return <h3 key={index}>{renderInlineMarkdown(trimmed.slice(3))}</h3>
+    }
+
+    if (trimmed.startsWith('# ')) {
+      return <h2 key={index}>{renderInlineMarkdown(trimmed.slice(2))}</h2>
+    }
+
+    if (trimmed.startsWith('> ')) {
+      return <p key={index} className="rules-modal__note">{renderInlineMarkdown(trimmed.slice(2))}</p>
+    }
+
+    if (trimmed.startsWith('*   ') || trimmed.startsWith('- ')) {
+      const content = trimmed.replace(/^\*\s{3}|^-\s/, '')
+      return <p key={index} className="rules-modal__bullet">{renderInlineMarkdown(content)}</p>
+    }
+
+    return <p key={index}>{renderInlineMarkdown(trimmed)}</p>
+  })
+}
+
 function SeasonSelect() {
   const { seasonCatalog, selectSeason, hasSavedGame, loadSavedGame } = useGame()
+  const [showRules, setShowRules] = useState(false)
 
   return (
     <main className="season-select">
@@ -26,11 +110,16 @@ function SeasonSelect() {
               '从 2018 到 2025 任选一个完整赛季，掌管一支属于你的梦幻车队。调配五位车手与两支制造商，在真实历史赛历的每一站中运筹预算、使用策略芯片、与 AI 经理同场竞技。',
             )}
           </p>
-          {hasSavedGame ? (
-            <button type="button" className="action-button" onClick={loadSavedGame}>
-              {copyText('Continue saved game', '继续游戏')}
+          <div className="season-select__actions">
+            {hasSavedGame ? (
+              <button type="button" className="action-button" onClick={loadSavedGame}>
+                {copyText('Continue saved game', '继续游戏')}
+              </button>
+            ) : null}
+            <button type="button" className="secondary-button" onClick={() => setShowRules(true)}>
+              {copyText('Rules', '规则')}
             </button>
-          ) : null}
+          </div>
         </div>
         <img src={heroImage} alt="" className="season-select__image" />
       </section>
@@ -58,6 +147,28 @@ function SeasonSelect() {
           </button>
         ))}
       </section>
+
+      {showRules ? (
+        <div className="overlay-backdrop" role="presentation" onClick={() => setShowRules(false)}>
+          <section
+            className="modal-panel modal-panel--wide rules-modal"
+            role="dialog"
+            aria-modal="true"
+            onClick={(event) => event.stopPropagation()}
+          >
+            <div className="panel__header">
+              <div>
+                <p className="panel__kicker">{copyText('Reference', '参考')}</p>
+                <h3>{copyText('Game rules', '游戏规则')}</h3>
+              </div>
+              <button type="button" className="secondary-button" onClick={() => setShowRules(false)}>
+                {copyText('Close', '关闭')}
+              </button>
+            </div>
+            <div className="rules-modal__content">{renderRulesText(rulesText)}</div>
+          </section>
+        </div>
+      ) : null}
     </main>
   )
 }
