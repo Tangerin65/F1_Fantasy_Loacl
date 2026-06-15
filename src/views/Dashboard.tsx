@@ -11,7 +11,7 @@ import {
 } from '../lib/presentation'
 import { buildConstructorScoreMap, buildDriverScoreMap } from '../context/GameContext'
 import { useGame } from '../context/useGame'
-import { RoundDetailModal } from '../components/RoundDetailModal'
+import { renderStageBreakdowns } from '../components/RoundDetailModal'
 
 type SelectedAsset =
   | { kind: 'driver'; id: string }
@@ -62,11 +62,7 @@ export function Dashboard() {
   const [seasonScoreAsset, setSeasonScoreAsset] = useState<SeasonScoreAsset>(null)
   const [showWeekendBreakdown, setShowWeekendBreakdown] = useState(false)
   const [expandedStage, setExpandedStage] = useState<ExpandedStage>(null)
-  const [selectedRoundDetail, setSelectedRoundDetail] = useState<{
-    roundData: RoundData
-    roundIndex: number
-    score: DriverRoundScore | ConstructorRoundScore
-  } | null>(null)
+  const [expandedRoundIndex, setExpandedRoundIndex] = useState<number | null>(null)
 
   if (!humanManager || !selectedSeasonEntry || !state.seasonData) {
     return null
@@ -115,7 +111,7 @@ export function Dashboard() {
   const hasSprint = lastRoundData?.isSprint ?? false
   const openSeasonScore = (asset: Exclude<SeasonScoreAsset, null>) => {
     setSeasonScoreAsset(asset)
-    setSelectedRoundDetail(null)
+    setExpandedRoundIndex(null)
   }
 
   const seasonScores = useMemo(() => {
@@ -124,19 +120,13 @@ export function Dashboard() {
       .map((roundData, roundIndex) => {
         const roundResult = state.roundResults[roundIndex]
         if (!roundResult) return null
-        const managerResult = roundResult.find(
-          (entry) => entry.managerId === humanManager.id,
-        )
-        if (!managerResult) return null
         if (seasonScoreAsset.kind === 'driver') {
-          const score = managerResult.driverScores.find(
-            (s) => s.driver === seasonScoreAsset.id,
-          )
+          const driverScoreMap = buildDriverScoreMap(roundData)
+          const score = driverScoreMap.get(seasonScoreAsset.id)
           return score ? { roundData, roundIndex, score } : null
         } else {
-          const score = managerResult.constructorScores.find(
-            (s) => s.constructor === seasonScoreAsset.id,
-          )
+          const constructorScoreMap = buildConstructorScoreMap(roundData, season)
+          const score = constructorScoreMap.get(seasonScoreAsset.id)
           return score ? { roundData, roundIndex, score } : null
         }
       })
@@ -145,7 +135,7 @@ export function Dashboard() {
       roundIndex: number
       score: DriverRoundScore | ConstructorRoundScore
     }[]
-  }, [seasonScoreAsset, state.seasonData, state.roundResults, humanManager])
+  }, [seasonScoreAsset, state.seasonData, state.roundResults, season])
 
   return (
     <section className="view-stack">
@@ -497,7 +487,7 @@ export function Dashboard() {
       ) : null}
 
       {seasonScoreAsset ? (
-        <div className="overlay-backdrop" role="presentation" onClick={() => { setSeasonScoreAsset(null); setSelectedRoundDetail(null); }}>
+        <div className="overlay-backdrop" role="presentation" onClick={() => { setSeasonScoreAsset(null); setExpandedRoundIndex(null); }}>
           <section
             className="modal-panel modal-panel--wide"
             role="dialog"
@@ -514,7 +504,7 @@ export function Dashboard() {
               <button
                 type="button"
                 className="secondary-button"
-                onClick={() => { setSeasonScoreAsset(null); setSelectedRoundDetail(null); }}
+                onClick={() => { setSeasonScoreAsset(null); setExpandedRoundIndex(null); }}
               >
                 {copyText('Close', '关闭')}
               </button>
@@ -522,29 +512,35 @@ export function Dashboard() {
 
             {seasonScores.length > 0 ? (
               <div className="season-score-list">
-                {seasonScores.map(({ roundData, roundIndex, score }) => (
-                  <article
-                    key={`${seasonScoreAsset.kind}-${seasonScoreAsset.id}-${roundIndex}`}
-                    className="season-score-row"
-                  >
-                    <button
-                      type="button"
-                      className="season-score-row__summary"
-                      onClick={() =>
-                        setSelectedRoundDetail({ roundData, roundIndex, score })
-                      }
+                {seasonScores.map(({ roundData, roundIndex, score }) => {
+                  const isExpanded = expandedRoundIndex === roundIndex
+                  return (
+                    <article
+                      key={`${seasonScoreAsset.kind}-${seasonScoreAsset.id}-${roundIndex}`}
+                      className="season-score-row"
                     >
-                      <span>{getRaceLabel(roundData)}</span>
-                      <strong>
-                        {('totalFinal' in score ? score.totalFinal : score.total).toFixed(0)} pts
-                      </strong>
-                      <small>
-                        Q {score.qualifyingPoints} · S {score.sprintPoints} · R {score.racePoints}
-                        {'pitStopPoints' in score ? ` · P ${score.pitStopPoints}` : ''}
-                      </small>
-                    </button>
-                  </article>
-                ))}
+                      <button
+                        type="button"
+                        className={`season-score-row__summary${isExpanded ? ' is-expanded' : ''}`}
+                        onClick={() =>
+                          setExpandedRoundIndex(isExpanded ? null : roundIndex)
+                        }
+                      >
+                        <span>{getRaceLabel(roundData)}</span>
+                        <strong>
+                          {('totalFinal' in score ? score.totalFinal : score.total).toFixed(0)} pts
+                        </strong>
+                        <small>
+                          Q {score.qualifyingPoints} · S {score.sprintPoints} · R {score.racePoints}
+                          {'pitStopPoints' in score ? ` · P ${score.pitStopPoints}` : ''}
+                        </small>
+                      </button>
+                      {isExpanded && score.breakdown
+                        ? renderStageBreakdowns(score, roundData.isSprint)
+                        : null}
+                    </article>
+                  )
+                })}
               </div>
             ) : (
               <p className="muted-copy">
@@ -553,16 +549,6 @@ export function Dashboard() {
             )}
           </section>
         </div>
-      ) : null}
-
-      {selectedRoundDetail ? (
-        <RoundDetailModal
-          roundData={selectedRoundDetail.roundData}
-          season={season}
-          selectedAsset={seasonScoreAsset}
-          roundScore={selectedRoundDetail.score}
-          onClose={() => setSelectedRoundDetail(null)}
-        />
       ) : null}
 
       {/* D5: score breakdown with expandable stage details */}

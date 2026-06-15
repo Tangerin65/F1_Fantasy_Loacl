@@ -438,7 +438,7 @@
             "fastestStop": 23.28
           }
         ],
-        "driverOfTheDay": null
+        "driverOfTheDay": "ALB"
       }
     },
     {
@@ -878,7 +878,7 @@
             "fastestStop": 39.72
           }
         ],
-        "driverOfTheDay": null
+        "driverOfTheDay": "PER"
       }
     },
     {
@@ -1318,7 +1318,7 @@
             "fastestStop": 22.68
           }
         ],
-        "driverOfTheDay": null
+        "driverOfTheDay": "VER"
       }
     },
     {
@@ -1758,7 +1758,7 @@
             "fastestStop": 33.82
           }
         ],
-        "driverOfTheDay": null
+        "driverOfTheDay": "HAM"
       }
     },
     {
@@ -2198,7 +2198,7 @@
             "fastestStop": 28.93
           }
         ],
-        "driverOfTheDay": null
+        "driverOfTheDay": "VER"
       }
     },
     {
@@ -2638,7 +2638,7 @@
             "fastestStop": 23.21
           }
         ],
-        "driverOfTheDay": null
+        "driverOfTheDay": "VET"
       }
     },
     {
@@ -3078,7 +3078,7 @@
             "fastestStop": 23.64
           }
         ],
-        "driverOfTheDay": null
+        "driverOfTheDay": "GAS"
       }
     },
     {
@@ -3518,7 +3518,7 @@
             "fastestStop": 26.69
           }
         ],
-        "driverOfTheDay": null
+        "driverOfTheDay": "GAS"
       }
     },
     {
@@ -3958,7 +3958,7 @@
             "fastestStop": 23.72
           }
         ],
-        "driverOfTheDay": null
+        "driverOfTheDay": "RIC"
       }
     },
     {
@@ -4398,7 +4398,7 @@
             "fastestStop": 31.37
           }
         ],
-        "driverOfTheDay": null
+        "driverOfTheDay": "VER"
       }
     },
     {
@@ -4838,7 +4838,7 @@
             "fastestStop": 23.02
           }
         ],
-        "driverOfTheDay": null
+        "driverOfTheDay": "HUL"
       }
     },
     {
@@ -5278,7 +5278,7 @@
             "fastestStop": 27.3
           }
         ],
-        "driverOfTheDay": null
+        "driverOfTheDay": "PER"
       }
     },
     {
@@ -5718,7 +5718,7 @@
             "fastestStop": 30.42
           }
         ],
-        "driverOfTheDay": null
+        "driverOfTheDay": "RAI"
       }
     },
     {
@@ -6158,7 +6158,7 @@
             "fastestStop": 24.55
           }
         ],
-        "driverOfTheDay": null
+        "driverOfTheDay": "VET"
       }
     },
     {
@@ -6598,7 +6598,7 @@
             "fastestStop": 25.79
           }
         ],
-        "driverOfTheDay": null
+        "driverOfTheDay": "GRO"
       }
     },
     {
@@ -7038,7 +7038,7 @@
             "fastestStop": 25.47
           }
         ],
-        "driverOfTheDay": null
+        "driverOfTheDay": "RUS"
       }
     },
     {
@@ -7478,7 +7478,7 @@
             "fastestStop": 25.72
           }
         ],
-        "driverOfTheDay": null
+        "driverOfTheDay": "VER"
       }
     }
   ]

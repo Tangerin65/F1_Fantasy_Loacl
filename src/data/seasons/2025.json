@@ -438,7 +438,7 @@
             "fastestStop": 14.71
           }
         ],
-        "driverOfTheDay": null
+        "driverOfTheDay": "NOR"
       }
     },
     {
@@ -1062,7 +1062,7 @@
             "fastestStop": 23.0
           }
         ],
-        "driverOfTheDay": null
+        "driverOfTheDay": "ANT"
       }
     },
     {
@@ -1502,7 +1502,7 @@
             "fastestStop": 24.46
           }
         ],
-        "driverOfTheDay": null
+        "driverOfTheDay": "TSU"
       }
     },
     {
@@ -1942,7 +1942,7 @@
             "fastestStop": 24.79
           }
         ],
-        "driverOfTheDay": null
+        "driverOfTheDay": "HAM"
       }
     },
     {
@@ -2382,7 +2382,7 @@
             "fastestStop": 26.03
           }
         ],
-        "driverOfTheDay": null
+        "driverOfTheDay": "VER"
       }
     },
     {
@@ -3006,7 +3006,7 @@
             "fastestStop": 24.26
           }
         ],
-        "driverOfTheDay": null
+        "driverOfTheDay": "PIA"
       }
     },
     {
@@ -3446,7 +3446,7 @@
             "fastestStop": 30.51
           }
         ],
-        "driverOfTheDay": null
+        "driverOfTheDay": "VER"
       }
     },
     {
@@ -3886,7 +3886,7 @@
             "fastestStop": 24.58
           }
         ],
-        "driverOfTheDay": null
+        "driverOfTheDay": "LEC"
       }
     },
     {
@@ -4317,7 +4317,7 @@
             "fastestStop": 22.22
           }
         ],
-        "driverOfTheDay": null
+        "driverOfTheDay": "VER"
       }
     },
     {
@@ -4757,7 +4757,7 @@
             "fastestStop": 18.27
           }
         ],
-        "driverOfTheDay": null
+        "driverOfTheDay": "ANT"
       }
     },
     {
@@ -5197,7 +5197,7 @@
             "fastestStop": 21.77
           }
         ],
-        "driverOfTheDay": null
+        "driverOfTheDay": "BOR"
       }
     },
     {
@@ -5637,7 +5637,7 @@
             "fastestStop": 29.74
           }
         ],
-        "driverOfTheDay": null
+        "driverOfTheDay": "HUL"
       }
     },
     {
@@ -6261,7 +6261,7 @@
             "fastestStop": 23.84
           }
         ],
-        "driverOfTheDay": null
+        "driverOfTheDay": "HAM"
       }
     },
     {
@@ -6701,7 +6701,7 @@
             "fastestStop": 21.75
           }
         ],
-        "driverOfTheDay": null
+        "driverOfTheDay": "BOR"
       }
     },
     {
@@ -7141,7 +7141,7 @@
             "fastestStop": 18.27
           }
         ],
-        "driverOfTheDay": null
+        "driverOfTheDay": "HAD"
       }
     },
     {
@@ -7581,7 +7581,7 @@
             "fastestStop": 26.14
           }
         ],
-        "driverOfTheDay": null
+        "driverOfTheDay": "VER"
       }
     },
     {
@@ -8021,7 +8021,7 @@
             "fastestStop": 21.98
           }
         ],
-        "driverOfTheDay": null
+        "driverOfTheDay": "SAI"
       }
     },
     {
@@ -8461,7 +8461,7 @@
             "fastestStop": 24.19
           }
         ],
-        "driverOfTheDay": null
+        "driverOfTheDay": "ALO"
       }
     },
     {
@@ -9085,7 +9085,7 @@
             "fastestStop": 24.11
           }
         ],
-        "driverOfTheDay": null
+        "driverOfTheDay": "LEC"
       }
     },
     {
@@ -9525,7 +9525,7 @@
             "fastestStop": 22.79
           }
         ],
-        "driverOfTheDay": null
+        "driverOfTheDay": "BEA"
       }
     },
     {
@@ -10149,7 +10149,7 @@
             "fastestStop": 23.75
           }
         ],
-        "driverOfTheDay": null
+        "driverOfTheDay": "VER"
       }
     },
     {
@@ -10589,7 +10589,7 @@
             "fastestStop": 22.84
           }
         ],
-        "driverOfTheDay": null
+        "driverOfTheDay": "VER"
       }
     },
     {
@@ -11213,7 +11213,7 @@
             "fastestStop": 28.94
           }
         ],
-        "driverOfTheDay": null
+        "driverOfTheDay": "VER"
       }
     },
     {
@@ -11653,7 +11653,7 @@
             "fastestStop": 22.25
           }
         ],
-        "driverOfTheDay": null
+        "driverOfTheDay": "VER"
       }
     }
   ]

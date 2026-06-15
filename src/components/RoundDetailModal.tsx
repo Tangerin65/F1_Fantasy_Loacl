@@ -13,7 +13,6 @@ interface RoundDetailModalProps {
   roundData: RoundData
   season: number
   selectedAsset: { kind: 'driver' | 'constructor'; id: string; name: string } | null
-  roundScore: DriverRoundScore | ConstructorRoundScore | null
   onClose: () => void
 }
 
@@ -45,6 +44,43 @@ const renderBreakdownList = (items: ScoreBreakdownItem[]) => (
   </ul>
 )
 
+export const renderStageBreakdowns = (
+  score: DriverRoundScore | ConstructorRoundScore,
+  isSprint: boolean,
+) => {
+  const stages: Exclude<ExpandedStage, null>[] = (
+    'totalFinal' in score
+      ? ['qualifying', 'sprint', 'race']
+      : ['qualifying', 'sprint', 'race', 'pitStop']
+  ).filter((stage) => {
+    if (stage === 'sprint' && !isSprint) return false
+    return (score.breakdown?.[stage]?.length ?? 0) > 0
+  })
+
+  if (stages.length === 0) return null
+
+  return (
+    <div className="season-score-row__detail">
+      {stages.map((stage) => (
+        <section key={stage} className="breakdown-detail breakdown-detail--compact">
+          <h4>
+            {stage === 'qualifying'
+              ? copyText('Qualifying', '排位赛')
+              : stage === 'sprint'
+                ? copyText('Sprint', '冲刺赛')
+                : stage === 'race'
+                  ? copyText('Race', '正赛')
+                  : copyText('Pit stop', '进站')}
+            {' · '}
+            {getStageTotal(score, stage)} pts
+          </h4>
+          {renderBreakdownList(score.breakdown![stage])}
+        </section>
+      ))}
+    </div>
+  )
+}
+
 /* ------------------------------------------------------------------ */
 /*  Component                                                          */
 /* ------------------------------------------------------------------ */
@@ -53,7 +89,6 @@ export function RoundDetailModal({
   roundData,
   season,
   selectedAsset,
-  roundScore,
   onClose,
 }: RoundDetailModalProps) {
   const isSprint = roundData.isSprint
@@ -66,13 +101,6 @@ export function RoundDetailModal({
     !isDriver && normalizeTeamName(teamName, season) === selectedAsset.id
   const hlRow = (...checks: boolean[]) =>
     checks.some(Boolean) ? ' detail-table__row--highlighted' : ''
-
-  /* --- breakdown stages --- */
-  const stages: ExpandedStage[] = isDriver
-    ? ['qualifying', 'sprint', 'race']
-    : ['qualifying', 'sprint', 'race', 'pitStop']
-
-  const hasBreakdown = roundScore?.breakdown != null
 
   return (
     <div
@@ -222,40 +250,6 @@ export function RoundDetailModal({
           </div>
         ) : null}
 
-        {/* ---- score breakdown for the selected asset ---- */}
-        {hasBreakdown && roundScore.breakdown ? (
-          <div className="breakdown-detail" style={{ marginTop: 20 }}>
-            <h3 style={{ marginBottom: 12 }}>
-              {selectedAsset?.name}{' '}
-              {copyText('Score Breakdown', '得分拆解')}
-            </h3>
-            <div className="detail-grid">
-              {stages
-                .filter((stage) => {
-                  if (stage === 'sprint' && !isSprint) return false
-                  if (stage === 'pitStop' && !('pitStopPoints' in roundScore))
-                    return false
-                  return (roundScore.breakdown![stage]?.length ?? 0) > 0
-                })
-                .map((stage) => (
-                  <section key={stage} className="detail-card">
-                    <h4>
-                      {stage === 'qualifying'
-                        ? copyText('Qualifying', '排位赛')
-                        : stage === 'sprint'
-                          ? copyText('Sprint', '冲刺赛')
-                          : stage === 'race'
-                            ? copyText('Race', '正赛')
-                            : copyText('Pit stop', '进站')}
-                      {' · '}
-                      {getStageTotal(roundScore, stage)} pts
-                    </h4>
-                    {renderBreakdownList(roundScore.breakdown[stage])}
-                  </section>
-                ))}
-            </div>
-          </div>
-        ) : null}
       </section>
     </div>
   )
